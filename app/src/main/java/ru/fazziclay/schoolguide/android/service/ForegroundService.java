@@ -87,8 +87,8 @@ public class ForegroundService extends Service {
     }
 
     public void loop() {
-        // TODO: 9/18/21 fix bug nullPointer
         SchoolDay currentDay = SchoolWeek.getSchoolWeek().getCurrentDay();
+        if (currentDay == null) return;
         String subText = "";
 
         if (DEBUG_NOTIFY) {
