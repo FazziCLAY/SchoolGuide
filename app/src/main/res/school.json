@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "teachers": [
+    {
+      "id": 0,
+      "name": "Custom teacher 1"
+    },
+    {
+      "id": 1,
+      "name": "Custom teacher 2"
+    }
+  ],
+  "lessons": [
+    {
+      "id": 0,
+      "name": "Lesson From teacher 1",
+      "teacher": 0
+    },
+    {
+      "id": 1,
+      "name": "Lesson From teacher 2",
+      "teacher": 1
+    }
+  ],
+  "week": {
+    "defaultDuration": 40,
+    "defaultStartTime": {
+      "1": "8:30",
+      "2": "9:20",
+      "3": "10:20",
+      "4": "11:20",
+      "5": "12:10",
+      "6": "13:00",
+      "7": "13:50"
+    },
+    "monday": [
+      {
+        "id": 1,
+        "duration": -1
+      }
+    ],
+    "tuesday": [
+      {
+        "id": 1,
+        "duration": -1
+      }
+    ],
+    "wednesday": [
+      {
+        "id": 0,
+        "duration": -1
+      }
+    ],
+    "thursday": [
+      {
+        "id": 1,
+        "duration": -1
+      },
+      {
+        "id": 0,
+        "duration": -1
+      }
+    ],
+    "friday": [
+      {
+        "id": 0,
+        "startTime": "8:50",
+        "duration": 25
+      }
+    ]
+  }
+}

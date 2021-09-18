@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next_lesson">След. урок: %s</string>
+    <string name="now_lesson">Сейчас: %s</string>
+    <string name="rest">Отдых!</string>
+    <string name="left">Осталось: %s</string>
+</resources>

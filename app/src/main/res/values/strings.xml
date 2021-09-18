@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name" translatable="false">SchoolGuide</string>
+    <string name="next_lesson">Next: %s</string>
+    <string name="now_lesson">Now: %s</string>
+    <string name="rest">Rest!</string>
+    <string name="left">Left: %s</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+</resources>
