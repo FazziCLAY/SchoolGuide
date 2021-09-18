@@ -1,6 +1,9 @@
 package ru.fazziclay.schoolguide.android.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -32,6 +35,14 @@ public class HomeActivity extends AppCompatActivity {
         debug.setChecked(ForegroundService.DEBUG_NOTIFY);
         debug.setOnClickListener(view -> ForegroundService.DEBUG_NOTIFY = debug.isChecked());
         binding.root.addView(debug);
+
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Button button = new Button(this);
+        button.setOnClickListener(v -> {
+            vibrator.vibrate(100);
+        });
+
+        binding.root.addView(button);
 
         // Schedule Text
         StringBuilder text = new StringBuilder();

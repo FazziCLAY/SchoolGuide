@@ -4,16 +4,15 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.widget.RemoteViews;
+import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import ru.fazziclay.fazziclaylibs.FileUtils;
 import ru.fazziclay.schoolguide.Clock;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SchoolDay;
@@ -28,10 +27,19 @@ public class ForegroundService extends Service {
     public static final int NOTIFICATION_ID = 1;
     public static final int LOOP_DELAY = 1000;
 
+    public static final long[] VIBRATION_NOTIFY_LESSON_START = {0, 200, 100, 500, 100, 200};
+    public static final long[] VIBRATION_NOTIFY_LESSON_END = {0, 150, 100, 150, 100, 150, 100};
+    public static final long[] VIBRATION_NOTIFY_REST_ENDING = {0, 150, 150, 120, 60, 120, 60, 120};
+
     public static boolean DEBUG_NOTIFY = false;
 
+    Vibrator vibrator;
     Handler loopHandler;
     Runnable loopRunnable;
+
+    boolean isNotifiedLessonStart = false;
+    boolean isNotifiedLessonEnd = false;
+    boolean isNotifiedRestEnding = false;
 
     @Override
     public void onCreate() {
@@ -47,6 +55,7 @@ public class ForegroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         loopHandler = new Handler();
         loopRunnable = new Runnable() {
             @Override
@@ -78,8 +87,8 @@ public class ForegroundService extends Service {
     }
 
     public void loop() {
+        // TODO: 9/18/21 fix bug nullPointer
         SchoolDay currentDay = SchoolWeek.getSchoolWeek().getCurrentDay();
-        String widgetText = "";
         String subText = "";
 
         if (DEBUG_NOTIFY) {
@@ -90,43 +99,51 @@ public class ForegroundService extends Service {
         }
 
         if (currentDay.getState() == SchoolDayState.SCHOOL_END && !DEBUG_NOTIFY) {
-            widgetText = "";
             stopService(new Intent(this, MainNotificationService.class));
             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
             managerCompat.cancel(MainNotificationService.NOTIFICATION_ID);
 
         } else if (currentDay.getState() == SchoolDayState.SCHOOL_REST) {
-            String title = getString(R.string.rest) + " " + getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilLesson()));
+            boolean isRestEnding = (currentDay.getLeftUntilLesson() < 3*60*1000);
+            if (!isNotifiedLessonEnd) {
+                vibrator.vibrate(VIBRATION_NOTIFY_LESSON_END,-1);
+                isNotifiedLessonEnd = true;
+                isNotifiedLessonStart = false;
+                isNotifiedRestEnding = false;
+            }
+            if (!isNotifiedRestEnding && isRestEnding) {
+                vibrator.vibrate(VIBRATION_NOTIFY_REST_ENDING,-1);
+                isNotifiedRestEnding = true;
+            }
+
+            String title = getString(R.string.rest) + " " + getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilLesson())) +
+                    (isRestEnding ? " " + getString(R.string.hurry_up) : "");
             String content = getString(R.string.next_lesson, currentDay.getNextLesson());
             MainNotificationService.updateNotification(this,
                     title,
                     subText,
                     content
             );
-            widgetText += title + "\n" + content + "\n";
+            MainWidget.updateAllWidgets(this, title + "\n" + content);
 
         } else if (currentDay.getState() == SchoolDayState.SCHOOL_LESSON) {
+            boolean isLessonEnding = (currentDay.getLeftUntilRest() < 5 * 60 * 1000);
+            if (!isNotifiedLessonStart) {
+                vibrator.vibrate(VIBRATION_NOTIFY_LESSON_START,-1);
+                isNotifiedLessonStart = true;
+                isNotifiedRestEnding = false;
+                isNotifiedLessonEnd = false;
+            }
+
             String title   = getString(R.string.now_lesson, currentDay.getNowLesson());
-            String content = getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilRest())) + ((currentDay.getLeftUntilRest() < 5 * 60 * 1000) ? getString(R.string.next_lesson, currentDay.getNextLesson()) : "");
+            String content = getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilRest())) +
+                    (isLessonEnding ? " " + getString(R.string.next_lesson, currentDay.getNextLesson()) : "");
             MainNotificationService.updateNotification(this,
                     title,
                     subText,
                     content
             );
-            widgetText += title + "\n" + content + "\n";
+            MainWidget.updateAllWidgets(this, title + "\n" + content);
         }
-
-        RemoteViews views = new RemoteViews(getPackageName(), R.layout.main_widget);
-        views.setTextViewText(R.id.main_text, widgetText);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        String[] widgetsIds = FileUtils.read(getExternalFilesDir("") + MainWidget.WIDGETS_PATH).split("\n");
-        int i = 0;
-        while (i < widgetsIds.length) {
-            try {
-                appWidgetManager.updateAppWidget(Integer.parseInt(widgetsIds[i]), views);
-            } catch (Exception ignored) {}
-            i++;
-        }
-
     }
 }
