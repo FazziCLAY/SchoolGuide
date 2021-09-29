@@ -8,19 +8,45 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.DateFormatSymbols;
+import java.util.Calendar;
 import java.util.Locale;
 
 import ru.fazziclay.schoolguide.Clock;
+import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.SchoolDay;
 import ru.fazziclay.schoolguide.data.SchoolLesson;
 import ru.fazziclay.schoolguide.data.SchoolWeek;
 import ru.fazziclay.schoolguide.data.Settings;
+import ru.fazziclay.schoolguide.data.StateCache;
 import ru.fazziclay.schoolguide.databinding.ActivityHomeBinding;
 import ru.fazziclay.schoolguide.data.jsonparser.JsonRoot;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
     DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(Locale.getDefault());
+    Button earlyFinishButton = null;
+
+    public void setEarlyFinishButton() {
+        if (ForegroundService.getInstance().isEarlyFinished()) {
+            earlyFinishButton.setText("( ОТМЕНИТЬ ДОСРОЧНОЕ ЗАВЕРШЕНИЕ )");
+            earlyFinishButton.setOnClickListener(v -> {
+                ForegroundService.getInstance().getStateCache().earlyFinishedForDay = StateCache.EARLY_FINISHED_FOR_DAY_NOT_SET;
+                ForegroundService.getInstance().setEarlyFinished(false);
+                ForegroundService.getInstance().syncCache();
+
+                setEarlyFinishButton();
+            });
+        } else {
+            earlyFinishButton.setText("!! Досрочно завершить !!");
+            earlyFinishButton.setOnClickListener(v -> {
+                ForegroundService.getInstance().getStateCache().earlyFinishedForDay = (short) Clock.getCurrentCalendar().get(Calendar.DAY_OF_YEAR);
+                ForegroundService.getInstance().setEarlyFinished(true);
+                ForegroundService.getInstance().syncCache();
+
+                setEarlyFinishButton();
+            });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +68,9 @@ public class HomeActivity extends AppCompatActivity {
         });
         binding.root.addView(button);
 
+        earlyFinishButton = new Button(this);
+        binding.root.addView(earlyFinishButton);
+        setEarlyFinishButton();
 
         // Schedule Text
         TextView textView = new TextView(this);

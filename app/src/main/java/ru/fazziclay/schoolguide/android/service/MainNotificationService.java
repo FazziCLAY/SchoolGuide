@@ -43,6 +43,8 @@ public class MainNotificationService extends Service {
     }
 
     public static void updateNotification(Context context, String title, String subText, String contentText) {
+        context.startService(new Intent(context, MainNotificationService.class));
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
@@ -55,5 +57,11 @@ public class MainNotificationService extends Service {
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    public static void stop(Context context) {
+        context.stopService(new Intent(context, MainNotificationService.class));
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
+        managerCompat.cancel(MainNotificationService.NOTIFICATION_ID);
     }
 }

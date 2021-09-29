@@ -24,6 +24,14 @@ public class StateCache {
     public boolean isNotifiedLessonEnd = false;
     public boolean isNotifiedRestEnding = false;
 
+    public static final short FOREGROUND_NOTIFICATION_STATE_NOT_SET = -1;
+    public static final short FOREGROUND_NOTIFICATION_STATE_DEFAULT = 1;
+    public static final short FOREGROUND_NOTIFICATION_STATE_MAIN_NOTIFY = 2;
+    public short foregroundNotificationState = -1;
+
+    public static final short EARLY_FINISHED_FOR_DAY_NOT_SET = -1;
+    public short earlyFinishedForDay = -1;
+
     public StateCache(boolean isNotifiedLessonStart,
                       boolean isNotifiedLessonEnd,
                       boolean isNotifiedRestEnding) {

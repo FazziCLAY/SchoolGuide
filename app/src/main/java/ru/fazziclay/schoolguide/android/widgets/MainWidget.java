@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
+import java.util.Objects;
+
 import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.R;
 
@@ -15,6 +17,7 @@ public class MainWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
+            if (!Objects.requireNonNull(FileUtil.read(context.getExternalFilesDir("").getAbsolutePath() + WIDGETS_PATH)).contains(String.valueOf(appWidgetId)))
             FileUtil.write(context.getExternalFilesDir("").getAbsolutePath() + WIDGETS_PATH, FileUtil.read(context.getExternalFilesDir("").getAbsolutePath() +  WIDGETS_PATH) + "\n"+appWidgetId);
         }
     }

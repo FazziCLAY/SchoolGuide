@@ -33,4 +33,5 @@ public class Settings {
     public boolean notification = true;
     public boolean vibration = true;
     public boolean debug = false;
+    public boolean useForegroundNotificationForMain = false;
 }

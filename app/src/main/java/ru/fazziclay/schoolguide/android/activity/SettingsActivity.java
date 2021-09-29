@@ -18,6 +18,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.notification.setChecked(Settings.getSettings().notification);
         binding.vibration.setChecked(Settings.getSettings().vibration);
+        binding.useForegroundNotificationForMain.setChecked(Settings.getSettings().useForegroundNotificationForMain);
 
         binding.notification.setOnClickListener(v -> {
             Settings.getSettings().notification = binding.notification.isChecked();
@@ -25,6 +26,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
         binding.vibration.setOnClickListener(v -> {
             Settings.getSettings().vibration = binding.vibration.isChecked();
+            Settings.save(this);
+        });
+        binding.useForegroundNotificationForMain.setOnClickListener(v -> {
+            Settings.getSettings().useForegroundNotificationForMain = binding.useForegroundNotificationForMain.isChecked();
             Settings.save(this);
         });
     }

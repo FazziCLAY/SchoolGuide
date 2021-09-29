@@ -15,6 +15,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+
 import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.Clock;
 import ru.fazziclay.schoolguide.R;
@@ -37,8 +39,6 @@ public class ForegroundService extends Service {
     public static final long[] VIBRATION_NOTIFY_LESSON_END = {0, 250, 200, 250, 200, 250, 200};
     public static final long[] VIBRATION_NOTIFY_REST_ENDING = {0, 250, 250, 220, 100, 220, 100, 220};
 
-    public static boolean DEBUG_NOTIFY = false;
-
     static ForegroundService instance = null;
 
     SchoolWeek schoolWeek = null;
@@ -48,9 +48,10 @@ public class ForegroundService extends Service {
     Handler loopHandler = null;
     Runnable loopRunnable = null;
 
-    boolean isNotifiedLessonStart = false;
-    boolean isNotifiedLessonEnd = false;
-    boolean isNotifiedRestEnding = false;
+    boolean isEarlyFinished;
+    boolean isRestEnding;
+    boolean isLessonEnding;
+    boolean isSchoolEnd;
 
     @Override
     public void onCreate() {
@@ -66,12 +67,6 @@ public class ForegroundService extends Service {
 
         stateCache = gson.fromJson(FileUtil.read(StateCache.getStateCacheFilePath(this)), StateCache.class);
         if (stateCache == null) stateCache = new StateCache();
-        if (System.currentTimeMillis() - stateCache.cacheCreateTime < /*1 * */60 * 1000) {
-            isNotifiedLessonStart = stateCache.isNotifiedLessonStart;
-            isNotifiedLessonEnd = stateCache.isNotifiedLessonEnd;
-            isNotifiedRestEnding = stateCache.isNotifiedRestEnding;
-            stateCache.updateTime();
-        }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
@@ -102,7 +97,6 @@ public class ForegroundService extends Service {
         return null;
     }
 
-
     public static ForegroundService getInstance() {
         return instance;
     }
@@ -117,6 +111,14 @@ public class ForegroundService extends Service {
 
     public StateCache getStateCache() {
         return stateCache;
+    }
+
+    public boolean isEarlyFinished() {
+        return isEarlyFinished;
+    }
+
+    public void setEarlyFinished(boolean earlyFinished) {
+        isEarlyFinished = earlyFinished;
     }
 
     public Notification getForegroundNotification() {
@@ -140,89 +142,119 @@ public class ForegroundService extends Service {
             return;
         }
 
-        if (!settings.notification) {
-            stopService(new Intent(this, MainNotificationService.class));
+        isEarlyFinished = stateCache.earlyFinishedForDay == Clock.getCurrentCalendar().get(Calendar.DAY_OF_YEAR);
+        isSchoolEnd = currentDay.getState() == SchoolDayState.SCHOOL_END || isEarlyFinished;
+        isRestEnding = (currentDay.getLeftUntilLesson() < 3 * 60 * 1000);
+        isLessonEnding = (currentDay.getLeftUntilRest() < 5 * 60 * 1000);
+
+        if (!isEarlyFinished && stateCache.earlyFinishedForDay != StateCache.EARLY_FINISHED_FOR_DAY_NOT_SET) {
+            stateCache.earlyFinishedForDay = StateCache.EARLY_FINISHED_FOR_DAY_NOT_SET;
+            syncCache();
         }
 
-        if (currentDay.getState() == SchoolDayState.SCHOOL_END && !DEBUG_NOTIFY) {
-            loopSchoolEnd();
+        String title = "unknown";
+        String subText = null;
+        String content = "unknown";
 
-        } else if (currentDay.getState() == SchoolDayState.SCHOOL_REST) {
-            loopRest(currentDay);
+        if (currentDay.getState() == SchoolDayState.SCHOOL_REST) {
+            title = getString(R.string.rest) + " " + getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilLesson())) +
+                    (isRestEnding ? " " + getString(R.string.hurry_up) : "");
+            content = getString(R.string.next_lesson, currentDay.getNextLesson());
 
         } else if (currentDay.getState() == SchoolDayState.SCHOOL_LESSON) {
-            loopLesson(currentDay);
-        }
-    }
-
-    public void loopSchoolEnd() {
-        stopService(new Intent(this, MainNotificationService.class));
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.cancel(MainNotificationService.NOTIFICATION_ID);
-    }
-
-    public void loopLesson(SchoolDay currentDay) {
-        boolean isLessonEnding = (currentDay.getLeftUntilRest() < 5 * 60 * 1000);
-        if (!isNotifiedLessonStart) {
-            vibrate(VIBRATION_NOTIFY_LESSON_START);
-            isNotifiedLessonStart = true;
-            isNotifiedRestEnding = false;
-            isNotifiedLessonEnd = false;
-            syncCache();
+            title = getString(R.string.now_lesson, currentDay.getNowLesson());
+            content = getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilRest())) +
+                    ((isLessonEnding && currentDay.getNextLesson() != null) ? " " + getString(R.string.next_lesson, currentDay.getNextLesson()) : "");
         }
 
-        String title   = getString(R.string.now_lesson, currentDay.getNowLesson());
-        String content = getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilRest())) +
-                (isLessonEnding ? " " + getString(R.string.next_lesson, currentDay.getNextLesson()) : "");
-        if (settings.notification) {
-            startService(new Intent(this, MainNotificationService.class));
-            MainNotificationService.updateNotification(this,
-                    title,
-                    null,
-                    content
-            );
+        if (settings.vibration) {
+            checkVibrationNotify(currentDay.getState());
         }
+        updateMainNotification(this, title, subText, content);
         MainWidget.updateAllWidgets(this, title + "\n" + content);
     }
 
-    public void loopRest(SchoolDay currentDay) {
-        boolean isRestEnding = (currentDay.getLeftUntilLesson() < 3*60*1000);
-        if (!isNotifiedLessonEnd) {
-            vibrate(VIBRATION_NOTIFY_LESSON_END);
-            isNotifiedLessonEnd = true;
-            isNotifiedLessonStart = false;
-            isNotifiedRestEnding = false;
-            syncCache();
-        }
-        if (!isNotifiedRestEnding && isRestEnding) {
-            vibrate(VIBRATION_NOTIFY_REST_ENDING);
-            isNotifiedRestEnding = true;
-            syncCache();
-        }
+    public void checkVibrationNotify(SchoolDayState type) {
+        if (type == SchoolDayState.SCHOOL_LESSON) {
+            if (!stateCache.isNotifiedLessonStart) {
+                vibrate(VIBRATION_NOTIFY_LESSON_START);
+                stateCache.isNotifiedLessonStart = true;
+                stateCache.isNotifiedRestEnding = false;
+                stateCache.isNotifiedLessonEnd = false;
+                syncCache();
+            }
 
-        String title = getString(R.string.rest) + " " + getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilLesson())) +
-                (isRestEnding ? " " + getString(R.string.hurry_up) : "");
-        String content = getString(R.string.next_lesson, currentDay.getNextLesson());
-        if (settings.notification) {
-            startService(new Intent(this, MainNotificationService.class));
-            MainNotificationService.updateNotification(this,
-                    title,
-                    null,
-                    content
-            );
+        } else if (type == SchoolDayState.SCHOOL_REST) {
+            if (!stateCache.isNotifiedLessonEnd) {
+                vibrate(VIBRATION_NOTIFY_LESSON_END);
+                stateCache.isNotifiedLessonEnd = true;
+                stateCache.isNotifiedLessonStart = false;
+                stateCache.isNotifiedRestEnding = false;
+                syncCache();
+            }
+            if (!stateCache.isNotifiedRestEnding && isRestEnding) {
+                vibrate(VIBRATION_NOTIFY_REST_ENDING);
+                stateCache.isNotifiedRestEnding = true;
+                syncCache();
+            }
         }
-        MainWidget.updateAllWidgets(this, title + "\n" + content);
     }
 
     public void syncCache() {
         stateCache.updateTime();
-        stateCache.isNotifiedLessonStart = isNotifiedLessonStart;
-        stateCache.isNotifiedLessonEnd = isNotifiedLessonEnd;
-        stateCache.isNotifiedRestEnding = isNotifiedRestEnding;
         StateCache.save(this);
     }
 
     public void vibrate(long[] tact) {
-        if (settings.vibration) vibrator.vibrate(tact,-1);
+        if (settings.vibration) vibrator.vibrate(tact, -1);
+    }
+
+    public void updateNotification(Context context, String title, String subText, String contentText) {
+        stateCache.foregroundNotificationState = StateCache.FOREGROUND_NOTIFICATION_STATE_MAIN_NOTIFY;
+        syncCache();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setSubText(subText)
+                .setContentText(contentText)
+                .setSilent(true)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setSound(null)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
+        managerCompat.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    public void updateMainNotification(Context context, String title, String subText, String contentText) {
+        if (!settings.notification) {
+            MainNotificationService.stop(context);
+        }
+
+        if (settings.useForegroundNotificationForMain) {
+            MainNotificationService.stop(context);
+            if (isSchoolEnd) {
+                if (stateCache.foregroundNotificationState == StateCache.FOREGROUND_NOTIFICATION_STATE_NOT_SET || stateCache.foregroundNotificationState == StateCache.FOREGROUND_NOTIFICATION_STATE_MAIN_NOTIFY) updateToDefaultNotification();
+            } else {
+                updateNotification(context, title, subText, contentText);
+            }
+
+        } else {
+            updateToDefaultNotification();
+            if (isSchoolEnd) {
+                MainNotificationService.stop(context);
+            } else {
+                MainNotificationService.updateNotification(context, title, subText, contentText);
+            }
+        }
+    }
+
+    public void updateToDefaultNotification() {
+        stateCache.foregroundNotificationState = StateCache.FOREGROUND_NOTIFICATION_STATE_DEFAULT;
+        syncCache();
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(NOTIFICATION_ID, getForegroundNotification());
     }
 }
