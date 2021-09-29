@@ -5,7 +5,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
-import ru.fazziclay.fazziclaylibs.FileUtils;
+import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.R;
 
 public class MainWidget extends AppWidgetProvider {
@@ -15,7 +15,7 @@ public class MainWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            FileUtils.write(context.getExternalFilesDir("").getAbsolutePath() + WIDGETS_PATH, FileUtils.read(context.getExternalFilesDir("").getAbsolutePath() +  WIDGETS_PATH) + "\n"+appWidgetId);
+            FileUtil.write(context.getExternalFilesDir("").getAbsolutePath() + WIDGETS_PATH, FileUtil.read(context.getExternalFilesDir("").getAbsolutePath() +  WIDGETS_PATH) + "\n"+appWidgetId);
         }
     }
 
@@ -33,7 +33,7 @@ public class MainWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
         views.setTextViewText(R.id.main_text, text);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        String[] widgetsIds = FileUtils.read(context.getExternalFilesDir("") + MainWidget.WIDGETS_PATH).split("\n");
+        String[] widgetsIds = FileUtil.read(context.getExternalFilesDir("") + MainWidget.WIDGETS_PATH).split("\n");
         int i = 0;
         while (i < widgetsIds.length) {
             try {

@@ -1,12 +1,14 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.data;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import ru.fazziclay.schoolguide.android.service.ForegroundService;
+
 public class SchoolWeek {
     public static SchoolWeek getSchoolWeek() {
-        return Config.getConfig().schoolWeek;
+        return ForegroundService.getInstance().getSchoolWeek();
     }
 
     SchoolDay monday;
@@ -14,13 +16,23 @@ public class SchoolWeek {
     SchoolDay wednesday;
     SchoolDay thursday;
     SchoolDay friday;
+    SchoolDay saturday;
+    SchoolDay sunday;
 
-    public SchoolWeek(SchoolDay monday, SchoolDay tuesday, SchoolDay wednesday, SchoolDay thursday, SchoolDay friday) {
+    public SchoolWeek(SchoolDay monday,
+                      SchoolDay tuesday,
+                      SchoolDay wednesday,
+                      SchoolDay thursday,
+                      SchoolDay friday,
+                      SchoolDay saturday,
+                      SchoolDay sunday) {
         this.monday = monday;
         this.tuesday = tuesday;
         this.wednesday = wednesday;
         this.thursday = thursday;
         this.friday = friday;
+        this.saturday = saturday;
+        this.sunday = sunday;
     }
 
     public LinkedList<SchoolDay> getList() {
@@ -30,6 +42,8 @@ public class SchoolWeek {
         schoolDays.add(wednesday);
         schoolDays.add(thursday);
         schoolDays.add(friday);
+        schoolDays.add(saturday);
+        schoolDays.add(sunday);
 
         return schoolDays;
     }

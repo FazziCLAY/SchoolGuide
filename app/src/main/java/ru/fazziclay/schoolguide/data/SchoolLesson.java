@@ -1,6 +1,8 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.data;
 
 import androidx.annotation.NonNull;
+
+import ru.fazziclay.schoolguide.Clock;
 
 public class SchoolLesson {
     int startTime;

@@ -26,13 +26,21 @@ public class Clock {
     }
 
     public static String millisToString(long m) {
+        return millisToString(m, false);
+    }
+    public static String millisToString(long m, boolean withoutSeconds) {
         String leftTime = "";
         int left = (int) (m/1000);
 
         int hours = (left / 3600);
         if (hours > 0) leftTime+= NumberUtils.intToFixedLengthString(hours, 2) + ":";
-        leftTime+= NumberUtils.intToFixedLengthString((left % 3600) / 60, 2) + ":";
-        leftTime+= NumberUtils.intToFixedLengthString(left % 60, 2);
+        leftTime+= NumberUtils.intToFixedLengthString((left % 3600) / 60, 2);
+
+        if (!withoutSeconds) {
+            leftTime+= ":" + NumberUtils.intToFixedLengthString(left % 60, 2);
+        }
+
+
 
         return leftTime;
     }

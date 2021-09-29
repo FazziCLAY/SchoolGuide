@@ -1,11 +1,17 @@
-package ru.fazziclay.schoolguide.jsonparser;
+package ru.fazziclay.schoolguide.data.jsonparser;
 
 import androidx.annotation.NonNull;
 
-public class JsonDayLesson {
+public class JsonWeekLesson {
     int id;
-    String startTime;
     int duration;
+    String startTime;
+
+    public JsonWeekLesson(int id, int duration, String startTime) {
+        this.id = id;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
 
     public boolean isUseDefaultDuration() {
         return (duration == -1);

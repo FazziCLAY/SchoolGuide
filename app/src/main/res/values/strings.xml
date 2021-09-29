@@ -4,5 +4,6 @@
     <string name="now_lesson">Now: %s</string>
     <string name="rest">Rest!</string>
     <string name="left">Left: %s</string>
-    <string name="hurry_up">(HURRY UP!)</string>
+    <string name="hurry_up">(HURRY UP)</string>
+    <string name="error_school_file_not_found">d</string>
 </resources>

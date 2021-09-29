@@ -1,10 +1,15 @@
-package ru.fazziclay.schoolguide.jsonparser;
+package ru.fazziclay.schoolguide.data.jsonparser;
 
 import androidx.annotation.NonNull;
 
-public class JsonTeacher {
+public class JsonRootTeacher {
     int id;
     String name;
+
+    public JsonRootTeacher(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public int getId() {
         return id;

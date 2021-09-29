@@ -1,6 +1,8 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.data;
 
 import java.util.LinkedList;
+
+import ru.fazziclay.schoolguide.Clock;
 
 public class SchoolDay {
     LinkedList<SchoolLesson> lessons;

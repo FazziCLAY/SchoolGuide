@@ -4,5 +4,6 @@
     <string name="now_lesson">Сейчас: %s</string>
     <string name="rest">Отдых!</string>
     <string name="left">Осталось: %s</string>
-    <string name="hurry_up">(ПОТОРОПИСЬ!)</string>
+    <string name="hurry_up">(ПОТОРОПИСЬ)</string>
+    <string name="error_school_file_not_found">Файл расписания не найден</string>
 </resources>
