@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ru.fazziclay.schoolguide.data.Settings;
+import ru.fazziclay.schoolguide.data.settings.Settings;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide.data;
+package ru.fazziclay.schoolguide.data.settings;
 
 import android.content.Context;
 

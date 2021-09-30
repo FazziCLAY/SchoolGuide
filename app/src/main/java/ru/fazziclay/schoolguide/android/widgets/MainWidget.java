@@ -5,43 +5,60 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
-import java.util.Objects;
-
 import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.R;
 
 public class MainWidget extends AppWidgetProvider {
-    public static final String WIDGETS_PATH = "/widgets.txt";
+    public static final String WIDGETS_FILE = "widgets.sgpltxt";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            if (!Objects.requireNonNull(FileUtil.read(context.getExternalFilesDir("").getAbsolutePath() + WIDGETS_PATH)).contains(String.valueOf(appWidgetId)))
-            FileUtil.write(context.getExternalFilesDir("").getAbsolutePath() + WIDGETS_PATH, FileUtil.read(context.getExternalFilesDir("").getAbsolutePath() +  WIDGETS_PATH) + "\n"+appWidgetId);
+            addWidget(context, appWidgetId);
         }
     }
 
     @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
+            removeWidget(context, appWidgetId);
+        }
     }
 
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+    public static String getWidgetsFilePath(Context context) {
+        return context.getExternalFilesDir("").getAbsolutePath() + "/" + WIDGETS_FILE;
+    }
+
+    public static void addWidget(Context context, int widgetId) {
+        String fileContent = FileUtil.read(getWidgetsFilePath(context), "");
+        fileContent = fileContent+widgetId+"&";
+
+        FileUtil.write(getWidgetsFilePath(context), fileContent);
+    }
+
+    public static void removeWidget(Context context, int widgetId) {
+        String fileContent = FileUtil.read(getWidgetsFilePath(context), "");
+        fileContent = fileContent.replace(widgetId+"&", "");
+
+        FileUtil.write(getWidgetsFilePath(context), fileContent);
     }
 
     public static void updateAllWidgets(Context context, String text) {
+        String fileContent = FileUtil.read(getWidgetsFilePath(context), "");
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
         views.setTextViewText(R.id.main_text, text);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        String[] widgetsIds = FileUtil.read(context.getExternalFilesDir("") + MainWidget.WIDGETS_PATH).split("\n");
+        String[] widgetsIds = fileContent.split("&");
         int i = 0;
         while (i < widgetsIds.length) {
+            int id;
             try {
-                appWidgetManager.updateAppWidget(Integer.parseInt(widgetsIds[i]), views);
-            } catch (Exception ignored) {}
+                id = Integer.parseInt(widgetsIds[i]);
+            } catch (Exception ignored) {
+                return;
+            }
+            appWidgetManager.updateAppWidget(id, views);
             i++;
         }
     }

@@ -8,25 +8,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import ru.fazziclay.fazziclaylibs.FileUtil;
-import ru.fazziclay.schoolguide.Clock;
+import ru.fazziclay.fazziclaylibs.TimeUtil;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.widgets.MainWidget;
-import ru.fazziclay.schoolguide.data.SchoolDay;
-import ru.fazziclay.schoolguide.data.SchoolDayState;
-import ru.fazziclay.schoolguide.data.SchoolWeek;
-import ru.fazziclay.schoolguide.data.Settings;
-import ru.fazziclay.schoolguide.data.StateCache;
-import ru.fazziclay.schoolguide.data.jsonparser.JsonParser;
+import ru.fazziclay.schoolguide.data.cache.StateCache;
+import ru.fazziclay.schoolguide.data.schedule.ScheduleData;
+import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
+import ru.fazziclay.schoolguide.data.schedule.State;
+import ru.fazziclay.schoolguide.data.settings.Settings;
 
 public class ForegroundService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "Foreground";
@@ -40,11 +42,13 @@ public class ForegroundService extends Service {
     public static final long[] VIBRATION_NOTIFY_REST_ENDING = {0, 250, 250, 220, 100, 220, 100, 220};
 
     static ForegroundService instance = null;
-
-    SchoolWeek schoolWeek = null;
-    Settings settings = null;
-    StateCache stateCache = null;
+    Gson gson = null;
     Vibrator vibrator = null;
+    Settings settings = null;
+    ScheduleData scheduleData = null;
+    ScheduleProvider scheduleProvider = null;
+    StateCache stateCache = null;
+
     Handler loopHandler = null;
     Runnable loopRunnable = null;
 
@@ -56,16 +60,14 @@ public class ForegroundService extends Service {
     @Override
     public void onCreate() {
         instance = this;
+        gson = new GsonBuilder().setPrettyPrinting().create();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        JsonParser jsonParser = new JsonParser();
-        schoolWeek = jsonParser.parse(jsonParser.getJsonRoot(this));
-
-        Gson gson = new Gson();
         settings = gson.fromJson(FileUtil.read(Settings.getSettingsFilePath(this)), Settings.class);
-        if (settings == null) settings = new Settings();
-
+        scheduleData = gson.fromJson(FileUtil.read(ScheduleData.getScheduleFilePath(this), "{}"), ScheduleData.class);
+        scheduleProvider = new ScheduleProvider(getScheduleData());
         stateCache = gson.fromJson(FileUtil.read(StateCache.getStateCacheFilePath(this)), StateCache.class);
+
+        if (settings == null) settings = new Settings();
         if (stateCache == null) stateCache = new StateCache();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -80,7 +82,7 @@ public class ForegroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        loopHandler = new Handler();
+        loopHandler = new Handler(Looper.myLooper());
         loopRunnable = new Runnable() {
             @Override
             public void run() {
@@ -101,12 +103,16 @@ public class ForegroundService extends Service {
         return instance;
     }
 
-    public SchoolWeek getSchoolWeek() {
-        return schoolWeek;
-    }
-
     public Settings getSettings() {
         return settings;
+    }
+
+    public ScheduleData getScheduleData() {
+        return scheduleData;
+    }
+
+    public ScheduleProvider getScheduleProvider() {
+        return scheduleProvider;
     }
 
     public StateCache getStateCache() {
@@ -133,19 +139,10 @@ public class ForegroundService extends Service {
     }
 
     public void loop() {
-        SchoolWeek week = SchoolWeek.getSchoolWeek();
-        if (week == null) {
-            return;
-        }
-        SchoolDay currentDay = week.getCurrentDay();
-        if (currentDay == null) {
-            return;
-        }
-
-        isEarlyFinished = stateCache.earlyFinishedForDay == Clock.getCurrentCalendar().get(Calendar.DAY_OF_YEAR);
-        isSchoolEnd = currentDay.getState() == SchoolDayState.SCHOOL_END || isEarlyFinished;
-        isRestEnding = (currentDay.getLeftUntilLesson() < 3 * 60 * 1000);
-        isLessonEnding = (currentDay.getLeftUntilRest() < 5 * 60 * 1000);
+        isEarlyFinished = stateCache.earlyFinishedForDay == new GregorianCalendar().get(Calendar.DAY_OF_YEAR);
+        isSchoolEnd = getScheduleProvider().getState() == State.SCHOOL_END || isEarlyFinished;
+        isRestEnding = (getScheduleProvider().getLeftUntilLesson() < 3 * 60);
+        isLessonEnding = (getScheduleProvider().getLeftUntilRest() < 5 * 60);
 
         if (!isEarlyFinished && stateCache.earlyFinishedForDay != StateCache.EARLY_FINISHED_FOR_DAY_NOT_SET) {
             stateCache.earlyFinishedForDay = StateCache.EARLY_FINISHED_FOR_DAY_NOT_SET;
@@ -153,29 +150,33 @@ public class ForegroundService extends Service {
         }
 
         String title = "unknown";
-        String subText = null;
+        String subText = null; // возможно пригодится
         String content = "unknown";
 
-        if (currentDay.getState() == SchoolDayState.SCHOOL_REST) {
-            title = getString(R.string.rest) + " " + getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilLesson())) +
-                    (isRestEnding ? " " + getString(R.string.hurry_up) : "");
-            content = getString(R.string.next_lesson, currentDay.getNextLesson());
+        if (getScheduleProvider().getState() == State.SCHOOL_REST) {
+            title = String.format("%s - %s %s",
+                    getString(R.string.rest), // Title
+                    getString(R.string.left, TimeUtil.secondsToDigitalTime(getScheduleProvider().getLeftUntilLesson())), // Left time
+                    (isRestEnding ? getString(R.string.hurry_up) : "") // HURRY UP WARNING
+            );
+            content = getString(R.string.next_lesson, getScheduleProvider().scheduleLessonToString(getScheduleProvider().getNextLesson()));
 
-        } else if (currentDay.getState() == SchoolDayState.SCHOOL_LESSON) {
-            title = getString(R.string.now_lesson, currentDay.getNowLesson());
-            content = getString(R.string.left, Clock.millisToString(currentDay.getLeftUntilRest())) +
-                    ((isLessonEnding && currentDay.getNextLesson() != null) ? " " + getString(R.string.next_lesson, currentDay.getNextLesson()) : "");
+        } else if (getScheduleProvider().getState() == State.SCHOOL_LESSON) {
+            title = getString(R.string.now_lesson, getScheduleProvider().scheduleLessonToString(getScheduleProvider().getNowLesson()));
+
+            content = String.format("%s %s",
+                    getString(R.string.left, TimeUtil.secondsToDigitalTime(getScheduleProvider().getLeftUntilRest())), // Left time
+                    ((isLessonEnding && getScheduleProvider().getNextLesson() != null) ? getString(R.string.next_lesson, getScheduleProvider().scheduleLessonToString(getScheduleProvider().getNextLesson())) : "") // Next lesson
+            );
         }
 
-        if (settings.vibration) {
-            checkVibrationNotify(currentDay.getState());
-        }
+        checkVibrationNotify(getScheduleProvider().getState());
         updateMainNotification(this, title, subText, content);
         MainWidget.updateAllWidgets(this, title + "\n" + content);
     }
 
-    public void checkVibrationNotify(SchoolDayState type) {
-        if (type == SchoolDayState.SCHOOL_LESSON) {
+    public void checkVibrationNotify(State type) {
+        if (type == State.SCHOOL_LESSON) {
             if (!stateCache.isNotifiedLessonStart) {
                 vibrate(VIBRATION_NOTIFY_LESSON_START);
                 stateCache.isNotifiedLessonStart = true;
@@ -184,7 +185,7 @@ public class ForegroundService extends Service {
                 syncCache();
             }
 
-        } else if (type == SchoolDayState.SCHOOL_REST) {
+        } else if (type == State.SCHOOL_REST) {
             if (!stateCache.isNotifiedLessonEnd) {
                 vibrate(VIBRATION_NOTIFY_LESSON_END);
                 stateCache.isNotifiedLessonEnd = true;
@@ -202,11 +203,19 @@ public class ForegroundService extends Service {
 
     public void syncCache() {
         stateCache.updateTime();
-        StateCache.save(this);
+        stateCache.save(StateCache.getStateCacheFilePath(this));
     }
 
     public void vibrate(long[] tact) {
         if (settings.vibration) vibrator.vibrate(tact, -1);
+    }
+
+    public void updateToDefaultNotification() {
+        stateCache.foregroundNotificationState = StateCache.FOREGROUND_NOTIFICATION_STATE_DEFAULT;
+        syncCache();
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(NOTIFICATION_ID, getForegroundNotification());
     }
 
     public void updateNotification(Context context, String title, String subText, String contentText) {
@@ -248,13 +257,5 @@ public class ForegroundService extends Service {
                 MainNotificationService.updateNotification(context, title, subText, contentText);
             }
         }
-    }
-
-    public void updateToDefaultNotification() {
-        stateCache.foregroundNotificationState = StateCache.FOREGROUND_NOTIFICATION_STATE_DEFAULT;
-        syncCache();
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(NOTIFICATION_ID, getForegroundNotification());
     }
 }
