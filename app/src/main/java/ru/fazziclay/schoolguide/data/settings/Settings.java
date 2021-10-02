@@ -8,8 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
+import ru.fazziclay.schoolguide.data.DataBase;
 
-public class Settings {
+public class Settings extends DataBase {
     public final static String SETTINGS_FILE = "settings.json";
 
     public static String getSettingsFilePath(Context context) {
@@ -20,18 +21,20 @@ public class Settings {
         return ForegroundService.getInstance().getSettings();
     }
 
-    public static void save(Context context) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-
-        FileUtil.write(getSettingsFilePath(context), gson.toJson(getSettings(), Settings.class));
-    }
-
     @SerializedName("version")
     public int formatVersion = 1;
     public boolean notification = true;
     public boolean vibration = true;
     public boolean debug = false;
     public boolean useForegroundNotificationForMain = false;
+
+    @Override
+    public void save(String filePath) {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+
+        FileUtil.write(filePath, gson.toJson(this, Settings.class));
+    }
+
 }

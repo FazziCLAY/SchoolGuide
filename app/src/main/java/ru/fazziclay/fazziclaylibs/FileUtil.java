@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -102,5 +103,11 @@ public class FileUtil {
 
     public static String fixPathSeparator(String path) {
         return path.replace("/", File.separator).replace("\\", File.separator);
+    }
+
+    public static File[] getFilesList(String path) {
+        createDirIfNotExists(path);
+        File file = new File(path);
+        return file.listFiles();
     }
 }

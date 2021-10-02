@@ -25,7 +25,7 @@ import java.util.Locale;
 import ru.fazziclay.fazziclaylibs.TimeUtil;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
-import ru.fazziclay.schoolguide.data.schedule.ScheduleData;
+import ru.fazziclay.schoolguide.data.schedule.Schedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.schedule.ScheduledLesson;
 import ru.fazziclay.schoolguide.data.schedule.info.LessonInfo;
@@ -162,7 +162,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
                 .setView(dialogLinearLayout)
                 .setPositiveButton(R.string.apply, (dialogInterface, i) -> {
                     teacherInfo.name = name.getText().toString();
-                    scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                    scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 })
                 .create();
 
@@ -173,7 +173,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(v -> {
             byte a = scheduleProvider.removeTeacherInfo(teacherInfo);
             if (a == 0) {
-                scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 dialog.dismiss();
             } else {
                 Toast.makeText(this, "Ошибка! Сначала сделайте так что бы этот учитель не вёл ни какие уроки!", Toast.LENGTH_LONG).show();
@@ -199,7 +199,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.apply, (dialogInterface, i) -> {
                     lessonInfo.name = name.getText().toString();
                     lessonInfo.teacher = teacherInfoArrayAdapter.getItem(teacherSpinner.getSelectedItemPosition()).id;
-                    scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                    scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 })
                 .create();
 
@@ -213,7 +213,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(v -> {
             byte a = scheduleProvider.removeLessonInfo(lessonInfo);
             if (a == 0) {
-                scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 dialog.dismiss();
             } else {
                 Toast.makeText(this, "Ошибка! Сначала сделайте так что бы этот урок не был в расписании!", Toast.LENGTH_LONG).show();
@@ -246,7 +246,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
                     String teacherName = name.getText().toString();
                     if (teacherName.equals("")) return;
                     scheduleProvider.addTeacherInfo(teacherName);
-                    scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                    scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 })
                 .create();
         a.show();
@@ -281,7 +281,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
                         return;
                     }
                     scheduleProvider.addLessonInfo(nameEditText.getText().toString(), teacherInfoArrayAdapter.getItem(selectedItemPosition).id);
-                    scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                    scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 })
                 .create();
         a.show();
@@ -350,7 +350,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
                     }
 
                     weekDay.add(lessonPositionAdapter.getItem(selectedItemPosition)-1, new ScheduledLesson(teacherInfoArrayAdapter.getItem(selectedItemPositionLesson).id, _startTime, _duration));
-                    scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                    scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 })
                 .create();
         a.show();
@@ -407,7 +407,7 @@ public class ScheduleConfiguratorActivity extends AppCompatActivity {
                     int ssda = lessonPositionAdapter.getItem(lessonPositionSpinet.getSelectedItemPosition())-1;
                     if (ssda < 0) ssda = 0;
                     weekDay.add(ssda, scheduledLesson);
-                    scheduleProvider.save(ScheduleData.getScheduleFilePath(this));
+                    scheduleProvider.save(Schedule.getScheduleFilePath(this));
                 })
                 .create();
 

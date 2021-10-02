@@ -27,6 +27,7 @@ public class HomeActivity extends AppCompatActivity {
     Button settingsButton = null;
     Button scheduleConfiguratorButton = null;
     Button earlyFinishButton = null;
+    Button restorePointsButton = null;
 
     public void setEarlyFinishButton() {
         if (ForegroundService.getInstance().isEarlyFinished()) {
@@ -59,12 +60,16 @@ public class HomeActivity extends AppCompatActivity {
         settingsButton = new Button(this);
         earlyFinishButton = new Button(this);
         scheduleConfiguratorButton = new Button(this);
+        restorePointsButton = new Button(this);
 
         settingsButton.setText(R.string.settings);
         settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
 
         scheduleConfiguratorButton.setText(R.string.schedule_configurator);
         scheduleConfiguratorButton.setOnClickListener(v -> startActivity(new Intent(this, ScheduleConfiguratorActivity.class)));
+
+        restorePointsButton.setText(R.string.restore_points);
+        restorePointsButton.setOnClickListener(v -> startActivity(new Intent(this, RestorePointActivity.class)));
 
         StringBuilder text = new StringBuilder();
         ScheduleProvider scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
@@ -94,6 +99,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.root.addView(earlyFinishButton);
         binding.root.addView(settingsButton);
         binding.root.addView(scheduleConfiguratorButton);
+        binding.root.addView(restorePointsButton);
         binding.schoolRaspisanie.addView(scheduleText);
 
         setEarlyFinishButton();

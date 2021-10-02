@@ -25,7 +25,7 @@ import ru.fazziclay.fazziclaylibs.TimeUtil;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.widgets.MainWidget;
 import ru.fazziclay.schoolguide.data.cache.StateCache;
-import ru.fazziclay.schoolguide.data.schedule.ScheduleData;
+import ru.fazziclay.schoolguide.data.restore_point.RestorePointProvider;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.schedule.State;
 import ru.fazziclay.schoolguide.data.settings.Settings;
@@ -45,8 +45,8 @@ public class ForegroundService extends Service {
     Gson gson = null;
     Vibrator vibrator = null;
     Settings settings = null;
-    ScheduleData scheduleData = null;
     ScheduleProvider scheduleProvider = null;
+    RestorePointProvider restorePointProvider = null;
     StateCache stateCache = null;
 
     Handler loopHandler = null;
@@ -63,8 +63,8 @@ public class ForegroundService extends Service {
         gson = new GsonBuilder().setPrettyPrinting().create();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         settings = gson.fromJson(FileUtil.read(Settings.getSettingsFilePath(this)), Settings.class);
-        scheduleData = gson.fromJson(FileUtil.read(ScheduleData.getScheduleFilePath(this), "{}"), ScheduleData.class);
-        scheduleProvider = new ScheduleProvider(getScheduleData());
+        scheduleProvider = new ScheduleProvider(this);
+        restorePointProvider = new RestorePointProvider(this);
         stateCache = gson.fromJson(FileUtil.read(StateCache.getStateCacheFilePath(this)), StateCache.class);
 
         if (settings == null) settings = new Settings();
@@ -107,12 +107,12 @@ public class ForegroundService extends Service {
         return settings;
     }
 
-    public ScheduleData getScheduleData() {
-        return scheduleData;
-    }
-
     public ScheduleProvider getScheduleProvider() {
         return scheduleProvider;
+    }
+
+    public RestorePointProvider getRestorePointProvider() {
+        return restorePointProvider;
     }
 
     public StateCache getStateCache() {

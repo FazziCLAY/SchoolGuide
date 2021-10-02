@@ -16,4 +16,5 @@
     <string name="ok" translatable="false">OK</string>
     <string name="delete">Delete</string>
     <string name="schedule_title">Schedule</string>
+    <string name="restore_points">Restore Points</string>
 </resources>

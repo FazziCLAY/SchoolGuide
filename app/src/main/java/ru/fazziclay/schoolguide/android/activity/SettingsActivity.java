@@ -22,15 +22,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.notification.setOnClickListener(v -> {
             Settings.getSettings().notification = binding.notification.isChecked();
-            Settings.save(this);
+            Settings.getSettings().save(Settings.getSettingsFilePath(this));
         });
         binding.vibration.setOnClickListener(v -> {
             Settings.getSettings().vibration = binding.vibration.isChecked();
-            Settings.save(this);
+            Settings.getSettings().save(Settings.getSettingsFilePath(this));
         });
         binding.useForegroundNotificationForMain.setOnClickListener(v -> {
             Settings.getSettings().useForegroundNotificationForMain = binding.useForegroundNotificationForMain.isChecked();
-            Settings.save(this);
+            Settings.getSettings().save(Settings.getSettingsFilePath(this));
         });
     }
 }

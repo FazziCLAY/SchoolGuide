@@ -10,7 +10,7 @@ import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.DataBase;
 
 public class StateCache extends DataBase {
-    public static final String STATE_CACHE_FILE = "state_cache.json";
+    private static final String STATE_CACHE_FILE = "state_cache.json";
 
     public static String getStateCacheFilePath(Context context) {
         return context.getExternalCacheDir().getAbsoluteFile() + "/" + STATE_CACHE_FILE;
@@ -35,15 +35,6 @@ public class StateCache extends DataBase {
 
     public void updateTime() {
         cacheCreateTime = System.currentTimeMillis();
-    }
-
-    @Deprecated
-    public static void save(Context context) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-
-        FileUtil.write(getStateCacheFilePath(context), gson.toJson(getCache(), StateCache.class));
     }
 
     @Override

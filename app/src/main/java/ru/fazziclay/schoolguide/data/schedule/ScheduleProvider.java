@@ -1,25 +1,27 @@
 package ru.fazziclay.schoolguide.data.schedule;
 
+import android.content.Context;
+
+import com.google.gson.Gson;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.data.schedule.info.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.info.TeacherInfo;
 
 public class ScheduleProvider {
     UUID instanceUUID;
-    ScheduleData scheduleData;
+    Schedule schedule;
 
-    public ScheduleProvider(ScheduleData scheduleData) {
+    public ScheduleProvider(Context context) {
         instanceUUID = UUID.randomUUID();
-        this.scheduleData = scheduleData;
-    }
-
-    public UUID getInstanceUUID() {
-        return instanceUUID;
+        Gson gson = new Gson();
+        this.schedule = gson.fromJson(FileUtil.read(Schedule.getScheduleFilePath(context), "{}"), Schedule.class);
     }
 
     public long getCurrentTimeInSeconds() {
@@ -107,13 +109,13 @@ public class ScheduleProvider {
         Calendar calendar = new GregorianCalendar();
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        if (dayOfWeek == Calendar.MONDAY) return scheduleData.week.monday;
-        if (dayOfWeek == Calendar.TUESDAY) return scheduleData.week.tuesday;
-        if (dayOfWeek == Calendar.WEDNESDAY) return scheduleData.week.wednesday;
-        if (dayOfWeek == Calendar.THURSDAY) return scheduleData.week.thursday;
-        if (dayOfWeek == Calendar.FRIDAY) return scheduleData.week.friday;
-        if (dayOfWeek == Calendar.SATURDAY) return scheduleData.week.saturday;
-        if (dayOfWeek == Calendar.SUNDAY) return scheduleData.week.sunday;
+        if (dayOfWeek == Calendar.MONDAY) return schedule.week.monday;
+        if (dayOfWeek == Calendar.TUESDAY) return schedule.week.tuesday;
+        if (dayOfWeek == Calendar.WEDNESDAY) return schedule.week.wednesday;
+        if (dayOfWeek == Calendar.THURSDAY) return schedule.week.thursday;
+        if (dayOfWeek == Calendar.FRIDAY) return schedule.week.friday;
+        if (dayOfWeek == Calendar.SATURDAY) return schedule.week.saturday;
+        if (dayOfWeek == Calendar.SUNDAY) return schedule.week.sunday;
 
         throw new Error("Day of week not found! || День недели не найден");
     }
@@ -123,7 +125,7 @@ public class ScheduleProvider {
      * @return TeacherInfo по запрошеному teacherInfoId
      * **/
     public TeacherInfo getTeacherInfoById(short teacherInfoId) {
-        List<TeacherInfo> list = scheduleData.teachers;
+        List<TeacherInfo> list = schedule.teachers;
         int i = 0;
         while (i < list.size()) {
             TeacherInfo q = list.get(i);
@@ -138,7 +140,7 @@ public class ScheduleProvider {
      * @return LessonInfo по запрошеному lessonInfoId
      * **/
     public LessonInfo getLessonInfoById(short lessonInfoId) {
-        List<LessonInfo> list = scheduleData.lessons;
+        List<LessonInfo> list = schedule.lessons;
         int i = 0;
         while (i < list.size()) {
             LessonInfo q = list.get(i);
@@ -173,33 +175,33 @@ public class ScheduleProvider {
     }
 
     public ScheduleWeek getScheduleWeek() {
-        return scheduleData.week;
+        return schedule.week;
     }
 
     public List<TeacherInfo> getTeacherInfoList() {
-        return scheduleData.teachers;
+        return schedule.teachers;
     }
 
     public List<LessonInfo> getLessonsInfoList() {
-        return scheduleData.lessons;
+        return schedule.lessons;
     }
 
     public void save(String filePath) {
-        scheduleData.save(filePath);
+        schedule.save(filePath);
     }
 
     /**
      * @return status. 0 - successes; 1 - error
      * **/
     public byte removeTeacherInfo(TeacherInfo teacherInfo) {
-        List<LessonInfo> list = scheduleData.lessons;
+        List<LessonInfo> list = schedule.lessons;
         int i = 0;
         while (i < list.size()) {
             LessonInfo q = list.get(i);
             if (q.teacher == teacherInfo.id) return 1;
             i++;
         }
-        scheduleData.teachers.remove(teacherInfo);
+        schedule.teachers.remove(teacherInfo);
         return 0;
     }
 
@@ -214,10 +216,8 @@ public class ScheduleProvider {
             i++;
         }
 
-        TeacherInfo teacherInfo = new TeacherInfo();
-        teacherInfo.name = name;
-        teacherInfo.id = id;
-        scheduleData.teachers.add(teacherInfo);
+        TeacherInfo teacherInfo = new TeacherInfo(id, name);
+        schedule.teachers.add(teacherInfo);
     }
 
     public void addLessonInfo(String name, short teacher) {
@@ -231,11 +231,8 @@ public class ScheduleProvider {
             i++;
         }
 
-        LessonInfo teacherInfo = new LessonInfo();
-        teacherInfo.name = name;
-        teacherInfo.teacher = teacher;
-        teacherInfo.id = id;
-        scheduleData.lessons.add(teacherInfo);
+        LessonInfo teacherInfo = new LessonInfo(id, teacher, name);
+        schedule.lessons.add(teacherInfo);
     }
 
     public byte removeLessonInfo(LessonInfo lessonInfo) {
@@ -252,7 +249,7 @@ public class ScheduleProvider {
             i++;
         }
 
-        scheduleData.lessons.remove(lessonInfo);
+        schedule.lessons.remove(lessonInfo);
         return 0;
     }
 
@@ -260,5 +257,13 @@ public class ScheduleProvider {
         return String.format("%s (%s)",
                 getLessonInfoById(scheduledLesson.id).name,
                 getTeacherInfoById(getLessonInfoById(scheduledLesson.id).teacher).name);
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
     }
 }
