@@ -21,4 +21,13 @@
     </style>
 
     <style name="Theme.TestNetworkData.AppWidgetContainer" parent="Theme.TestNetworkData.AppWidgetContainerParent" />
+
+    <style name="Theme.TestNetworkData.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.TestNetworkData.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.TestNetworkData.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

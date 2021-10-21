@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="next_lesson">След. урок: %s</string>
-    <string name="now_lesson">Сейчас: %s</string>
+    <string name="next_lesson">След. урок: %s (%s)</string>
+    <string name="now_lesson">Сейчас: %s (%s)</string>
     <string name="rest">Отдых!</string>
     <string name="left">Осталось: %s</string>
     <string name="hurry_up">(ПОТОРОПИСЬ)</string>
-    <string name="error_school_file_not_found">Файл расписания не найден</string>
     <string name="settings">Настройки</string>
     <string name="schedule_configurator">Настройщик расписания</string>
     <string name="teachers_title">Преподователи</string>
@@ -15,4 +14,11 @@
     <string name="apply">Приминить</string>
     <string name="delete">Удалить</string>
     <string name="schedule_title">Расписание</string>
+    <string name="restore_points">Точки востановления</string>
+    <string name="action_settings">Настройки</string>
+    <string name="teacherName_hint">Имя учителя</string>
+    <string name="teacherDelete">Удалить</string>
+    <string name="teacherSave">Сохранить</string>
+    <string name="lessonName_hint">Имя урока</string>
+    <string name="fill_all_fields">Заполните все необходимые поля!</string>
 </resources>

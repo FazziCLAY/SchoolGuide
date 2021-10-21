@@ -2,16 +2,14 @@ package ru.fazziclay.schoolguide.data.restore_point;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
-
+import ru.fazziclay.schoolguide.data.BaseData;
 import ru.fazziclay.schoolguide.data.schedule.Schedule;
 
-public class RestorePoint {
+public class RestorePoint extends BaseData {
     public transient String fileName = null;
-    public int version = 1;
-    public String name = null;
-    public long createdTime = 0;
-    public Schedule schedule = new Schedule();
+    public String name;
+    public long createdTime;
+    public Schedule schedule;
 
     public RestorePoint(String name,
                         long createdTime,
@@ -21,13 +19,11 @@ public class RestorePoint {
         this.schedule = schedule;
     }
 
-    public RestorePoint() {}
-
     @NonNull
     @Override
     public String toString() {
         return "RestorePoint{" +
-                "version=" + version +
+                "formatVersion=" + formatVersion +
                 ", name='" + name + '\'' +
                 ", createdTime=" + createdTime +
                 ", schedule=" + schedule +

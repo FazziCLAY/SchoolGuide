@@ -4,11 +4,13 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ru.fazziclay.schoolguide.data.settings.Settings;
+import ru.fazziclay.schoolguide.android.service.ForegroundService;
+import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
     ActivitySettingsBinding binding;
+    SettingsProvider settingsProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,21 +18,19 @@ public class SettingsActivity extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.notification.setChecked(Settings.getSettings().notification);
-        binding.vibration.setChecked(Settings.getSettings().vibration);
-        binding.useForegroundNotificationForMain.setChecked(Settings.getSettings().useForegroundNotificationForMain);
+        settingsProvider = ForegroundService.getInstance().getSettingsProvider(); // TODO: 21-Oct-21 create provider center
 
-        binding.notification.setOnClickListener(v -> {
-            Settings.getSettings().notification = binding.notification.isChecked();
-            Settings.getSettings().save(Settings.getSettingsFilePath(this));
-        });
-        binding.vibration.setOnClickListener(v -> {
-            Settings.getSettings().vibration = binding.vibration.isChecked();
-            Settings.getSettings().save(Settings.getSettingsFilePath(this));
-        });
-        binding.useForegroundNotificationForMain.setOnClickListener(v -> {
-            Settings.getSettings().useForegroundNotificationForMain = binding.useForegroundNotificationForMain.isChecked();
-            Settings.getSettings().save(Settings.getSettingsFilePath(this));
-        });
+        initLayout();
+    }
+
+    private void initLayout() {
+        binding.notification.setChecked(settingsProvider.isNotification());
+        binding.notification.setOnClickListener(ignore -> settingsProvider.setNotification(binding.notification.isChecked()));
+
+        binding.vibration.setChecked(settingsProvider.isVibration());
+        binding.vibration.setOnClickListener(ignore -> settingsProvider.setVibration(binding.vibration.isChecked()));
+
+        binding.useForegroundNotificationForMain.setChecked(settingsProvider.isUseForegroundNotificationForMain());
+        binding.useForegroundNotificationForMain.setOnClickListener(ignore -> settingsProvider.setUseForegroundNotificationForMain(binding.useForegroundNotificationForMain.isChecked()));
     }
 }

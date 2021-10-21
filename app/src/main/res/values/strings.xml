@@ -1,11 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">SchoolGuide</string>
-    <string name="next_lesson">Next: %s</string>
-    <string name="now_lesson">Now: %s</string>
+    <string name="next_lesson">Next: %s (%s)</string>
+    <string name="now_lesson">Now: %s (%s)</string>
     <string name="rest">Rest!</string>
     <string name="left">Left: %s</string>
     <string name="hurry_up">(HURRY UP)</string>
-    <string name="error_school_file_not_found">d</string>
     <string name="settings">Settings</string>
     <string name="schedule_configurator">Schedule Configurator</string>
     <string name="teachers_title">Teachers</string>
@@ -17,4 +16,10 @@
     <string name="delete">Delete</string>
     <string name="schedule_title">Schedule</string>
     <string name="restore_points">Restore Points</string>
+    <string name="action_settings">Settings</string>
+    <string name="teacherName_hint">Teacher name</string>
+    <string name="teacherDelete">Delete</string>
+    <string name="teacherSave">Save</string>
+    <string name="lessonName_hint">Lesson name</string>
+    <string name="fill_all_fields">Fill in all the filelds!</string>
 </resources>

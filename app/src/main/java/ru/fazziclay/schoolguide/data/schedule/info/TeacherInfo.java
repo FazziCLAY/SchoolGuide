@@ -1,24 +1,21 @@
 package ru.fazziclay.schoolguide.data.schedule.info;
 
-import androidx.annotation.NonNull;
-
 public class TeacherInfo implements Cloneable {
-    public short id;
-    public String name;
+    private String name;
 
-    public TeacherInfo(short id, String name) {
-        this.id = id;
+    public TeacherInfo(String name) {
         this.name = name;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return String.format("%s (%s)", name, id);
+    public String getName() {
+        return name;
     }
 
-    @NonNull
-    public TeacherInfo clone() {
-        return new TeacherInfo(this.id, this.name);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static TeacherInfo createNone() {
+        return new TeacherInfo("[BUG] Blue Bear");
     }
 }
