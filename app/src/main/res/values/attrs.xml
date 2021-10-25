@@ -1,7 +1,7 @@
 <resources>
-    <declare-styleable name="AppWidgetAttrs">
-        <attr name="appWidgetPadding" format="dimension" />
-        <attr name="appWidgetInnerRadius" format="dimension" />
-        <attr name="appWidgetRadius" format="dimension" />
+    <declare-styleable name="SchoolGuide.Main">
+        <attr name="activityBackground" format="color" />
+        <attr name="editTextHintColor" format="color" />
+        <attr name="checkboxTextColor" format="color" />
     </declare-styleable>
 </resources>

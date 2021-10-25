@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".android.activity.developer.DeveloperManifestUtilsActivity"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/json"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textColorHint="@color/design_default_color_primary_dark"
+        android:hint="Json"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/prettyPrintJson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pretty print json"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/checkJson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check json"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AES ENCRYPT"
+        android:textColor="@color/white"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/secretKey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="decrypt"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

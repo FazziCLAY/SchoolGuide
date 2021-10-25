@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/activityBackground"
+    tools:context=".android.activity.schedule.ScheduleLessonEditActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10sp">
+
+        <Spinner
+            android:id="@+id/lesson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/startTime"
+            android:background="#1f666666"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_margin="2sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:text="@string/schedule_lesson_startTime" />
+
+        <TextView
+            android:id="@+id/duration"
+            android:background="#1f666666"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_margin="2sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:text="@string/schedule_lesson_duration" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:text="@string/abc_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="3sp"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:text="@string/abc_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="3sp"
+                style="?android:attr/buttonBarButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

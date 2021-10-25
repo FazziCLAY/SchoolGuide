@@ -3,34 +3,35 @@ package ru.fazziclay.schoolguide.data.schedule;
 import com.google.gson.annotations.SerializedName;
 
 public enum State {
-    @SerializedName("lesson_ending")
-    LESSON_ENDING, // Урок в школе
-
     @SerializedName("lesson")
-    LESSON, // Урок в школе
-
-    @SerializedName("rest_ending")
-    REST_ENDING, // Отдых оканчивается
+    LESSON, // Урок
 
     @SerializedName("rest")
     REST,   // Отдых,
 
     @SerializedName("end")
-    END;     // Уроки окончены
+    END;    // Уроки окончены
+
+    boolean isEnding = false;
+
+    public State setEnding(boolean ending) {
+        isEnding = ending;
+        return this;
+    }
+
+    public boolean isEnding() {
+        return isEnding;
+    }
 
     public boolean isLesson() {
-        return this == LESSON || this == LESSON_ENDING;
+        return this == LESSON;
     }
 
     public boolean isRest() {
-        return this == REST || this == REST_ENDING;
+        return this == REST;
     }
 
     public boolean isEnded() {
         return this == END;
-    }
-
-    public boolean isEnding() {
-        return this == REST_ENDING || this == LESSON_ENDING;
     }
 }

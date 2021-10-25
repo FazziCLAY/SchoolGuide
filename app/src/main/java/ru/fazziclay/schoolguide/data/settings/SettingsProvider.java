@@ -3,7 +3,10 @@ package ru.fazziclay.schoolguide.data.settings;
 import com.google.gson.Gson;
 
 import android.content.Context;
-import ru.fazziclay.fazziclaylibs.FileUtil;
+
+import java.util.UUID;
+
+import ru.fazziclay.schoolguide.util.FileUtil;
 import ru.fazziclay.schoolguide.data.BaseData;
 import ru.fazziclay.schoolguide.data.BaseProvider;
 
@@ -13,32 +16,56 @@ public class SettingsProvider extends BaseProvider {
     public SettingsProvider(Context context) {
         filePath = context.getExternalFilesDir(null).getAbsolutePath().concat("/").concat(SETTINGS_FILE);
         data = load();
+
+        if (data.isFormatVersionDefault()) data.formatVersion = 2;
+        save();
+    }
+
+    public Settings getSettings() {
+        return (Settings) data;
     }
 
     public void setNotification(boolean s) {
-        ((Settings) data).notification = s;
+        getSettings().isNotification = s;
         save();
     }
 
     public boolean isNotification() {
-        return ((Settings) data).notification;
+        return getSettings().isNotification;
     }
 
     public void setVibration(boolean s) {
-        ((Settings) data).vibration = s;
+        getSettings().isVibration = s;
         save();
     }
     public boolean isVibration() {
-        return ((Settings) data).vibration;
+        return getSettings().isVibration;
     }
 
-    public void setUseForegroundNotificationForMain(boolean s) {
-        ((Settings) data).useForegroundNotificationForMain = s;
+    public void getUserNotification(UserNotification s) {
+        getSettings().userNotification = s;
         save();
     }
 
-    public boolean isUseForegroundNotificationForMain() {
-        return ((Settings) data).useForegroundNotificationForMain;
+    public UserNotification getUserNotification() {
+        return getSettings().userNotification;
+    }
+
+    public void setUserNotification(UserNotification s) {
+        getSettings().userNotification = s;
+        save();
+    }
+
+    public void setSelectedLocalSchedule(UUID uuid) {
+        getSettings().selectedLocalSchedule = uuid;
+    }
+
+    public UUID getSelectedLocalSchedule() {
+        return getSettings().selectedLocalSchedule;
+    }
+
+    public DeveloperSettings getDeveloperSettings() {
+        return getSettings().developerSettings;
     }
 
     @Override

@@ -1,38 +1,33 @@
 package ru.fazziclay.schoolguide.data.schedule;
 
-import ru.fazziclay.schoolguide.data.schedule.info.LessonInfo;
-import ru.fazziclay.schoolguide.data.schedule.info.TeacherInfo;
+
+import androidx.annotation.NonNull;
 
 import java.util.UUID;
 
-public class Lesson {
-    private UUID lessonInfo  = null;
-    private UUID teacherInfo = null;
-    private TimeSegment time = null;
+public class Lesson extends TimeSegment {
+    private UUID lesson;
 
-    public LessonInfo getLessonInfo() {
-        return null;
+    public Lesson(UUID lesson, int start, int duration) {
+        super(start, duration);
+        this.lesson = lesson;
     }
 
-    public TeacherInfo getTeacherInfo() {
-        return null;
+    public UUID getLessonInfo() {
+        return lesson;
     }
 
-    public TimeSegment getTime() {
-        return time;
+    public void setLessonInfo(UUID lesson) {
+        this.lesson = lesson;
     }
 
-    public void setLessonInfo(LessonInfo lessonInfo) {
-        this.lessonInfo = null;
-        throw new Error("DEPRECATED FUNCTION CALLED!");
-    }
-
-    public void setTeacherInfo(TeacherInfo teacherInfo) {
-        this.teacherInfo = null;
-        throw new Error("DEPRECATED FUNCTION CALLED!");
-    }
-
-    public void setTime(TimeSegment time) {
-        this.time = time;
+    @NonNull
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "lesson=" + lesson +
+                ", start=" + start +
+                ", duration=" + duration +
+                '}';
     }
 }

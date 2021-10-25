@@ -1,8 +1,8 @@
 package ru.fazziclay.schoolguide.data.schedule;
 
 public class TimeSegment {
-    private int start;    // in seconds
-    private int duration; // in seconds
+    int start;    // in seconds
+    int duration; // in seconds
 
     public TimeSegment(int start, int duration) {
         this.start = start;

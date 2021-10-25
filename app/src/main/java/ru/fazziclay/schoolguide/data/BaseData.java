@@ -4,14 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
-import ru.fazziclay.fazziclaylibs.FileUtil;
+import ru.fazziclay.schoolguide.util.FileUtil;
 
 public abstract class BaseData {
     @SerializedName("version")
-    public int formatVersion = 0;
+    public int formatVersion = -1;
 
     public boolean isFormatVersionDefault() {
-        return (formatVersion == 0);
+        return (formatVersion == -1);
     }
 
     /**

@@ -4,14 +4,10 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import ru.fazziclay.fazziclaylibs.FileUtil;
 import ru.fazziclay.schoolguide.data.BaseData;
 import ru.fazziclay.schoolguide.data.BaseProvider;
 import ru.fazziclay.schoolguide.data.schedule.State;
-import ru.fazziclay.schoolguide.data.settings.Settings;
+import ru.fazziclay.schoolguide.util.FileUtil;
 
 public class StateCacheProvider extends BaseProvider {
     private static final String STATE_CACHE_FILE = "state_cache.json";
@@ -19,47 +15,67 @@ public class StateCacheProvider extends BaseProvider {
     public StateCacheProvider(Context context) {
         filePath = context.getExternalCacheDir().getAbsolutePath().concat("/").concat(STATE_CACHE_FILE);
         data = load();
+        if (data.isFormatVersionDefault()) data.formatVersion = 1;
     }
 
-    public void setEarlyFinishedForDay(short forDay) {
-        ((StateCache) data).earlyFinishedForDay = forDay;
-        save();
+    public StateCache getStateCache() {
+        return (StateCache) data;
     }
 
-    public short getEarlyFinishedDay() {
-        return ((StateCache) data).earlyFinishedForDay;
+    public void setForegroundNotificationState(NotificationState s) {
+        if (getStateCache().foregroundNotificationState != s) {
+            getStateCache().foregroundNotificationState = s;
+            save();
+        }
     }
 
-    public void earlyFinishForToday() {
-        setEarlyFinishedForDay((short) new GregorianCalendar().get(Calendar.DAY_OF_YEAR));
+    public boolean isForegroundNotificationStateDefault() {
+        return getStateCache().foregroundNotificationState == NotificationState.DEFAULT;
     }
 
-    public void cancelEarlyFinish() {
-        setEarlyFinishedForDay(StateCache.EARLY_FINISHED_FOR_DAY_NOT_SET);
+    public void setExternalNotificationState(NotificationState s) {
+        if (getStateCache().externalNotificationState != s) {
+            getStateCache().externalNotificationState = s;
+            save();
+        }
     }
 
-    public boolean isEarlyFinishedForToday() {
-        return (getEarlyFinishedDay() == (short) new GregorianCalendar().get(Calendar.DAY_OF_YEAR));
-    }
-
-    public void setForegroundNotificationState(short s) {
-        ((StateCache) data).foregroundNotificationState = s;
-        save();
-    }
-
-    public boolean isForegroundNotificationStateNotDefault() {
-        return ((StateCache) data).foregroundNotificationState != StateCache.FOREGROUND_NOTIFICATION_STATE_DEFAULT;
+    public boolean isExternalNotificationStateDefault() {
+        return getStateCache().externalNotificationState == NotificationState.DEFAULT;
     }
 
     public State getVibratedFor() {
-        return ((StateCache) data).vibratedFor;
+        return getStateCache().vibratedFor;
     }
 
     public void setVibratedFor(State state) {
-        ((StateCache) data).vibratedFor = state;
-        save();
+        if (getStateCache().vibratedFor != state) {
+            getStateCache().vibratedFor = state;
+            save();
+        }
     }
 
+    public int getLessonsActivityLastClickedTo() {
+        return getStateCache().lessonsActivityLastClickedTo;
+    }
+
+    public void setLessonsActivityLastClickedTo(int i) {
+        if (getStateCache().lessonsActivityLastClickedTo != i) {
+            getStateCache().lessonsActivityLastClickedTo = i;
+            save();
+        }
+    }
+
+    public long getLessonsActivityLastClickedTime() {
+        return getStateCache().lessonsActivityLastClickedTime;
+    }
+
+    public void setLessonsActivityLastClickedTime(long i) {
+        if (getStateCache().lessonsActivityLastClickedTime != i) {
+            getStateCache().lessonsActivityLastClickedTime = i;
+            save();
+        }
+    }
 
     @Override
     public BaseData load() {
