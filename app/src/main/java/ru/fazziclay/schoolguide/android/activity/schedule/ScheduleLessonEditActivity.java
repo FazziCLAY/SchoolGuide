@@ -71,6 +71,7 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         if (extras.containsKey(KEY_LESSON_POSITION)) {
             lessonPosition = extras.getInt(KEY_LESSON_POSITION);
             isCreatingMode = false;
+
         } else {
             isCreatingMode = true;
         }
@@ -78,7 +79,9 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
         localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
         dayOfWeekLessons = localSchedule.get(dayOfWeek);
-        lesson = dayOfWeekLessons.get(lessonPosition);
+        if (!isCreatingMode) {
+            lesson = dayOfWeekLessons.get(lessonPosition);
+        }
 
         String localizedDayOfWeek = dateFormatSymbols.getWeekdays()[dayOfWeek].toLowerCase();
         if (isCreatingMode) {

@@ -1,6 +1,5 @@
 package ru.fazziclay.schoolguide.data.schedule;
 
-
 import androidx.annotation.NonNull;
 
 import java.util.UUID;

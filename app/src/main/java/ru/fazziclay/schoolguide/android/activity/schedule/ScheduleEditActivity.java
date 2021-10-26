@@ -142,7 +142,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 textView.setTextColor(Color.GREEN);
                 textView.setText(String.format("[%s - %s] %s",
                         TimeUtil.secondsToHumanTime(lesson.getStart(), true),
-                        TimeUtil.secondsToHumanTime(lesson.getEnd(), true),
+                        TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60-1), true),
                         getLessonText(lesson)));
                 textView.setOnClickListener(ignore -> startActivity(new Intent(context, ScheduleLessonEditActivity.class)
                         .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())

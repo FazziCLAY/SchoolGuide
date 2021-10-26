@@ -68,6 +68,15 @@ public class SettingsProvider extends BaseProvider {
         return getSettings().developerSettings;
     }
 
+    public AppTheme getTheme() {
+        return getSettings().theme;
+    }
+
+    public void setTheme(AppTheme theme) {
+        getSettings().theme = theme;
+        save();
+    }
+
     @Override
     public BaseData load() {
         Gson gson = new Gson();

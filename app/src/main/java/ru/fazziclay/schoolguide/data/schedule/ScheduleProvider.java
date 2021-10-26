@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ScheduleProvider extends BaseProvider {
     private static final String SCHEDULE_FILE = "schedule.json";
-    private static final int CURRENT_FORMAT_VERSION = 2;
+    public static final int CURRENT_FORMAT_VERSION = 4;
 
     public ScheduleProvider(Context context) {
         filePath = context.getExternalFilesDir(null).getAbsolutePath().concat("/").concat(SCHEDULE_FILE);

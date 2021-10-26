@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
@@ -56,10 +58,21 @@ public class SchedulesActivity extends AppCompatActivity {
 
         // Fab
         binding.addScheduleButton.setOnClickListener(ignore -> {
-            UUID newUUID = scheduleProvider.addLocalSchedule(new LocalSchedule("New local schedule"));
-            Intent intent = new Intent(this, ScheduleEditActivity.class)
-                    .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, newUUID.toString());
-            startActivity(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("_123")
+                    .setMessage("_ create new empty?")
+                    .setView(null)
+                    .setPositiveButton("_create", (dialogInterface, i) -> {
+                        UUID newUUID = scheduleProvider.addLocalSchedule(new LocalSchedule("New local schedule"));
+                        Intent intent = new Intent(this, ScheduleEditActivity.class)
+                                .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, newUUID.toString());
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(R.string.abc_cancel, (dialogInterface, i) -> {
+
+                    });
+
+            builder.show();
         });
     }
 }

@@ -7,6 +7,7 @@ import ru.fazziclay.schoolguide.data.BaseData;
 public class Manifest extends BaseData {
     int manifestKey = 0;
     AppVersion latestVersion = null;
+    AppVersion appVersion = null;
 
     @NonNull
     @Override

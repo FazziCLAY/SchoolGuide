@@ -8,6 +8,7 @@ public class Settings extends BaseData {
     boolean isVibration = true;
     boolean isNotification = true;
     UserNotification userNotification = UserNotification.EXTERNAL;
+    AppTheme theme = AppTheme.AUTO;
     UUID selectedLocalSchedule = null;
     DeveloperSettings developerSettings = new DeveloperSettings();
 }
