@@ -5,22 +5,32 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 public class AppVersion {
-    int versionCode = 0;
-    String versionName = "Unknown";
-    String versionPageUrl = "https://github.com/fazziclay/schoolguide/";
-    String directDownloadUrl = "https://github.com/fazziclay/scoolguide/";
+    int code = 0;
+    String name = "Unknown";
+    String pageUrl = "https://github.com/fazziclay/schoolguide/";
+    String downloadUrl = "https://github.com/fazziclay/scoolguide/";
     HashMap<String, String> changelog = new HashMap<>();
 
-    public AppVersion() {}
+    public AppVersion(int code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    public String getChangeLog(String language) {
+        if (changelog.containsKey(language)) {
+            return changelog.get(language);
+        }
+        return changelog.get("default");
+    }
 
     @NonNull
     @Override
     public String toString() {
         return "AppVersion{" +
-                "versionCode=" + versionCode +
-                ", versionName='" + versionName + '\'' +
-                ", versionPageUrl='" + versionPageUrl + '\'' +
-                ", directDownloadUrl='" + directDownloadUrl + '\'' +
+                "code=" + code +
+                ", name='" + name + '\'' +
+                ", pageUrl='" + pageUrl + '\'' +
+                ", downloadUrl='" + downloadUrl + '\'' +
                 ", changelog=" + changelog +
                 '}';
     }

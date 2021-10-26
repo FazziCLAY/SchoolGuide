@@ -6,6 +6,7 @@
     <string name="abc_schedules">Schedules</string>
     <string name="abc_delete">Delete</string>
     <string name="abc_save">Save</string>
+    <string name="abc_cancel">Cancel</string>
     <string name="abc_fillAllFields">Fill in all the fields!</string>
     <string name="abc_lessonNameLengthLimit">The maximum length of the name is 50!</string>
     <string name="fab_content_lessons">Add lesson</string>
@@ -22,8 +23,20 @@
     <string name="schedule_lesson_startTime_title">Start time</string>
     <string name="notificationChannel_foreground_name">Main (Foreground)</string>
     <string name="notificationChannel_external_name">External</string>
-    <string name="notificationChannel_foreground_description">The main notification that notifed of background usage</string>
+    <string name="notificationChannel_foreground_description">The main notification that notified of background usage</string>
     <string name="notificationChannel_external_description">External notification for showing the schedule (you can enable it in the app settings)</string>
-    <string name="notification_foreground_defaultTitle">The applcation is active</string>
+    <string name="notification_foreground_defaultTitle">The application is active</string>
     <string name="notification_foreground_defaultText">This is necessary to keep the application open</string>
+    <string name="notificationChannel_updatechecker_name">UpdateChecker</string>
+    <string name="notificationChannel_updatechecker_description">Update checker notifications</string>
+    <string name="notification_updatechecker_newVersion_title">New version available</string>
+    <string name="notification_updatechecker_newVersion_text">Click to download and install</string>
+    <string name="activityTitle_scheduleLessonEdit_edit">Editing lesson for %s</string>
+    <string name="activityTitle_scheduleLessonEdit_create">Creating lesson for %s</string>
+    <string name="lessonEdit_delete_title">Are you sure?</string>
+    <string name="scheduleEdit_delete_title">Are you sure?</string>
+    <string name="scheduleLessonEdit_delete_title">Are you sure?</string>
+    <string name="lessonEdit_delete_message">Do you really want to delete this lesson?</string>
+    <string name="scheduleLessonEdit_delete_message">Do you really want to delete this lesson?</string>
+    <string name="scheduleEdit_delete_message">Do you really want to delete this schedule?</string>
 </resources>

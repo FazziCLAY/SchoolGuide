@@ -5,14 +5,15 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
-import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
+import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityLessonEditBinding;
 
 public class LessonEditActivity extends AppCompatActivity {
@@ -53,8 +54,16 @@ public class LessonEditActivity extends AppCompatActivity {
     }
 
     private void delete() {
-        scheduleProvider.removeLessonInfo(lessonInfoUUID);
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.lessonEdit_delete_title)
+                .setMessage(R.string.lessonEdit_delete_message)
+                .setPositiveButton(R.string.abc_delete, (ignore1, ignore2) -> {
+                    scheduleProvider.removeLessonInfo(lessonInfoUUID);
+                    finish();
+                })
+                .setNegativeButton(R.string.abc_cancel, null);
+
+        builder.show();
     }
 
     private void save() {

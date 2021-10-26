@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="?attr/activityBackground"
     tools:context=".android.activity.developer.DeveloperManifestUtilsActivity"
     android:orientation="vertical">
 
@@ -11,7 +11,7 @@
         android:id="@+id/json"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="?attr/editTextColor"
         android:textColorHint="@color/design_default_color_primary_dark"
         android:hint="Json"
         tools:ignore="HardcodedText" />
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="AES ENCRYPT"
-        android:textColor="@color/white"
+        android:textColor="#ffffff"
         tools:ignore="HardcodedText" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -50,7 +50,7 @@
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="?attr/checkboxTextColor"
         android:text="decrypt"
         tools:ignore="HardcodedText" />
 

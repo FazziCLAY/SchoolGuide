@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -24,28 +25,29 @@ import ru.fazziclay.schoolguide.databinding.ActivityScheduleLessonEditBinding;
 import ru.fazziclay.schoolguide.util.TimeUtil;
 
 public class ScheduleLessonEditActivity extends AppCompatActivity {
-    public static final String KEY_LOCAL_SCHEDULE_UUID = "localScheduleUUID";
-    public static final String KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK = "localScheduleEditDayOfWeek";
-    public static final String KEY_LESSON_POSITION = "lessonPosition";
-    DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
+    public static final String KEY_LOCAL_SCHEDULE_UUID = "localScheduleUUID"; // uuid локального расписания на который нацелен этот активити
+    public static final String KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK = "localScheduleEditDayOfWeek"; // день недели (Calendar.MONDAY) в на который нацелен активити
+    public static final String KEY_LESSON_POSITION = "lessonPosition"; // Позиция редактируемого урока в неделе
 
     ActivityScheduleLessonEditBinding binding;
+    DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(); // для локализованных дней недель
 
-    ScheduleProvider scheduleProvider;
+    ScheduleProvider scheduleProvider = null; // для отображения доп. штук и сохранения
+    UUID localScheduleUUID = null; // Полученный UUID локального расписания
+    LocalSchedule localSchedule = null; // Полученное из UUID расписание (из scheduleProvider)
+    int dayOfWeek = 0; // Полученный день недели в формате (Calendar.MONDAY)
+    List<Lesson> dayOfWeekLessons = null; // День недели из локального расписани полученный из scheduleProvider путём dayOfWeek
+    int lessonPosition = 0; // Полученное положение урока в неделе уроков
+    Lesson lesson = null; // Редактируемый урок полученный путём lessonPosition
 
-    UUID localScheduleUUID = null;
-    int dayOfWeek = -1;
-    int lessonPosition = -1;
-    boolean isCreatingMode = true;
+    boolean isCreatingMode = false; // Режим ли создания? Если да то при сохранении будет создан новый
 
-    LocalSchedule localSchedule = null;
-    List<Lesson> day = null;
-    Lesson lesson = null;
-
+    // Для выподающего списка выбора урока (LessonInfo)
     ArrayAdapter<String> lessonAdapter = null;
     UUID[] lessonAdapterValues = null;
     int selectedLesson = 0;
 
+    // Новые временные значения, при save() они пойдут в lesson, в начале такие же как и в lesson
     UUID lessonInfoUUID = null;
     int startTime = 0;
     int duration = 0;
@@ -56,27 +58,34 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         binding = ActivityScheduleLessonEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        try {
-            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
-
-            localScheduleUUID = UUID.fromString(getIntent().getExtras().getString(KEY_LOCAL_SCHEDULE_UUID, new UUID(0, 0).toString()));
-            dayOfWeek = getIntent().getExtras().getInt(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, -1);
-            lessonPosition = getIntent().getExtras().getInt(KEY_LESSON_POSITION, -1);
-
-            localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
-            day = localSchedule.get(dayOfWeek);
-        } catch (Throwable throwable) {
-            Toast.makeText(this, "Error: "+throwable.toString(), Toast.LENGTH_SHORT).show();
+        Bundle extras = getIntent().getExtras();
+        if (!extras.containsKey(KEY_LOCAL_SCHEDULE_UUID) || !extras.containsKey(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK)) {
+            Toast.makeText(this, "Ошибка! Извените...", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
-        try {
-            lesson = day.get(lessonPosition);
+        localScheduleUUID = UUID.fromString(extras.getString(KEY_LOCAL_SCHEDULE_UUID));
+        dayOfWeek = extras.getInt(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK);
+
+        if (extras.containsKey(KEY_LESSON_POSITION)) {
+            lessonPosition = extras.getInt(KEY_LESSON_POSITION);
             isCreatingMode = false;
-        } catch (Exception ignored) {
+        } else {
             isCreatingMode = true;
         }
 
-        setTitle("SchoolGuide - Create for "+dateFormatSymbols.getWeekdays()[dayOfWeek]);
+        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+        localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
+        dayOfWeekLessons = localSchedule.get(dayOfWeek);
+        lesson = dayOfWeekLessons.get(lessonPosition);
+
+        String localizedDayOfWeek = dateFormatSymbols.getWeekdays()[dayOfWeek].toLowerCase();
+        if (isCreatingMode) {
+            setTitle(getString(R.string.activityTitle_scheduleLessonEdit_create, localizedDayOfWeek));
+        } else {
+            setTitle(getString(R.string.activityTitle_scheduleLessonEdit_edit, localizedDayOfWeek));
+        }
 
         init();
         initLayout();
@@ -150,6 +159,10 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         binding.duration.setText(getString(R.string.schedule_lesson_duration, TimeUtil.secondsToHumanTime(duration, true)));
     }
 
+    interface TimePickedInterface {
+        void run(int seconds);
+    }
+
     private void timePicker(int defaultTime, String dialogTitle, TimePickedInterface pickedInterface) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 (timePicker, hour, minute) -> {
@@ -162,15 +175,23 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     }
 
     private void delete() {
-        day.remove(lesson);
-        scheduleProvider.save();
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.scheduleLessonEdit_delete_title)
+                .setMessage(R.string.scheduleLessonEdit_delete_message)
+                .setPositiveButton(R.string.abc_delete, (ignore1, ignore2) -> {
+                    dayOfWeekLessons.remove(lesson);
+                    scheduleProvider.save();
+                    finish();
+                })
+                .setNegativeButton(R.string.abc_cancel, null);
+
+        builder.show();
     }
 
     private void save() {
         if (lesson == null) {
             lesson = new Lesson(null, 0, 0);
-            day.add(lesson);
+            dayOfWeekLessons.add(lesson);
         }
 
         lesson.setLessonInfo(lessonInfoUUID);
@@ -178,9 +199,5 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         lesson.setDuration(duration);
         scheduleProvider.save();
         finish();
-    }
-
-    interface TimePickedInterface {
-        void run(int seconds);
     }
 }

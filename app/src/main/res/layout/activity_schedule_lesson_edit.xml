@@ -15,28 +15,30 @@
         <Spinner
             android:id="@+id/lesson"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/startTime"
-            android:background="#1f666666"
+            android:background="?attr/textViewButtonBackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="40sp"
             android:layout_margin="2sp"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="?attr/textViewButtonTextColor"
             android:textAllCaps="false"
             android:textSize="20sp"
             android:text="@string/schedule_lesson_startTime" />
 
         <TextView
             android:id="@+id/duration"
-            android:background="#1f666666"
+            android:background="?attr/textViewButtonBackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="40sp"
             android:layout_margin="2sp"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="?attr/textViewButtonTextColor"
             android:textAllCaps="false"
             android:textSize="20sp"
             android:text="@string/schedule_lesson_duration" />

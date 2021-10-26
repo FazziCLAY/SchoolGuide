@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
@@ -172,7 +174,15 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     private void delete() {
-        scheduleProvider.removeLocalSchedule(localScheduleUUID);
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.scheduleEdit_delete_title)
+                .setMessage(R.string.scheduleEdit_delete_message)
+                .setPositiveButton(R.string.abc_delete, (ignore1, ignore2) -> {
+                    scheduleProvider.removeLocalSchedule(localScheduleUUID);
+                    finish();
+                })
+                .setNegativeButton(R.string.abc_cancel, null);
+
+        builder.show();
     }
 }

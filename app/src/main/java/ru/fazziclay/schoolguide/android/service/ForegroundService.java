@@ -1,14 +1,17 @@
 package ru.fazziclay.schoolguide.android.service;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -22,6 +25,7 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.data.cache.NotificationState;
 import ru.fazziclay.schoolguide.data.cache.StateCacheProvider;
+import ru.fazziclay.schoolguide.data.manifest.VersionState;
 import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
@@ -46,7 +50,7 @@ public class ForegroundService extends Service {
     Runnable loopRunnable = null;
     NotificationManagerCompat notificationManagerCompat;
 
-    int internetTerminator = 10 * 60;
+    int internetTerminator = 10 * 60 +1;
 
     @Override
     public void onCreate() {
@@ -70,12 +74,15 @@ public class ForegroundService extends Service {
 
             NotificationChannel foregroundChannel = new NotificationChannel(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_foreground_name), NotificationManager.IMPORTANCE_HIGH);
             NotificationChannel externalChannel = new NotificationChannel(SharedConstrains.EXTERNAL_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_external_name), NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel updatecheckerChannel = new NotificationChannel(SharedConstrains.UPDATECHECKER_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updatechecker_name), NotificationManager.IMPORTANCE_HIGH);
 
             foregroundChannel.setDescription(getString(R.string.notificationChannel_foreground_description));
             externalChannel.setDescription(getString(R.string.notificationChannel_external_description));
+            updatecheckerChannel.setDescription(getString(R.string.notificationChannel_updatechecker_description));
 
             notificationManager.createNotificationChannel(foregroundChannel);
             notificationManager.createNotificationChannel(externalChannel);
+            notificationManager.createNotificationChannel(updatecheckerChannel);
         }
 
         startForeground(SharedConstrains.FOREGROUND_NOTIFICATION_ID, getDefaultForegroundNotification());
@@ -100,12 +107,15 @@ public class ForegroundService extends Service {
     public ManifestProvider getManifestProvider() {
         return manifestProvider;
     }
+
     public SettingsProvider getSettingsProvider() {
         return settingsProvider;
     }
+
     public ScheduleProvider getScheduleProvider() {
         return scheduleProvider;
     }
+
     public StateCacheProvider getStateCacheProvider() {
         return stateCacheProvider;
     }
@@ -131,7 +141,24 @@ public class ForegroundService extends Service {
     public void loop() {
         internetTerminator++;
         if (internetTerminator > 10 * 60) {
-            new Thread(() -> getManifestProvider().updateForGlobal()).start();
+            new Thread(() -> getManifestProvider().updateForGlobal((exception, scheduleProvider) -> {
+                if (scheduleProvider.getAppVersionState() == VersionState.OUTDATED) {
+
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this,  SharedConstrains.UPDATECHECKER_NOTIFICATION_CHANNEL_ID)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle(getString(R.string.notification_updatechecker_newVersion_title))
+                            .setContentText(getString(R.string.notification_updatechecker_newVersion_text))
+                            .setSilent(false)
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setSound(null)
+                            .setContentIntent(null)
+                            .setAutoCancel(true);
+                    notificationManagerCompat.notify(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID, builder.build());
+                } else {
+                    updateUpdatecheckerNotificationToDefault();
+                }
+            })).start();
             internetTerminator = 0;
         }
 
@@ -146,7 +173,7 @@ public class ForegroundService extends Service {
 
         String contentS = String.format("Left: %s %s",
                 TimeUtil.secondsToHumanTime(sp.getTimeBeforeStartRest(sls), false),
-                (((state.isLesson() && state.isEnding()) || state.isRest()) && nextLesson != null ? "Next: "+getLessonText(nextLesson) : "")
+                (((state.isLesson() && state.isEnding()) || state.isRest()) && nextLesson != null ? "Next: " + getLessonText(nextLesson) : "")
         );
         content = new SpannableString(contentS);
 
@@ -177,8 +204,15 @@ public class ForegroundService extends Service {
         }
     }
 
+    @SuppressLint("deprecated")
     public void vibrate(long[] tact) {
-        if (getSettingsProvider().isVibration()) vibrator.vibrate(tact, -1);
+        if (getSettingsProvider().isVibration()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(tact, -1));
+            } else {
+                vibrator.vibrate(tact, -1);
+            }
+        }
     }
 
     public void updateUserNotification(Spannable title, Spannable subText, Spannable contentText) {
@@ -187,17 +221,25 @@ public class ForegroundService extends Service {
         if (getSettingsProvider().isNotification() && !isSchoolEnded) {
             if (getSettingsProvider().getUserNotification() == UserNotification.FOREGROUND) {
                 updateNotification(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID, SharedConstrains.FOREGROUND_NOTIFICATION_ID, title, subText, contentText);
-                if (!getStateCacheProvider().isExternalNotificationStateDefault()) updateExternalNotificationToDefault();
+                if (!getStateCacheProvider().isExternalNotificationStateDefault())
+                    updateExternalNotificationToDefault();
             } else {
                 updateNotification(SharedConstrains.EXTERNAL_NOTIFICATION_CHANNEL_ID, SharedConstrains.EXTERNAL_NOTIFICATION_ID, title, subText, contentText);
-                if (!getStateCacheProvider().isForegroundNotificationStateDefault()) updateForegroundNotificationToDefault();
+                if (!getStateCacheProvider().isForegroundNotificationStateDefault())
+                    updateForegroundNotificationToDefault();
             }
 
 
         } else {
-            if (!getStateCacheProvider().isForegroundNotificationStateDefault()) updateForegroundNotificationToDefault();
-            if (!getStateCacheProvider().isExternalNotificationStateDefault()) updateExternalNotificationToDefault();
+            if (!getStateCacheProvider().isForegroundNotificationStateDefault())
+                updateForegroundNotificationToDefault();
+            if (!getStateCacheProvider().isExternalNotificationStateDefault())
+                updateExternalNotificationToDefault();
         }
+    }
+
+    private void updateUpdatecheckerNotificationToDefault() {
+        notificationManagerCompat.cancel(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID);
     }
 
     private void updateExternalNotificationToDefault() {
@@ -212,8 +254,10 @@ public class ForegroundService extends Service {
 
     // Обновить уведомление главной (этой) службы
     public void updateNotification(String notificationChannelId, int notificationId, Spannable title, Spannable subText, Spannable contentText) {
-        if (notificationChannelId.equals(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID)) getStateCacheProvider().setForegroundNotificationState(NotificationState.CUSTOM);
-        if (notificationChannelId.equals(SharedConstrains.EXTERNAL_NOTIFICATION_CHANNEL_ID)) getStateCacheProvider().setExternalNotificationState(NotificationState.CUSTOM);
+        if (notificationChannelId.equals(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID))
+            getStateCacheProvider().setForegroundNotificationState(NotificationState.CUSTOM);
+        if (notificationChannelId.equals(SharedConstrains.EXTERNAL_NOTIFICATION_CHANNEL_ID))
+            getStateCacheProvider().setExternalNotificationState(NotificationState.CUSTOM);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, notificationChannelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
