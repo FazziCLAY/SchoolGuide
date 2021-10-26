@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
 import ru.fazziclay.schoolguide.data.cache.NotificationState;
 import ru.fazziclay.schoolguide.data.cache.StateCacheProvider;
 import ru.fazziclay.schoolguide.data.manifest.VersionState;
@@ -39,6 +41,8 @@ public class ForegroundService extends Service {
     private static final short LOOP_DELAY = 1000;
 
     static ForegroundService instance = null;
+    public static final String REST = "Rest!";
+    public static final String HURRY_UP = "(HURRY UP)";
 
     ManifestProvider manifestProvider = null;
     SettingsProvider settingsProvider = null;
@@ -143,7 +147,7 @@ public class ForegroundService extends Service {
         if (internetTerminator > 10 * 60) {
             new Thread(() -> getManifestProvider().updateForGlobal((exception, scheduleProvider) -> {
                 if (scheduleProvider.getAppVersionState() == VersionState.OUTDATED) {
-
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, UpdateCheckerActivity.class), 0);
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(this,  SharedConstrains.UPDATECHECKER_NOTIFICATION_CHANNEL_ID)
                             .setSmallIcon(R.mipmap.ic_launcher)
@@ -152,7 +156,7 @@ public class ForegroundService extends Service {
                             .setSilent(false)
                             .setPriority(NotificationCompat.PRIORITY_MAX)
                             .setSound(null)
-                            .setContentIntent(null)
+                            .setContentIntent(pendingIntent)
                             .setAutoCancel(true);
                     notificationManagerCompat.notify(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID, builder.build());
                 } else {
@@ -166,18 +170,14 @@ public class ForegroundService extends Service {
         UUID sls = getSettingsProvider().getSelectedLocalSchedule();
         State state = sp.getState(sls);
         Lesson nextLesson = sp.getNextLesson(sls);
+        int leftTime = 0;
 
         SpannableString title = null;
         SpannableString content;
         SpannableString subText = null;
 
-        String contentS = String.format("Left: %s %s",
-                TimeUtil.secondsToHumanTime(sp.getTimeBeforeStartRest(sls), false),
-                (((state.isLesson() && state.isEnding()) || state.isRest()) && nextLesson != null ? "Next: " + getLessonText(nextLesson) : "")
-        );
-        content = new SpannableString(contentS);
-
         if (state.isLesson()) {
+            leftTime = sp.getTimeBeforeStartRest(sls);
             String titleS = String.format("Now: %s",
                     getLessonText(sp.getNowLesson(sls))
             );
@@ -185,8 +185,15 @@ public class ForegroundService extends Service {
             title = new SpannableString(titleS);
 
         } else if (state.isRest()) {
-            title = new SpannableString("Rest!" + (state.isEnding() ? " (HURRY UP)" : ""));
+            leftTime = sp.getTimeBeforeStartLesson(sls);
+            title = new SpannableString(REST + (state.isEnding() ? " "+HURRY_UP : ""));
         }
+
+        String contentS = String.format("Left: %s %s",
+                TimeUtil.secondsToHumanTime(leftTime, false),
+                (((state.isLesson() && state.isEnding()) || state.isRest()) && nextLesson != null ? "Next: " + getLessonText(nextLesson) : "")
+        );
+        content = new SpannableString(contentS);
 
         updateVibration(state);
         updateUserNotification(title, subText, content);
