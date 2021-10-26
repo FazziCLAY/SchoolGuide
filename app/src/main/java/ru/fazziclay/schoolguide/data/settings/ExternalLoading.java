@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.google.gson.annotations.SerializedName;
 
+import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
 import ru.fazziclay.schoolguide.android.activity.developer.DeveloperManifestUtilsActivity;
 import ru.fazziclay.schoolguide.android.activity.schedule.ScheduleLessonEditActivity;
 
@@ -12,7 +13,10 @@ public enum ExternalLoading {
     ACTIVITY_DEVELOPER_MANIFEST_UTILS(DeveloperManifestUtilsActivity.class),
 
     @SerializedName("activity_schedule_lesson_edit")
-    ACTIVITY_SCHEDULE_LESSON_EDIT(ScheduleLessonEditActivity.class, true);
+    ACTIVITY_SCHEDULE_LESSON_EDIT(ScheduleLessonEditActivity.class, true),
+
+    @SerializedName("activity_update_checker")
+    ACTIVITY_UPDATE_CHECKER(UpdateCheckerActivity.class, false);
 
     Class<? extends Activity> activity;
     boolean isCodedFeatures = false;

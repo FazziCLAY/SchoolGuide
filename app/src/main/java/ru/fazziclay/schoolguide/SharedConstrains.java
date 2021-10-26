@@ -10,6 +10,9 @@ public class SharedConstrains {
     public static final AppVersion APP_VERSION = new AppVersion(APPLICATION_VERSION_CODE, APPLICATION_VERSION_NAME);
     // = = =============================== = =
 
+    public static final boolean DEV_FEATURED_MANIFEST_ONLY_FILE = true;
+    public static final int DEV_FEATURED_MANIFEST_GLOBAL_DELAY = 3000;
+
     public static final String FOREGROUND_NOTIFICATION_CHANNEL_ID = "Foreground";
     public static final short FOREGROUND_NOTIFICATION_ID = 1;
 

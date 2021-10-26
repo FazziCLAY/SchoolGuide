@@ -5,5 +5,6 @@
         <attr name="checkboxTextColor" format="color" />
         <attr name="textViewButtonBackgroundColor" format="color" />
         <attr name="textViewButtonTextColor" format="color"/>
+        <attr name="headTextColor" format="color" />
     </declare-styleable>
 </resources>

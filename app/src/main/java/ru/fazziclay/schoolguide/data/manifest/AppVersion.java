@@ -23,6 +23,10 @@ public class AppVersion {
         return changelog.get("default");
     }
 
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -33,5 +37,9 @@ public class AppVersion {
                 ", downloadUrl='" + downloadUrl + '\'' +
                 ", changelog=" + changelog +
                 '}';
+    }
+
+    public int getCode() {
+        return code;
     }
 }

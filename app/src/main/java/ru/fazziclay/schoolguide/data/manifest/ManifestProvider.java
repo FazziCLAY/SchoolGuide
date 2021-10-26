@@ -19,7 +19,7 @@ public class ManifestProvider extends BaseProvider {
     private static final String MANIFEST_URL = "https://github.com/fazziclay/schoolguide/manifest.json";
     private static final String MANIFEST_KEY_URL = "https://github.com/fazziclay/schoolguide/manifest.json.key";
 
-    private static final int CURRENT_FORMAT_VERSION = 2;
+    private static final int CURRENT_FORMAT_VERSION = 4;
 
     boolean isUnstable = false;
 
@@ -40,10 +40,26 @@ public class ManifestProvider extends BaseProvider {
     @Override
     public BaseData load() {
         Gson gson = new Gson();
-        return gson.fromJson(FileUtil.read(filePath, "{}"), Manifest.class);
+        Manifest manifest = gson.fromJson(FileUtil.read(filePath, "{}"), Manifest.class);
+        manifest.appVersion = SharedConstrains.APP_VERSION;
+        return manifest;
     }
 
     public void updateForGlobal(UpdateForGlobalInterface updateForGlobalInterface) {
+        // DEV
+        {
+            try {
+                Thread.sleep(SharedConstrains.DEV_FEATURED_MANIFEST_GLOBAL_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (SharedConstrains.DEV_FEATURED_MANIFEST_ONLY_FILE) {
+                updateForGlobalInterface.run(null, this);
+                return;
+            }
+        }
+        // Start code from this
+
         Gson gson = new Gson();
         int key;
         Exception exception = null;
@@ -53,12 +69,15 @@ public class ManifestProvider extends BaseProvider {
 
             if (getManifest().manifestKey != key) {
                 Manifest globalManifest = gson.fromJson(parseUrl(MANIFEST_URL), Manifest.class);
+                globalManifest.appVersion = SharedConstrains.APP_VERSION;
                 setManifest(globalManifest);
             }
         } catch (Exception e) {
             exception = e;
         }
         updateForGlobalInterface.run(exception, this);
+
+        save();
     }
 
     public void setManifest(Manifest manifest) {
@@ -89,9 +108,9 @@ public class ManifestProvider extends BaseProvider {
     // ===================================
     // P  R  I  V  A  T  E      Z  O  N  E
     // ===================================
-    private String parseUrl(String urlINPUT) throws IOException {
+    private String parseUrl(String inputUrl) throws IOException {
         StringBuilder result = new StringBuilder();
-        URL url = new URL(urlINPUT);
+        URL url = new URL(inputUrl);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
         String line;
         while ((line = bufferedReader.readLine()) != null) {

@@ -5,5 +5,6 @@
         <item name="checkboxTextColor">#121212</item>
         <item name="textViewButtonTextColor">#000000</item>
         <item name="textViewButtonBackgroundColor">#96B1B1B1</item>
+        <item name="headTextColor">#000000</item>
     </style>
 </resources>

@@ -39,4 +39,17 @@
     <string name="lessonEdit_delete_message">Do you really want to delete this lesson?</string>
     <string name="scheduleLessonEdit_delete_message">Do you really want to delete this lesson?</string>
     <string name="scheduleEdit_delete_message">Do you really want to delete this schedule?</string>
+    <string name="activityTitle_about">About</string>
+    <string name="abc_loading">Loading</string>
+    <string name="updateCenter_downloading_title">Downloading</string>
+    <string name="updateCenter_download">Download and Install</string>
+    <string name="updateCenter_title_error">Error</string>
+    <string name="updateCenter_text_error_generic">Unknown error! Code: %s</string>
+    <string name="updateCenter_text_error_noNetworkConnection">No network connection!</string>
+    <string name="updateCenter_title_updateAvailable">Update available</string>
+    <string name="updateCenter_downloading_title_error">Downloading failed!</string>
+    <string name="updateCenter_downloading_title_success">Downloaded!</string>
+    <string name="abc_install">Install</string>
+    <string name="abc_error">Error</string>
+    <string name="activityTitle_updateChecker">Update Center</string>
 </resources>
