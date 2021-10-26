@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "manifestKey": 1,
+  "latestVersion": {
+    "code": 14,
+    "name": "2.4 beta dev",
+    "pageUrl": "https://fazziclay.github.io/pages/schoolguide_v1",
+    "downloadUrl": "https://fazziclay.github.io/downloads/schoolguide_v1.apk",
+    "changelog": {
+      "default": "ChangeLog",
+      "ru": "ЧенчЛог"
+    }
+  }
+}

@@ -7,7 +7,6 @@ import ru.fazziclay.schoolguide.data.BaseData;
 public class Manifest extends BaseData {
     int manifestKey = 0;
     AppVersion latestVersion = null;
-    String mySchoolSchedule = null;
 
     @NonNull
     @Override
@@ -16,7 +15,6 @@ public class Manifest extends BaseData {
                 "formatVersion=" + formatVersion +
                 ", manifestKey=" + manifestKey +
                 ", latestVersion=" + latestVersion +
-                ", mySchoolSchedule='" + mySchoolSchedule + '\'' +
                 '}';
     }
 }
