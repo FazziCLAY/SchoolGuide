@@ -1,14 +1,13 @@
 {
-  "version": 1,
-  "manifestKey": 1,
+  "version": 4,
+  "manifestKey": 3,
   "latestVersion": {
-    "code": 14,
-    "name": "2.4 beta dev",
-    "pageUrl": "https://fazziclay.github.io/pages/schoolguide_v1",
-    "downloadUrl": "https://fazziclay.github.io/downloads/schoolguide_v1.apk",
+    "code": 16,
+    "name": "2.5.2 - updateCheckerTest",
+    "pageUrl": "https://github.com/fazziclay/schoolguide",
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/16/app-debug.apk",
     "changelog": {
-      "default": "ChangeLog",
-      "ru": "ЧенчЛог"
+      "default": "Изменения:\n * Это тестовая новая версия для проверки Update checker!\n\nУдачи!"
     }
   }
 }
