@@ -2,6 +2,8 @@ package ru.fazziclay.schoolguide.android.activity.schedule;
 
 import android.app.TimePickerDialog;
 import java.text.DateFormatSymbols;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,12 +18,14 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.android.activity.lesson.LessonEditActivity;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityScheduleLessonEditBinding;
+import ru.fazziclay.schoolguide.databinding.BigNotificationBinding;
 import ru.fazziclay.schoolguide.util.TimeUtil;
 
 public class ScheduleLessonEditActivity extends AppCompatActivity {
@@ -30,7 +34,6 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     public static final String KEY_LESSON_POSITION = "lessonPosition"; // Позиция редактируемого урока в неделе
 
     ActivityScheduleLessonEditBinding binding;
-    DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(); // для локализованных дней недель
 
     ScheduleProvider scheduleProvider = null; // для отображения доп. штук и сохранения
     UUID localScheduleUUID = null; // Полученный UUID локального расписания
@@ -55,34 +58,30 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityScheduleLessonEditBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
-        Bundle extras = getIntent().getExtras();
-        if (!extras.containsKey(KEY_LOCAL_SCHEDULE_UUID) || !extras.containsKey(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK)) {
-            Toast.makeText(this, "Ошибка! Извените...", Toast.LENGTH_SHORT).show();
-            finish();
+        if (inputInit()) return;
+
+        if (scheduleProvider.getAllLessons().length == 0) {
+            BigNotificationBinding bigNotificationBinding = BigNotificationBinding.inflate(getLayoutInflater());
+            setContentView(bigNotificationBinding.getRoot());
+
+            bigNotificationBinding.title.setText(R.string.abc_actionBefore);
+            bigNotificationBinding.text.setText(R.string.schedule_lesson_lessonsNotFound);
+
+            bigNotificationBinding.actionButton.setText(R.string.abc_create);
+            bigNotificationBinding.actionButton.setOnClickListener(ignore -> {
+                startActivity(new Intent(this, LessonEditActivity.class)
+                        .putExtra(LessonEditActivity.KEY_CREATING_MODE, true)
+                );
+                finish();
+            });
             return;
         }
 
-        localScheduleUUID = UUID.fromString(extras.getString(KEY_LOCAL_SCHEDULE_UUID));
-        dayOfWeek = extras.getInt(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK);
+        binding = ActivityScheduleLessonEditBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        if (extras.containsKey(KEY_LESSON_POSITION)) {
-            lessonPosition = extras.getInt(KEY_LESSON_POSITION);
-            isCreatingMode = false;
-
-        } else {
-            isCreatingMode = true;
-        }
-
-        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
-        localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
-        dayOfWeekLessons = localSchedule.get(dayOfWeek);
-        if (!isCreatingMode) {
-            lesson = dayOfWeekLessons.get(lessonPosition);
-        }
-
+        DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
         String localizedDayOfWeek = dateFormatSymbols.getWeekdays()[dayOfWeek].toLowerCase();
         if (isCreatingMode) {
             setTitle(getString(R.string.activityTitle_scheduleLessonEdit_create, localizedDayOfWeek));
@@ -92,6 +91,28 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
 
         init();
         initLayout();
+    }
+
+    private boolean inputInit() {
+        Bundle extras = getIntent().getExtras();
+        if (!extras.containsKey(KEY_LOCAL_SCHEDULE_UUID) || !extras.containsKey(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK)) {
+            Toast.makeText(this, R.string.abc_error, Toast.LENGTH_SHORT).show();
+            finish();
+            return true;
+        }
+        isCreatingMode = true;
+        localScheduleUUID = UUID.fromString(extras.getString(KEY_LOCAL_SCHEDULE_UUID));
+        dayOfWeek = extras.getInt(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK);
+
+        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+        localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
+        dayOfWeekLessons = localSchedule.get(dayOfWeek);
+        if (extras.containsKey(KEY_LESSON_POSITION)) {
+            lessonPosition = extras.getInt(KEY_LESSON_POSITION);
+            lesson = dayOfWeekLessons.get(lessonPosition);
+            isCreatingMode = false;
+        }
+        return false;
     }
 
     private void init() {
