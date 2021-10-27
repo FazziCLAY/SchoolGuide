@@ -63,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
             LocalSchedule localSchedule = scheduleProvider.getLocalSchedule(uuid);
             names.add(localSchedule.getName());
             if (settingsProvider.getSelectedLocalSchedule().equals(uuid)) selectedLocalSchedulePosition = i;
+            i++;
         }
 
         selectedLocalScheduleAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, names);
