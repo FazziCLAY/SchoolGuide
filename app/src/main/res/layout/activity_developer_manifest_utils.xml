@@ -1,57 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/activityBackground"
-    tools:context=".android.activity.developer.DeveloperManifestUtilsActivity"
-    android:orientation="vertical">
+    tools:context=".android.activity.developer.DeveloperManifestUtilsActivity">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/json"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?attr/editTextColor"
-        android:textColorHint="@color/design_default_color_primary_dark"
-        android:hint="Json"
-        tools:ignore="HardcodedText" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/prettyPrintJson"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pretty print json"
-        tools:ignore="HardcodedText" />
+        <EditText
+            android:id="@+id/manifestKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Manifest Key"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            tools:ignore="HardcodedText" />
 
-    <Button
-        android:id="@+id/checkJson"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Check json"
-        tools:ignore="HardcodedText" />
+        <CheckBox
+            android:id="@+id/isTechnicalWorks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Is technical works"
+            tools:ignore="HardcodedText" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AES ENCRYPT"
-        android:textColor="#ffffff"
-        tools:ignore="HardcodedText" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5sp"
+            android:background="#2E7F7F7F"
+            android:orientation="vertical"
+            android:padding="5sp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/secretKey"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="latestVersion"
+                tools:ignore="HardcodedText" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/latestVersionCode"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="code"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                tools:ignore="HardcodedText,TouchTargetSizeCheck" />
 
-    <CheckBox
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/checkboxTextColor"
-        android:text="decrypt"
-        tools:ignore="HardcodedText" />
+            <EditText
+                android:id="@+id/latestVersionName"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="name"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                tools:ignore="HardcodedText,TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/latestVersionPageUrl"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="page url"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+            <EditText
+                android:id="@+id/latestVersionDownloadUrl"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="download url"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+            <EditText
+                android:id="@+id/latestVersionDefaultChangelog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Default changelog"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:minHeight="48dp"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:background="#2D7F7F7F"
+                android:orientation="vertical"
+                android:padding="5sp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/latestVersionAddChangelogLang"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Language code"
+                        android:importantForAutofill="no"
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/latestVersionAddChangelogAddButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Add"
+                        tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+                    <Button
+                        android:id="@+id/latestVersionAddChangelogDelButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="del"
+                        tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/latestVersionAddChangelogText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Custom changelog"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/getResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GET RESULT"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/resultJson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="RESULT JSON"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:minHeight="48dp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+</ScrollView>

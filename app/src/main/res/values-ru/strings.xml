@@ -51,4 +51,6 @@
     <string name="updateCenter_text_error_noNetworkConnection">Нету соеденения с интернетом</string>
     <string name="updateCenter_text_error_generic">Неизвестная ошибка! КодЖ %s</string>
     <string name="updateCenter_title_error">Ошибка</string>
+    <string name="updateCenter_title_latest">Обновлено!</string>
+    <string name="updateCenter_text_latest">Ваша версия последняя, обновления не требуется!</string>
 </resources>

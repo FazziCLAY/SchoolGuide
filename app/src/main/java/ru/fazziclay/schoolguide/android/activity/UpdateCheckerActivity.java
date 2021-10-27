@@ -137,6 +137,12 @@ public class UpdateCheckerActivity extends AppCompatActivity {
                     downloadThread.start();
                 });
             }
+            return;
+        }
+
+        if (state == State.VERSION_LATEST) {
+            binding.title.setText(R.string.updateCenter_title_latest);
+            binding.text.setText(getString(R.string.updateCenter_text_latest));
         }
     }
 

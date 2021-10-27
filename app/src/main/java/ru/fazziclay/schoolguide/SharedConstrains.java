@@ -10,7 +10,7 @@ public class SharedConstrains {
     public static final AppVersion APP_VERSION = new AppVersion(APPLICATION_VERSION_CODE, APPLICATION_VERSION_NAME);
     // = = =============================== = =
 
-    public static final boolean DEV_FEATURED_MANIFEST_ONLY_FILE = true;
+    public static final boolean DEV_FEATURED_MANIFEST_ONLY_FILE = false;
     public static final int DEV_FEATURED_MANIFEST_GLOBAL_DELAY = 3000;
 
     public static final String FOREGROUND_NOTIFICATION_CHANNEL_ID = "Foreground";
@@ -28,4 +28,5 @@ public class SharedConstrains {
     public static final long[] VIBRATION_NOTIFY_REST_ENDING = {0, 250, 250, 220, 100, 220, 100, 220};
     public static final long[] VIBRATION_NOTIFY_END = {0, 100, 400, 100, 400, 100, 400, 400, 400, 100, 100};
 
+    public static final int INTERNET_TERMINATOR_DELAY = 10; //10 * 60;
 }

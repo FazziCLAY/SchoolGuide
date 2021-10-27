@@ -52,4 +52,6 @@
     <string name="abc_install">Install</string>
     <string name="abc_error">Error</string>
     <string name="activityTitle_updateChecker">Update Center</string>
+    <string name="updateCenter_title_latest">Updated!</string>
+    <string name="updateCenter_text_latest">TODO</string>
 </resources>

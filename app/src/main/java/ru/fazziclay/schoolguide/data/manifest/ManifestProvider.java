@@ -16,10 +16,10 @@ import ru.fazziclay.schoolguide.data.BaseProvider;
 
 public class ManifestProvider extends BaseProvider {
     private static final String MANIFEST_LOCAL_FILE = "manifest.json";
-    private static final String MANIFEST_URL = "https://github.com/fazziclay/schoolguide/manifest.json";
-    private static final String MANIFEST_KEY_URL = "https://github.com/fazziclay/schoolguide/manifest.json.key";
+    private static final String MANIFEST_URL = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/main/manifest/manifest.json";
+    private static final String MANIFEST_KEY_URL = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/main/manifest/manifest.json.key";
 
-    private static final int CURRENT_FORMAT_VERSION = 4;
+    public static final int CURRENT_FORMAT_VERSION = 4;
 
     boolean isUnstable = false;
 
@@ -40,23 +40,19 @@ public class ManifestProvider extends BaseProvider {
     @Override
     public BaseData load() {
         Gson gson = new Gson();
-        Manifest manifest = gson.fromJson(FileUtil.read(filePath, "{}"), Manifest.class);
-        manifest.appVersion = SharedConstrains.APP_VERSION;
-        return manifest;
+        return gson.fromJson(FileUtil.read(filePath, "{}"), Manifest.class);
     }
 
     public void updateForGlobal(UpdateForGlobalInterface updateForGlobalInterface) {
         // DEV
-        {
+        if (SharedConstrains.DEV_FEATURED_MANIFEST_ONLY_FILE) {
             try {
                 Thread.sleep(SharedConstrains.DEV_FEATURED_MANIFEST_GLOBAL_DELAY);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (SharedConstrains.DEV_FEATURED_MANIFEST_ONLY_FILE) {
-                updateForGlobalInterface.run(null, this);
-                return;
-            }
+            updateForGlobalInterface.run(null, this);
+            return;
         }
         // Start code from this
 
@@ -67,9 +63,8 @@ public class ManifestProvider extends BaseProvider {
         try {
             key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
 
-            if (getManifest().manifestKey != key) {
+            if (getManifest().manifestKey < key) {
                 Manifest globalManifest = gson.fromJson(parseUrl(MANIFEST_URL), Manifest.class);
-                globalManifest.appVersion = SharedConstrains.APP_VERSION;
                 setManifest(globalManifest);
             }
         } catch (Exception e) {

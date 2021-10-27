@@ -144,7 +144,7 @@ public class ForegroundService extends Service {
 
     public void loop() {
         internetTerminator++;
-        if (internetTerminator > 10 * 60) {
+        if (internetTerminator > SharedConstrains.INTERNET_TERMINATOR_DELAY) {
             new Thread(() -> getManifestProvider().updateForGlobal((exception, scheduleProvider) -> {
                 if (scheduleProvider.getAppVersionState() == VersionState.OUTDATED) {
                     PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, UpdateCheckerActivity.class), 0);

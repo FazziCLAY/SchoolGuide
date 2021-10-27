@@ -16,6 +16,14 @@ public class AppVersion {
         this.name = name;
     }
 
+    public AppVersion(int code, String name, String pageUrl, String downloadUrl, HashMap<String, String> changelog) {
+        this.code = code;
+        this.name = name;
+        this.pageUrl = pageUrl;
+        this.downloadUrl = downloadUrl;
+        this.changelog = changelog;
+    }
+
     public String getChangeLog(String language) {
         if (changelog.containsKey(language)) {
             return changelog.get(language);

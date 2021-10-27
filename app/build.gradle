@@ -10,8 +10,8 @@ android {
         applicationId "ru.fazziclay.schoolguide"
         minSdkVersion 16
         targetSdkVersion 31
-        versionCode 14
-        versionName "2.4 beta dev"
+        versionCode 16
+        versionName "2.5.2 - updateCheckerTest"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
