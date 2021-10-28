@@ -21,19 +21,12 @@ public class ManifestProvider extends BaseProvider {
 
     public static final int CURRENT_FORMAT_VERSION = 4;
 
-    boolean isUnstable = false;
-
     public ManifestProvider(Context context) {
         filePath = context.getExternalFilesDir(null).getAbsolutePath().concat("/").concat(MANIFEST_LOCAL_FILE);
         data = load();
 
         if (data.isFormatVersionDefault()) data.formatVersion = CURRENT_FORMAT_VERSION;
-        if (data.formatVersion != CURRENT_FORMAT_VERSION) {
-            isUnstable = true;
-        }
-
         new Thread(() -> updateForGlobal((exception, manifestProvider) -> {})).start();
-
         save();
     }
 
@@ -44,24 +37,11 @@ public class ManifestProvider extends BaseProvider {
     }
 
     public void updateForGlobal(UpdateForGlobalInterface updateForGlobalInterface) {
-        // DEV
-        if (SharedConstrains.DEV_FEATURED_MANIFEST_ONLY_FILE) {
-            try {
-                Thread.sleep(SharedConstrains.DEV_FEATURED_MANIFEST_GLOBAL_DELAY);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            updateForGlobalInterface.run(null, this);
-            return;
-        }
-        // Start code from this
-
         Gson gson = new Gson();
-        int key;
         Exception exception = null;
 
         try {
-            key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
+            int key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
 
             if (getManifest().manifestKey < key) {
                 Manifest globalManifest = gson.fromJson(parseUrl(MANIFEST_URL), Manifest.class);
@@ -98,6 +78,10 @@ public class ManifestProvider extends BaseProvider {
         if (appVersion.code == latestVersion.code) return VersionState.LATEST;
         if (appVersion.code < latestVersion.code) return VersionState.OUTDATED;
         return VersionState.UNKNOWN;
+    }
+
+    public boolean isTechnicalWorks() {
+        return getManifest().isTechnicalWorks;
     }
 
     // ===================================

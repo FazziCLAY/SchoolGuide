@@ -54,4 +54,20 @@
     <string name="activityTitle_updateChecker">Update Center</string>
     <string name="updateCenter_title_latest">Updated!</string>
     <string name="updateCenter_text_latest">TODO</string>
+    <string name="settings_title_enterScheduleHubCode">Enter code?</string>
+    <string name="settings_hint_enterScheduleHubCode">Code</string>
+    <string name="settings_button_enterScheduleHubCode">Send</string>
+    <string name="schedules_createNew_title">Creating new schedule</string>
+    <string name="abc_create">Create</string>
+    <string name="schedules_createNew_empty">Create empty</string>
+    <string name="schedules_createNew_copyOf">Copy of \'%s\'</string>
+    <string name="schedules_createNew_newEmptyName">New empty schedule</string>
+    <string name="schedule_lesson_lessonsNotFound">Lessons not found. Create!</string>
+    <string name="abc_actionBefore">Wait</string>
+    <string name="settings_userNotificationSinner">User notification</string>
+    <string name="settings_selectedLocalSchedule">Selected schedule</string>
+    <string name="updateCenter_title_technicalWorks">Technical Works</string>
+    <string name="updateCenter_text_technicalWorks">TODO</string>
+    <string name="abc_market">Market</string>
+    <string name="fab_content_market">Market</string>
 </resources>

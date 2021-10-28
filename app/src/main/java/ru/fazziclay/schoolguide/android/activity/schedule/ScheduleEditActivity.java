@@ -18,6 +18,7 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
@@ -31,6 +32,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
     public static final String KEY_LOCAL_SCHEDULE_UUID = "localScheduleUUID";
     private static final boolean IS_MONDAY_FIRST = true;
 
+    CrashReport crashReport;
     int[] weekDays = new int[]{Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
     String[] weekDaysNames = new DateFormatSymbols().getWeekdays();
 
@@ -43,18 +45,25 @@ public class ScheduleEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityScheduleEditBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        crashReport = new CrashReport(CrashReport.getFolder(this));
+        try {
+            binding = ActivityScheduleEditBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
 
-        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
-        localScheduleUUID = UUID.fromString(getIntent().getExtras().getString(KEY_LOCAL_SCHEDULE_UUID));
-        localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
+            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            localScheduleUUID = UUID.fromString(getIntent().getExtras().getString(KEY_LOCAL_SCHEDULE_UUID));
+            localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
 
-        if (IS_MONDAY_FIRST) {
-            weekDays = new int[]{Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY};
+            if (IS_MONDAY_FIRST) {
+                weekDays = new int[]{Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY};
+            }
+
+            initLayout();
+        } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
+            finish();
         }
-
-        initLayout();
     }
 
     @Override

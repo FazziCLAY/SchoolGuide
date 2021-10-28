@@ -1,33 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/activityBackground"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".android.activity.HomeActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/lessonsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/abc_lessons" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/scheduleButton"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/abc_schedules"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                android:id="@+id/marketButton"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/abc_market"
+                style="?android:attr/buttonBarButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="100sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/settingsButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/abc_settings"/>
+            android:text="@string/abc_settings" />
 
-        <Button
-            android:id="@+id/lessonsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/abc_lessons"/>
-
-        <Button
-            android:id="@+id/scheduleButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/abc_schedules"/>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

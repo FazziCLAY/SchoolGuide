@@ -58,6 +58,7 @@ public class SettingsProvider extends BaseProvider {
 
     public void setSelectedLocalSchedule(UUID uuid) {
         getSettings().selectedLocalSchedule = uuid;
+        save();
     }
 
     public UUID getSelectedLocalSchedule() {

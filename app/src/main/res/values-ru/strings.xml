@@ -53,4 +53,20 @@
     <string name="updateCenter_title_error">Ошибка</string>
     <string name="updateCenter_title_latest">Обновлено!</string>
     <string name="updateCenter_text_latest">Ваша версия последняя, обновления не требуется!</string>
+    <string name="settings_title_enterScheduleHubCode">Ввести код?</string>
+    <string name="settings_hint_enterScheduleHubCode">Код</string>
+    <string name="settings_button_enterScheduleHubCode">Отправить</string>
+    <string name="schedules_createNew_copyOf">Копия \'%s\'</string>
+    <string name="schedules_createNew_title">Создание нового расписания</string>
+    <string name="abc_create">Создать</string>
+    <string name="schedules_createNew_empty">Создать пустой</string>
+    <string name="schedules_createNew_newEmptyName">Новое пустое расписание</string>
+    <string name="abc_actionBefore">Подождите</string>
+    <string name="schedule_lesson_lessonsNotFound">Уроков не найдено. Создайте!</string>
+    <string name="abc_market">Рынок</string>
+    <string name="fab_content_market">Рынок</string>
+    <string name="updateCenter_title_technicalWorks">Технические работы</string>
+    <string name="updateCenter_text_technicalWorks">Измените. На сервере технические работы!</string>
+    <string name="settings_selectedLocalSchedule">Выбранное расписание</string>
+    <string name="settings_userNotificationSinner">Уведомление польхователя</string>
 </resources>

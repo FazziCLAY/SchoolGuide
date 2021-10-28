@@ -1,6 +1,7 @@
 {
   "version": 4,
   "manifestKey": 3,
+  "isTechnicalWorks": false,
   "latestVersion": {
     "code": 16,
     "name": "2.5.2 - updateCheckerTest",

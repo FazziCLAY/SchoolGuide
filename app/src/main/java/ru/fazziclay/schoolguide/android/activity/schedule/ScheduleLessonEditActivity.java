@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.activity.lesson.LessonEditActivity;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
@@ -33,6 +34,7 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     public static final String KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK = "localScheduleEditDayOfWeek"; // день недели (Calendar.MONDAY) в на который нацелен активити
     public static final String KEY_LESSON_POSITION = "lessonPosition"; // Позиция редактируемого урока в неделе
 
+    CrashReport crashReport;
     ActivityScheduleLessonEditBinding binding;
 
     ScheduleProvider scheduleProvider = null; // для отображения доп. штук и сохранения
@@ -58,39 +60,48 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (inputInit()) return;
-
-        if (scheduleProvider.getAllLessons().length == 0) {
-            BigNotificationBinding bigNotificationBinding = BigNotificationBinding.inflate(getLayoutInflater());
-            setContentView(bigNotificationBinding.getRoot());
-
-            bigNotificationBinding.title.setText(R.string.abc_actionBefore);
-            bigNotificationBinding.text.setText(R.string.schedule_lesson_lessonsNotFound);
-
-            bigNotificationBinding.actionButton.setText(R.string.abc_create);
-            bigNotificationBinding.actionButton.setOnClickListener(ignore -> {
-                startActivity(new Intent(this, LessonEditActivity.class)
-                        .putExtra(LessonEditActivity.KEY_CREATING_MODE, true)
-                );
+        crashReport = new CrashReport(CrashReport.getFolder(this));
+        try {
+            if (inputInit()) {
                 finish();
-            });
-            return;
+                return;
+            }
+
+            if (scheduleProvider.getAllLessons().length == 0) {
+                BigNotificationBinding bigNotificationBinding = BigNotificationBinding.inflate(getLayoutInflater());
+                setContentView(bigNotificationBinding.getRoot());
+
+                bigNotificationBinding.title.setText(R.string.abc_actionBefore);
+                bigNotificationBinding.text.setText(R.string.schedule_lesson_lessonsNotFound);
+
+                bigNotificationBinding.actionButton.setText(R.string.abc_create);
+                bigNotificationBinding.actionButton.setOnClickListener(ignore -> {
+                    startActivity(new Intent(this, LessonEditActivity.class)
+                            .putExtra(LessonEditActivity.KEY_CREATING_MODE, true)
+                    );
+                    finish();
+                });
+                return;
+            }
+
+            binding = ActivityScheduleLessonEditBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+
+            DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
+            String localizedDayOfWeek = dateFormatSymbols.getWeekdays()[dayOfWeek].toLowerCase();
+            if (isCreatingMode) {
+                setTitle(getString(R.string.activityTitle_scheduleLessonEdit_create, localizedDayOfWeek));
+            } else {
+                setTitle(getString(R.string.activityTitle_scheduleLessonEdit_edit, localizedDayOfWeek));
+            }
+
+            init();
+            initLayout();
+        } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
+            finish();
         }
-
-        binding = ActivityScheduleLessonEditBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
-        String localizedDayOfWeek = dateFormatSymbols.getWeekdays()[dayOfWeek].toLowerCase();
-        if (isCreatingMode) {
-            setTitle(getString(R.string.activityTitle_scheduleLessonEdit_create, localizedDayOfWeek));
-        } else {
-            setTitle(getString(R.string.activityTitle_scheduleLessonEdit_edit, localizedDayOfWeek));
-        }
-
-        init();
-        initLayout();
     }
 
     private boolean inputInit() {

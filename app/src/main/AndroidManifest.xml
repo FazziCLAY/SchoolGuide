@@ -16,10 +16,10 @@
         android:theme="@style/Theme.SchoolGuide">
         <activity
             android:name=".android.activity.AboutActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".android.activity.UpdateCheckerActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".android.activity.schedule.ScheduleLessonEditActivity"
             android:exported="true" />
@@ -61,16 +61,14 @@
         </activity>
 
         <provider
-            android:authorities="${applicationId}.provider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true" >
-
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/providers_paths"/>
+                android:resource="@xml/providers_paths" />
         </provider>
-
     </application>
 
 </manifest>

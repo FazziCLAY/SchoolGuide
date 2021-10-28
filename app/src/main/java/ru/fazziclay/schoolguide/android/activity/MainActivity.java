@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.android.activity.schedule.ScheduleLessonEditActivity;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.settings.DeveloperSettings;
@@ -14,8 +15,11 @@ import ru.fazziclay.schoolguide.data.settings.ExternalLoading;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 
 public class MainActivity extends Activity {
+    CrashReport crashReport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        crashReport = new CrashReport(CrashReport.getFolder(this));
         super.onCreate(savedInstanceState);
         try {
             SettingsProvider preLoadSettingsProvider = new SettingsProvider(this);
@@ -44,7 +48,10 @@ public class MainActivity extends Activity {
             finish();
 
         } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
             Toast.makeText(this, "Error for starting!\n"+throwable.toString(), Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }

@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.util.Locale;
 
 import ru.fazziclay.schoolguide.BuildConfig;
+import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.DownloadThread;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SharedConstrains;
@@ -24,6 +25,7 @@ import ru.fazziclay.schoolguide.databinding.ActivityUpdateCheckerBinding;
 
 // DEV
 public class UpdateCheckerActivity extends AppCompatActivity {
+    CrashReport crashReport;
     ActivityUpdateCheckerBinding binding;
 
     ManifestProvider manifestProvider = null;
@@ -48,6 +50,7 @@ public class UpdateCheckerActivity extends AppCompatActivity {
                         binding.downloading.setVisibility(View.GONE);
                     } else {
                         binding.downloadingTitle.setText(getString(R.string.updateCenter_downloading_title_error));
+                        binding.downloadingCancel.setEnabled(false);
                     }
                     return;
                 }
@@ -64,19 +67,39 @@ public class UpdateCheckerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityUpdateCheckerBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        setTitle(R.string.activityTitle_updateChecker);
+        crashReport = new CrashReport(CrashReport.getFolder(this));
+        try {
+            binding = ActivityUpdateCheckerBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+            setTitle(R.string.activityTitle_updateChecker);
 
-        manifestProvider = ForegroundService.getInstance().getManifestProvider();
+            manifestProvider = ForegroundService.getInstance().getManifestProvider();
 
-        preInit();
+            preInit();
 
-        new Thread(() -> manifestProvider.updateForGlobal((e, manifestProvider) -> {
-            exception = e;
-            initState();
-            runOnUiThread(this::initLayout);
-        })).start();
+            new Thread(() -> manifestProvider.updateForGlobal((e, manifestProvider) -> {
+                exception = e;
+                if (manifestProvider.isTechnicalWorks()) {
+                    state = State.TECHNICAL_WORKS;
+                } else {
+                    initState();
+                }
+                runOnUiThread(() -> {
+                    try {
+                        initLayout();
+                    } catch (Throwable throwable) {
+                        crashReport.error(throwable);
+                        crashReport.notifyUser(this);
+                        finish();
+                    }
+                });
+            })).start();
+
+        } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
+            finish();
+        }
     }
 
     private void preInit() {
@@ -104,6 +127,12 @@ public class UpdateCheckerActivity extends AppCompatActivity {
         binding.loadingGroup.setVisibility(View.GONE);
         binding.mainGroup.setVisibility(View.VISIBLE);
 
+        if (state == State.TECHNICAL_WORKS) {
+            binding.title.setText(R.string.updateCenter_title_technicalWorks);
+            binding.text.setText(getString(R.string.updateCenter_text_technicalWorks));
+            return;
+        }
+
         if (state.isError()) {
             binding.title.setText(R.string.updateCenter_title_error);
             if (state == State.ERROR_GENERIC) binding.text.setText(getString(R.string.updateCenter_text_error_generic, exception.toString()));
@@ -126,6 +155,7 @@ public class UpdateCheckerActivity extends AppCompatActivity {
                 binding.downloadButton.setVisibility(View.VISIBLE);
                 binding.downloadButton.setOnClickListener(button -> {
                     button.setEnabled(false);
+                    binding.downloadingCancel.setEnabled(true);
                     binding.downloading.setVisibility(View.VISIBLE);
 
                     downloadThread = new DownloadThread(
@@ -144,6 +174,11 @@ public class UpdateCheckerActivity extends AppCompatActivity {
             binding.title.setText(R.string.updateCenter_title_latest);
             binding.text.setText(getString(R.string.updateCenter_text_latest));
         }
+
+        if (state == State.VERSION_UNKNOWN) {
+            binding.title.setText(R.string.abc_error);
+            binding.text.setText(null);
+        }
     }
 
     private void installApk(String filePath) {
@@ -161,6 +196,7 @@ public class UpdateCheckerActivity extends AppCompatActivity {
     private enum State {
         ERROR_GENERIC,
         ERROR_NOT_NETWORK_CONNECTION,
+        TECHNICAL_WORKS,
         VERSION_LATEST,
         VERSION_UNKNOWN,
         VERSION_OUTDATED;

@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
@@ -22,6 +23,7 @@ import ru.fazziclay.schoolguide.data.settings.UserNotification;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
+    CrashReport crashReport;
     ActivitySettingsBinding binding;
     SettingsProvider settingsProvider = null;
     ScheduleProvider scheduleProvider = null;
@@ -39,14 +41,21 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySettingsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        crashReport = new CrashReport(CrashReport.getFolder(this));
+        try {
+            binding = ActivitySettingsBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
 
-        settingsProvider = ForegroundService.getInstance().getSettingsProvider();
-        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            settingsProvider = ForegroundService.getInstance().getSettingsProvider();
+            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
 
-        initAdapters();
-        initLayout();
+            initAdapters();
+            initLayout();
+        } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
+            finish();
+        }
     }
 
     private void initAdapters() {
@@ -62,7 +71,10 @@ public class SettingsActivity extends AppCompatActivity {
         for (UUID uuid : selectedLocalScheduleAdapterValues) {
             LocalSchedule localSchedule = scheduleProvider.getLocalSchedule(uuid);
             names.add(localSchedule.getName());
-            if (settingsProvider.getSelectedLocalSchedule().equals(uuid)) selectedLocalSchedulePosition = i;
+            if (settingsProvider.getSelectedLocalSchedule() != null) {
+                if (settingsProvider.getSelectedLocalSchedule().equals(uuid))
+                    selectedLocalSchedulePosition = i;
+            }
             i++;
         }
 
@@ -125,6 +137,13 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+        // Enter code
+        binding.scheduleHubSend.setOnClickListener(ignore -> {
+            String code = binding.scheduleHubCode.getText().toString();
+
+
         });
     }
 
