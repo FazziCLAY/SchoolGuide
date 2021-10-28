@@ -1,14 +1,14 @@
 {
   "version": 4,
-  "manifestKey": 3,
+  "manifestKey": 5,
   "isTechnicalWorks": false,
   "latestVersion": {
-    "code": 16,
-    "name": "2.5.2 - updateCheckerTest",
+    "code": 20,
+    "name": "2.6 - Public Test",
     "pageUrl": "https://github.com/fazziclay/schoolguide",
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/16/app-debug.apk",
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/20/app-debug.apk",
     "changelog": {
-      "default": "Изменения:\n * Это тестовая новая версия для проверки Update checker!\n\nУдачи!"
+      "default": "Исправлены баги!"
     }
   }
 }
