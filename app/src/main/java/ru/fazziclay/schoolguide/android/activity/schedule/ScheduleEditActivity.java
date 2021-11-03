@@ -1,6 +1,5 @@
 package ru.fazziclay.schoolguide.android.activity.schedule;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -69,7 +68,13 @@ public class ScheduleEditActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initLayout();
+        try {
+            initLayout();
+        } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
+            finish();
+        }
     }
 
     private void initLayout() {
@@ -88,9 +93,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
             }
         });
 
-        Context context = this;
         BaseExpandableListAdapter listAdapter = new BaseExpandableListAdapter() {
-
             @Override
             public int getGroupCount() {
                 return 7;
@@ -108,7 +111,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
             @Override
             public Object getChild(int groupId, int childId) {
-                return "Child - groupId:"+groupId+" - childId:"+childId;
+                return null;
             }
 
             @Override
@@ -127,10 +130,10 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 String weekName = weekDaysNames[weekValue];
 
                 if (convertView == null) {
-                    TextView textView = new TextView(context);
+                    TextView textView = new TextView(ScheduleEditActivity.this);
                     textView.setTextSize(30);
                     textView.setText(weekName.toUpperCase());
-                    textView.setOnClickListener(ignore -> startActivity(new Intent(context, ScheduleLessonEditActivity.class)
+                    textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
                             .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
                             .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue))
                 );
@@ -138,6 +141,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
                     convertView = textView;
                 }
                 binding.lessonsList.expandGroup(groupId);
+                binding.lessonsList.setGroupIndicator(null);
                 return convertView;
             }
 
@@ -146,14 +150,14 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 int weekValue = weekDays[groupId];
                 Lesson lesson = localSchedule.get(weekValue).get(childId);
 
-                TextView textView = new TextView(context);
+                TextView textView = new TextView(ScheduleEditActivity.this);
                 textView.setTextSize(21);
                 textView.setTextColor(Color.GREEN);
                 textView.setText(String.format("[%s - %s] %s",
                         TimeUtil.secondsToHumanTime(lesson.getStart(), true),
                         TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60-1), true),
                         getLessonText(lesson)));
-                textView.setOnClickListener(ignore -> startActivity(new Intent(context, ScheduleLessonEditActivity.class)
+                textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
                         .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
                         .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue)
                         .putExtra(ScheduleLessonEditActivity.KEY_LESSON_POSITION, childId)
@@ -178,7 +182,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
     private String getLessonText(Lesson lesson) {
         LessonInfo a = scheduleProvider.getLessonInfo(lesson.getLessonInfo());
-        if (a == null) return "Unknown";
+        if (a == null) return getString(R.string.abc_unknown);
         return a.getName();
     }
 

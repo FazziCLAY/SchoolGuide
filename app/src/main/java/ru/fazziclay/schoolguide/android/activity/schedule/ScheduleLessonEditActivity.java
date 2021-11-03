@@ -205,7 +205,7 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
                     pickedInterface.run(seconds);
                 }, TimeUtil.getHoursInSeconds(defaultTime), TimeUtil.getMinutesInSeconds(defaultTime), true);
 
-        timePickerDialog.setTitle(dialogTitle);
+        timePickerDialog.setMessage(dialogTitle);
         timePickerDialog.show();
     }
 

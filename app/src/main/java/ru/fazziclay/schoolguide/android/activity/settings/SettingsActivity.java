@@ -1,23 +1,25 @@
 package ru.fazziclay.schoolguide.android.activity.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.android.SpinnerAdapter;
+import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
-import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
-import ru.fazziclay.schoolguide.data.settings.AppTheme;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.data.settings.UserNotification;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
@@ -28,15 +30,8 @@ public class SettingsActivity extends AppCompatActivity {
     SettingsProvider settingsProvider = null;
     ScheduleProvider scheduleProvider = null;
 
-    ArrayAdapter<String> userNotificationAdapter = null;
-    UserNotification[] userNotificationAdapterValues = null;
-
-    ArrayAdapter<String> selectedLocalScheduleAdapter = null;
-    UUID[] selectedLocalScheduleAdapterValues = null;
-    int selectedLocalSchedulePosition = 0;
-
-    ArrayAdapter<String> themeAdapter = null;
-    List<AppTheme> themeAdapterValues = null;
+    SpinnerAdapter userNotificationAdapter = null;
+    SpinnerAdapter selectedLocalScheduleAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
             settingsProvider = ForegroundService.getInstance().getSettingsProvider();
             scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
 
-            initAdapters();
             initLayout();
         } catch (Throwable throwable) {
             crashReport.error(throwable);
@@ -58,96 +52,67 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void initAdapters() {
-        userNotificationAdapterValues = new UserNotification[]{UserNotification.FOREGROUND, UserNotification.EXTERNAL};
-        userNotificationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
-                new String[]{getString(R.string.userNotification_foreground), getString(R.string.userNotification_external)});
-
-
-        selectedLocalScheduleAdapterValues = scheduleProvider.getAllSchedules();
-        List<String> names = new ArrayList<>();
-
-        int i = 0;
-        for (UUID uuid : selectedLocalScheduleAdapterValues) {
-            LocalSchedule localSchedule = scheduleProvider.getLocalSchedule(uuid);
-            names.add(localSchedule.getName());
-            if (settingsProvider.getSelectedLocalSchedule() != null) {
-                if (settingsProvider.getSelectedLocalSchedule().equals(uuid))
-                    selectedLocalSchedulePosition = i;
-            }
-            i++;
-        }
-
-        selectedLocalScheduleAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, names);
-
-
-        themeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new String[] {"AUTO", "NIGHT", "LIGHT"});
-        themeAdapterValues = Arrays.asList(AppTheme.AUTO, AppTheme.NIGHT, AppTheme.LIGHT);
-    }
-
     private void initLayout() {
         // Notification
-        binding.isNotificationCheckbox.setChecked(settingsProvider.isNotification());
-        binding.isNotificationCheckbox.setOnClickListener(ignore -> {
-            settingsProvider.setNotification(binding.isNotificationCheckbox.isChecked());
-            initUserNotificationSpinner();
+        binding.isNotification.setChecked(settingsProvider.isNotification());
+        binding.isNotification.setOnClickListener(checkbox -> {
+            settingsProvider.setNotification(((CheckBox)checkbox).isChecked());
+            binding.userNotification.setEnabled(settingsProvider.isNotification());
         });
 
+        // Notification spinner
         initUserNotificationSpinner();
-        binding.userNotificationSpinner.setAdapter(userNotificationAdapter);
-        binding.userNotificationSpinner.setSelection(settingsProvider.getUserNotification() == UserNotification.FOREGROUND ? 0 : 1);
-        binding.userNotificationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                settingsProvider.setUserNotification(userNotificationAdapterValues[i]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                binding.userNotificationSpinner.setPrompt("No selected!");
-            }
-        });
 
         // Vibration
-        binding.isVibrationCheckbox.setChecked(settingsProvider.isVibration());
-        binding.isVibrationCheckbox.setOnClickListener(ignore -> settingsProvider.setVibration(binding.isVibrationCheckbox.isChecked()));
+        binding.isVibration.setChecked(settingsProvider.isVibration());
+        binding.isVibration.setOnClickListener(checkbox -> settingsProvider.setVibration(((CheckBox)checkbox).isChecked()));
 
         // Selected local Schedule
-        binding.selectedLocalSchedule.setAdapter(selectedLocalScheduleAdapter);
-        binding.selectedLocalSchedule.setSelection(selectedLocalSchedulePosition);
-        binding.selectedLocalSchedule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                settingsProvider.setSelectedLocalSchedule(selectedLocalScheduleAdapterValues[i]);
-            }
+        initSelectedLocalScheduleSpinner();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                binding.selectedLocalSchedule.setPrompt("No selected!");
-            }
-        });
-
-        binding.theme.setAdapter(themeAdapter);
-        binding.theme.setSelection(themeAdapterValues.indexOf(settingsProvider.getTheme()));
-        binding.theme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                settingsProvider.setTheme(themeAdapterValues.get(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
-
-        // Enter code
-        binding.scheduleHubSend.setOnClickListener(ignore -> {
-            String code = binding.scheduleHubCode.getText().toString();
-
-
-        });
+        // Check update
+        binding.checkUpdate.setOnClickListener(ignore -> startActivity(new Intent(this, UpdateCheckerActivity.class)));
     }
 
     private void initUserNotificationSpinner() {
-        binding.userNotificationSpinner.setEnabled(settingsProvider.isNotification());
+        // Adapter
+        List<SpinnerAdapter.SpinnerAdapterElement> userNotificationElements = new ArrayList<>();
+        userNotificationElements.add(new SpinnerAdapter.SpinnerAdapterElement(getString(R.string.userNotification_foreground), UserNotification.FOREGROUND));
+        userNotificationElements.add(new SpinnerAdapter.SpinnerAdapterElement(getString(R.string.userNotification_external), UserNotification.EXTERNAL));
+        userNotificationAdapter = new SpinnerAdapter(userNotificationElements, settingsProvider.getUserNotification());
+
+        // Layout
+        binding.userNotification.setEnabled(settingsProvider.isNotification());
+
+        binding.userNotification.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, userNotificationAdapter.getNames()));
+        binding.userNotification.setSelection(userNotificationAdapter.getSelected());
+        binding.userNotification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settingsProvider.setUserNotification((UserNotification) userNotificationAdapter.getValue(i));
+            }
+            @Override public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+    }
+
+    private void initSelectedLocalScheduleSpinner() {
+        // Adapter
+        List<SpinnerAdapter.SpinnerAdapterElement> selectedLocalScheduleElements = new ArrayList<>();
+        for (UUID uuid : scheduleProvider.getAllSchedules()) selectedLocalScheduleElements.add(new SpinnerAdapter.SpinnerAdapterElement(scheduleProvider.getLocalSchedule(uuid).getName(), uuid));
+        selectedLocalScheduleAdapter = new SpinnerAdapter(selectedLocalScheduleElements, settingsProvider.getSelectedLocalSchedule());
+
+        // Layout
+        binding.selectedLocalSchedule.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, selectedLocalScheduleAdapter.getNames()));
+        binding.selectedLocalSchedule.setSelection(selectedLocalScheduleAdapter.getSelected());
+        TextView emptyText = new TextView(SettingsActivity.this);
+        emptyText.setText(R.string.settings_selectedLocalSchedule_empty);
+        binding.selectedLocalSchedule.setEmptyView(emptyText);
+        binding.selectedLocalSchedule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settingsProvider.setSelectedLocalSchedule((UUID) selectedLocalScheduleAdapter.getValue(i));
+            }
+            @Override public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
     }
 }

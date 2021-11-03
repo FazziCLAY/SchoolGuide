@@ -9,17 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10sp">
+        android:padding="8sp">
 
         <CheckBox
-            android:id="@+id/isNotificationCheckbox"
+            android:id="@+id/isNotification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?attr/checkboxTextColor"
             android:text="@string/settings_isNotification" />
 
         <Spinner
-            android:id="@+id/userNotificationSpinner"
+            android:id="@+id/userNotification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:prompt="@string/settings_userNotificationSinner"
@@ -27,7 +27,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <CheckBox
-            android:id="@+id/isVibrationCheckbox"
+            android:id="@+id/isVibration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?attr/checkboxTextColor"
@@ -41,41 +41,10 @@
             android:minHeight="48dp"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <Spinner
-            android:id="@+id/theme"
+        <Button
+            android:id="@+id/checkUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:textSize="16sp"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_title_enterScheduleHubCode"/>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/scheduleHubCode"
-                android:layout_weight="2"
-                android:hint="@string/settings_hint_enterScheduleHubCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName" />
-
-            <Button
-                android:id="@+id/scheduleHubSend"
-                android:text="@string/settings_button_enterScheduleHubCode"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+            android:text="@string/settings_checkUpdate" />
     </LinearLayout>
 </ScrollView>

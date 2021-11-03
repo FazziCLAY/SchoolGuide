@@ -19,6 +19,7 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
+import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivitySchedulesBinding;
 
 public class SchedulesActivity extends AppCompatActivity {
@@ -47,18 +48,20 @@ public class SchedulesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initLayout();
+        try {
+            initLayout();
+        } catch (Throwable throwable) {
+            crashReport.error(throwable);
+            crashReport.notifyUser(this);
+            finish();
+        }
     }
 
     private void initLayout() {
         // Init schedules list
         UUID[] schedulesIds = scheduleProvider.getAllSchedules();
         List<String> names = new ArrayList<>();
-
-        for (UUID uuid : schedulesIds) {
-            LocalSchedule localSchedule = scheduleProvider.getLocalSchedule(uuid);
-            names.add(localSchedule.getName());
-        }
+        for (UUID uuid : schedulesIds) names.add(scheduleProvider.getLocalSchedule(uuid).getName());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, names);
         binding.schedulesList.setAdapter(adapter);
@@ -95,13 +98,16 @@ public class SchedulesActivity extends AppCompatActivity {
                             localSchedule.setName(getString(R.string.schedules_createNew_copyOf, localSchedule.getName()));
                         }
 
+                        UUID createdUUID = scheduleProvider.addLocalSchedule(localSchedule);
+                        if (scheduleProvider.getAllSchedules().length == 0) {
+                            SettingsProvider settingsProvider = ForegroundService.getInstance().getSettingsProvider();
+                            settingsProvider.setSelectedLocalSchedule(createdUUID);
+                        }
                         Intent intent = new Intent(this, ScheduleEditActivity.class)
-                                .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, scheduleProvider.addLocalSchedule(localSchedule).toString());
+                                .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, createdUUID.toString());
                         startActivity(intent);
                     })
-                    .setNegativeButton(R.string.abc_cancel, (dialogInterface, i) -> {
-
-                    });
+                    .setNegativeButton(R.string.abc_cancel, null);
 
             builder.show();
         });

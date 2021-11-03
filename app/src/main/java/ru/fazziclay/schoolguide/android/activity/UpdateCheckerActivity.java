@@ -23,14 +23,13 @@ import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
 import ru.fazziclay.schoolguide.data.manifest.VersionState;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCheckerBinding;
 
-// DEV
 public class UpdateCheckerActivity extends AppCompatActivity {
     CrashReport crashReport;
     ActivityUpdateCheckerBinding binding;
 
     ManifestProvider manifestProvider = null;
     State state = State.ERROR_GENERIC;
-    Exception exception = null;
+    Exception exception = new Exception("Error generic!");
     DownloadThread.DownloadThreadInterface downloadThreadInterface = new DownloadThread.DownloadThreadInterface() {
         @Override
         public void onChangeProgress(int progress, int max) {
@@ -79,10 +78,12 @@ public class UpdateCheckerActivity extends AppCompatActivity {
 
             new Thread(() -> manifestProvider.updateForGlobal((e, manifestProvider) -> {
                 exception = e;
-                if (manifestProvider.isTechnicalWorks()) {
-                    state = State.TECHNICAL_WORKS;
-                } else {
+                try {
                     initState();
+                } catch (Throwable throwable) {
+                    crashReport.error(throwable);
+                    crashReport.notifyUser(this);
+                    finish();
                 }
                 runOnUiThread(() -> {
                     try {
@@ -108,6 +109,11 @@ public class UpdateCheckerActivity extends AppCompatActivity {
     }
 
     private void initState() {
+        if (manifestProvider.isTechnicalWorks()) {
+            state = State.TECHNICAL_WORKS;
+            return;
+        }
+
         if (exception != null) {
             if (exception.getClass().equals(UnknownHostException.class)) {
                 state = State.ERROR_NOT_NETWORK_CONNECTION;
@@ -130,22 +136,25 @@ public class UpdateCheckerActivity extends AppCompatActivity {
         if (state == State.TECHNICAL_WORKS) {
             binding.title.setText(R.string.updateCenter_title_technicalWorks);
             binding.text.setText(getString(R.string.updateCenter_text_technicalWorks));
-            return;
-        }
 
-        if (state.isError()) {
+        } else if (state.isError()) {
             binding.title.setText(R.string.updateCenter_title_error);
             if (state == State.ERROR_GENERIC) binding.text.setText(getString(R.string.updateCenter_text_error_generic, exception.toString()));
             if (state == State.ERROR_NOT_NETWORK_CONNECTION) binding.text.setText(R.string.updateCenter_text_error_noNetworkConnection);
-            return;
-        }
 
-        AppVersion latestVersion = manifestProvider.getLatestAppVersion();
-        tempDownloadedFilePath = getExternalCacheDir().getAbsolutePath() + "/downloads/update_v"+latestVersion.getCode()+".apk";
+        } else if (state == State.VERSION_UNKNOWN) {
+            binding.title.setText(R.string.abc_error);
+            binding.text.setText(null);
 
-        binding.downloadingInstall.setOnClickListener(ignore -> installApk(tempDownloadedFilePath));
+        } else if (state == State.VERSION_LATEST) {
+            binding.title.setText(R.string.updateCenter_title_latest);
+            binding.text.setText(R.string.updateCenter_text_latest);
 
-        if (state.isUpdateAvailable()) {
+        } else if (state.isUpdateAvailable()) {
+            AppVersion latestVersion = manifestProvider.getLatestAppVersion();
+            tempDownloadedFilePath = getExternalCacheDir().getAbsolutePath() + "/downloads/update_v"+latestVersion.getCode()+".apk";
+            binding.downloadingInstall.setOnClickListener(ignore -> installApk(tempDownloadedFilePath));
+
             binding.title.setText(R.string.updateCenter_title_updateAvailable);
             binding.text.setText(latestVersion.getChangeLog(Locale.getDefault().getLanguage())
                     .replace("%CLIENT_VERSION_CODE%", String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE))
@@ -167,17 +176,6 @@ public class UpdateCheckerActivity extends AppCompatActivity {
                     downloadThread.start();
                 });
             }
-            return;
-        }
-
-        if (state == State.VERSION_LATEST) {
-            binding.title.setText(R.string.updateCenter_title_latest);
-            binding.text.setText(getString(R.string.updateCenter_text_latest));
-        }
-
-        if (state == State.VERSION_UNKNOWN) {
-            binding.title.setText(R.string.abc_error);
-            binding.text.setText(null);
         }
     }
 
@@ -187,8 +185,10 @@ public class UpdateCheckerActivity extends AppCompatActivity {
             intent.setDataAndType(FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(filePath)), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent);
+
         } catch (Exception e) {
-            e.printStackTrace();
+            crashReport.error(e);
+            crashReport.notifyUser(this);
             Toast.makeText(this, getString(R.string.abc_error), Toast.LENGTH_SHORT).show();
         }
     }

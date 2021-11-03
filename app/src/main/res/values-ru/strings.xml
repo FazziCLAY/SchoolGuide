@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="abc_settings">Настройки приложения</string>
+    <string name="abc_settings">Настройки</string>
     <string name="abc_lessons">Уроки</string>
     <string name="abc_schedules">Расписания</string>
     <string name="abc_delete">Удалить</string>
     <string name="abc_save">Сохранить</string>
     <string name="abc_fillAllFields">Заполните все поля!</string>
-    <string name="abc_lessonNameLengthLimit">Максимальная длинна имени 50!</string>
     <string name="fab_content_lessons">Добавить урок</string>
     <string name="fab_content_schedules">Добавить расписание</string>
     <string name="userNotification_foreground">Главное (О фоне)</string>
@@ -61,12 +60,14 @@
     <string name="abc_create">Создать</string>
     <string name="schedules_createNew_empty">Создать пустой</string>
     <string name="schedules_createNew_newEmptyName">Новое пустое расписание</string>
-    <string name="abc_actionBefore">Подождите</string>
+    <string name="abc_actionBefore">Внимание</string>
     <string name="schedule_lesson_lessonsNotFound">Уроков не найдено. Создайте!</string>
-    <string name="abc_market">Рынок</string>
     <string name="fab_content_market">Рынок</string>
     <string name="updateCenter_title_technicalWorks">Технические работы</string>
     <string name="updateCenter_text_technicalWorks">Измените. На сервере технические работы!</string>
     <string name="settings_selectedLocalSchedule">Выбранное расписание</string>
     <string name="settings_userNotificationSinner">Уведомление польхователя</string>
+    <string name="abc_unknown">Неизвестный</string>
+    <string name="settings_checkUpdate">Проверить обновления</string>
+    <string name="settings_selectedLocalSchedule_empty">Пусто</string>
 </resources>

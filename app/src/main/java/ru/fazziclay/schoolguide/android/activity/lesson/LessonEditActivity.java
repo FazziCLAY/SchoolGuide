@@ -83,11 +83,6 @@ public class LessonEditActivity extends AppCompatActivity {
         }
         String name = editable.toString();
 
-        if (name.length() > 50) {
-            notify(R.string.abc_lessonNameLengthLimit);
-            return;
-        }
-
         if (isCreatingMode) {
             lessonInfo = new LessonInfo(name);
             lessonInfoUUID = scheduleProvider.addLessonInfo(lessonInfo);
