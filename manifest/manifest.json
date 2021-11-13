@@ -1,12 +1,12 @@
 {
   "version": 4,
-  "manifestKey": 5,
+  "manifestKey": 6,
   "isTechnicalWorks": false,
   "latestVersion": {
-    "code": 20,
-    "name": "2.6 - Public Test",
+    "code": 23,
+    "name": "2.8 - Beta",
     "pageUrl": "https://github.com/fazziclay/schoolguide",
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/20/app-debug.apk",
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/23/app-debug.apk",
     "changelog": {
       "default": "Исправлены баги!"
     }
