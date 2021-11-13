@@ -78,6 +78,15 @@ public class SettingsProvider extends BaseProvider {
         save();
     }
 
+    public void setFirstWeekDay(int firstWeekDay) {
+        getSettings().firstWeekDay = firstWeekDay;
+        save();
+    }
+
+    public int getFirstWeekDay() {
+        return getSettings().firstWeekDay;
+    }
+
     @Override
     public BaseData load() {
         Gson gson = new Gson();

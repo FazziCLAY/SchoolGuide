@@ -70,4 +70,6 @@
     <string name="abc_unknown">Неизвестный</string>
     <string name="settings_checkUpdate">Проверить обновления</string>
     <string name="settings_selectedLocalSchedule_empty">Пусто</string>
+    <string name="abc_set">Установить</string>
+    <string name="scheduleEdit_emptyDay"><![CDATA[<Пусто>]]></string>
 </resources>

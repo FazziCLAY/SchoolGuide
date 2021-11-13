@@ -1,5 +1,6 @@
 package ru.fazziclay.schoolguide.data.settings;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.data.BaseData;
@@ -11,4 +12,5 @@ public class Settings extends BaseData {
     AppTheme theme = AppTheme.AUTO;
     UUID selectedLocalSchedule = null;
     DeveloperSettings developerSettings = new DeveloperSettings();
+    int firstWeekDay = Calendar.MONDAY;
 }

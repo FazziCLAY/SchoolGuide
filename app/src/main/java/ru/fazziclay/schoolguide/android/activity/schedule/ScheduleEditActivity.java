@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
@@ -24,6 +25,7 @@ import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
+import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityScheduleEditBinding;
 import ru.fazziclay.schoolguide.util.TimeUtil;
 
@@ -35,6 +37,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
     int[] weekDays = new int[]{Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
     String[] weekDaysNames = new DateFormatSymbols().getWeekdays();
 
+    SettingsProvider settingsProvider;
     ScheduleProvider scheduleProvider;
     ActivityScheduleEditBinding binding;
 
@@ -49,6 +52,8 @@ public class ScheduleEditActivity extends AppCompatActivity {
             binding = ActivityScheduleEditBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
+
+            settingsProvider = ForegroundService.getInstance().getSettingsProvider();
             scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
             localScheduleUUID = UUID.fromString(getIntent().getExtras().getString(KEY_LOCAL_SCHEDULE_UUID));
             localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
@@ -78,6 +83,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     private void initLayout() {
+        binding.setButton.setVisibility(settingsProvider.getSelectedLocalSchedule().equals(localScheduleUUID) ? View.GONE : View.VISIBLE);
         binding.scheduleName.setText(localSchedule.getName());
         binding.scheduleName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -92,7 +98,6 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 scheduleProvider.save();
             }
         });
-
         BaseExpandableListAdapter listAdapter = new BaseExpandableListAdapter() {
             @Override
             public int getGroupCount() {
@@ -101,6 +106,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
             @Override
             public int getChildrenCount(int groupId) {
+                if (localSchedule.get(weekDays[groupId]).size() == 0) return 1;
                 return localSchedule.get(weekDays[groupId]).size();
             }
 
@@ -129,17 +135,16 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 int weekValue = weekDays[groupId];
                 String weekName = weekDaysNames[weekValue];
 
-                if (convertView == null) {
-                    TextView textView = new TextView(ScheduleEditActivity.this);
-                    textView.setTextSize(30);
-                    textView.setText(weekName.toUpperCase());
-                    textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
-                            .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
-                            .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue))
+                TextView textView = new TextView(ScheduleEditActivity.this);
+                textView.setTextColor(Color.CYAN);
+                textView.setTextSize(30);
+                textView.setText(weekName.toUpperCase());
+                textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
+                        .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
+                        .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue))
                 );
 
-                    convertView = textView;
-                }
+                convertView = textView;
                 binding.lessonsList.expandGroup(groupId);
                 binding.lessonsList.setGroupIndicator(null);
                 return convertView;
@@ -147,15 +152,43 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
             @Override
             public View getChildView(int groupId, int childId, boolean b, View view, ViewGroup viewGroup) {
+                if (localSchedule.get(weekDays[groupId]).size() == 0) {
+                    TextView textView = new TextView(ScheduleEditActivity.this);
+                    textView.setTextSize(21);
+                    textView.setPadding(15, 1, 5, 1);
+                    textView.setText(R.string.scheduleEdit_emptyDay);
+                    textView.setTextColor(Color.LTGRAY);
+                    return textView;
+                }
+
+                int colorNew = Color.GREEN;
+                int colorD = Color.LTGRAY;
+
+                int iii = groupId - 1;
+                if (iii < 0) iii = weekDays.length - 1;
+                int weekValuePr = weekDays[iii];
+                List<Lesson> weekPr = localSchedule.get(weekValuePr);
+
                 int weekValue = weekDays[groupId];
-                Lesson lesson = localSchedule.get(weekValue).get(childId);
+                List<Lesson> week = localSchedule.get(weekValue);
+                Lesson lesson = week.get(childId);
+
+                int color = colorNew;
+                for (Lesson l : weekPr) {
+                    if (l.getLessonInfo().equals(lesson.getLessonInfo())) {
+                        color = colorD;
+                        break;
+                    }
+                }
 
                 TextView textView = new TextView(ScheduleEditActivity.this);
                 textView.setTextSize(21);
-                textView.setTextColor(Color.GREEN);
-                textView.setText(String.format("[%s - %s] %s",
-                        TimeUtil.secondsToHumanTime(lesson.getStart(), true),
-                        TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60-1), true),
+                textView.setTextColor(color);
+                textView.setPadding(15, 1, 5, 1);
+                textView.setText(String.format("#%s [%s - %s] %s",
+                        childId + 1,
+                        TimeUtil.secondsToHumanTime(lesson.getStart(), true).substring(0, 5),
+                        TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60 - 1), true).substring(0, 5),
                         getLessonText(lesson)));
                 textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
                         .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
@@ -178,6 +211,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
         binding.lessonsList.setAdapter(listAdapter);
 
         binding.deleteButton.setOnClickListener(ignore -> delete());
+        binding.setButton.setOnClickListener(ignore -> set());
     }
 
     private String getLessonText(Lesson lesson) {
@@ -192,10 +226,17 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 .setMessage(R.string.scheduleEdit_delete_message)
                 .setPositiveButton(R.string.abc_delete, (ignore1, ignore2) -> {
                     scheduleProvider.removeLocalSchedule(localScheduleUUID);
+                    UUID[] a = scheduleProvider.getAllSchedules();
+                    if (a.length > 0) settingsProvider.setSelectedLocalSchedule(a[0]);
                     finish();
                 })
                 .setNegativeButton(R.string.abc_cancel, null);
 
         builder.show();
+    }
+
+    private void set() {
+        settingsProvider.setSelectedLocalSchedule(localScheduleUUID);
+        binding.setButton.setVisibility(View.GONE);
     }
 }

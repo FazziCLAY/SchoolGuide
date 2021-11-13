@@ -25,6 +25,7 @@ import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
+import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityScheduleLessonEditBinding;
 import ru.fazziclay.schoolguide.databinding.BigNotificationBinding;
 import ru.fazziclay.schoolguide.util.TimeUtil;

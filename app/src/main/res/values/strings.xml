@@ -73,4 +73,6 @@
     <string name="fab_content_market">Market</string>
     <string name="settings_checkUpdate">Check Update</string>
     <string name="settings_selectedLocalSchedule_empty">Empty</string>
+    <string name="abc_set">Set</string>
+    <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
 </resources>

@@ -2,7 +2,11 @@ package ru.fazziclay.schoolguide.android.activity.schedule;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,6 +30,7 @@ public class SchedulesActivity extends AppCompatActivity {
     CrashReport crashReport;
     ActivitySchedulesBinding binding;
     ScheduleProvider scheduleProvider;
+    SettingsProvider settingsProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,7 @@ public class SchedulesActivity extends AppCompatActivity {
             setContentView(binding.getRoot());
 
             scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            settingsProvider = ForegroundService.getInstance().getSettingsProvider();
 
             initLayout();
         } catch (Throwable throwable) {
@@ -60,16 +66,41 @@ public class SchedulesActivity extends AppCompatActivity {
     private void initLayout() {
         // Init schedules list
         UUID[] schedulesIds = scheduleProvider.getAllSchedules();
-        List<String> names = new ArrayList<>();
-        for (UUID uuid : schedulesIds) names.add(scheduleProvider.getLocalSchedule(uuid).getName());
+        BaseAdapter adapter = new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return schedulesIds.length;
+            }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, names);
+            @Override
+            public Object getItem(int position) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                UUID scheduleUUID = schedulesIds[position];
+
+                CheckBox textView = new CheckBox(SchedulesActivity.this);
+                textView.setPadding(6, 10, 6, 10);
+                textView.setTextSize(30);
+                textView.setOnCheckedChangeListener((buttonView, isChecked) -> buttonView.setChecked(scheduleUUID.equals(settingsProvider.getSelectedLocalSchedule())));
+                textView.setOnClickListener(ignored -> {
+                    Intent intent = new Intent(SchedulesActivity.this, ScheduleEditActivity.class)
+                            .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, schedulesIds[position].toString());
+                    startActivity(intent);
+                });
+                textView.setText(scheduleProvider.getLocalSchedule(scheduleUUID).getName());
+                textView.setChecked(scheduleUUID.equals(settingsProvider.getSelectedLocalSchedule()));
+                return textView;
+            }
+        };
         binding.schedulesList.setAdapter(adapter);
-        binding.schedulesList.setOnItemClickListener((adapterView, view, itemPosition, l) -> {
-            Intent intent = new Intent(this, ScheduleEditActivity.class)
-                    .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, schedulesIds[itemPosition].toString());
-            startActivity(intent);
-        });
 
         // Fab (Floating action button)
         binding.addScheduleButton.setOnClickListener(ignore -> {
