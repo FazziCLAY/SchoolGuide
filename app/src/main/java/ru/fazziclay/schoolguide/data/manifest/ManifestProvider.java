@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.data.schedule.Schedule;
 import ru.fazziclay.schoolguide.util.FileUtil;
 import ru.fazziclay.schoolguide.data.BaseData;
 import ru.fazziclay.schoolguide.data.BaseProvider;
@@ -43,7 +44,7 @@ public class ManifestProvider extends BaseProvider {
         try {
             int key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
 
-            if (getManifest().manifestKey < key) {
+            if (getManifest().manifestKey != key) {
                 Manifest globalManifest = gson.fromJson(parseUrl(MANIFEST_URL), Manifest.class);
                 setManifest(globalManifest);
             }
@@ -82,6 +83,10 @@ public class ManifestProvider extends BaseProvider {
 
     public boolean isTechnicalWorks() {
         return getManifest().isTechnicalWorks;
+    }
+
+    public Schedule getDeveloperSchedule() {
+        return getManifest().developerSchedule;
     }
 
     // ===================================

@@ -83,7 +83,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     private void initLayout() {
-        binding.setButton.setVisibility(settingsProvider.getSelectedLocalSchedule().equals(localScheduleUUID) ? View.GONE : View.VISIBLE);
+        binding.setButton.setVisibility(localScheduleUUID.equals(settingsProvider.getSelectedLocalSchedule()) ? View.GONE : View.VISIBLE);
         binding.scheduleName.setText(localSchedule.getName());
         binding.scheduleName.addTextChangedListener(new TextWatcher() {
             @Override

@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
         <activity
+            android:name=".android.activity.developer.SetDeveloperScheduleActivity"
+            android:exported="false" />
+        <activity
             android:name=".android.activity.AboutActivity"
             android:exported="true" />
         <activity

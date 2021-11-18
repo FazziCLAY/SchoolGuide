@@ -41,8 +41,6 @@ public class ForegroundService extends Service {
     private static final short LOOP_DELAY = 1000;
 
     static ForegroundService instance = null;
-    public static final String REST = "Rest!";
-    public static final String HURRY_UP = "(HURRY UP)";
 
     ManifestProvider manifestProvider = null;
     SettingsProvider settingsProvider = null;
@@ -137,8 +135,9 @@ public class ForegroundService extends Service {
     }
 
     public String getLessonText(Lesson lesson) {
+        if (lesson == null) return getString(R.string.abc_empty);
         LessonInfo a = getScheduleProvider().getLessonInfo(lesson.getLessonInfo());
-        if (a == null) return "Unknown";
+        if (a == null) return getString(R.string.abc_unknown);
         return a.getName();
     }
 
@@ -169,31 +168,45 @@ public class ForegroundService extends Service {
         ScheduleProvider sp = getScheduleProvider();
         UUID sls = getSettingsProvider().getSelectedLocalSchedule();
         State state = sp.getState(sls);
-        Lesson nextLesson = sp.getNextLesson(sls);
         int leftTime = 0;
 
         SpannableString title = null;
-        SpannableString content;
+        SpannableString content = null;
         SpannableString subText = null;
 
         if (state.isLesson()) {
             leftTime = sp.getTimeBeforeStartRest(sls);
-            String titleS = String.format("Now: %s",
-                    getLessonText(sp.getNowLesson(sls))
-            );
+            String titleS = getString(R.string.notification_lesson_title);
+            String contentS = getString(R.string.notification_lesson_text);
+            if (state.isEnding()) {
+                contentS = getString(R.string.notification_lesson_text_z);
+            }
 
-            title = new SpannableString(titleS);
+            title = new SpannableString(titleS
+                    .replace("%LEFT%", TimeUtil.secondsToHumanTime(leftTime, false))
+            );
+            content = new SpannableString(contentS
+                    .replace("%LESSON%", getLessonText(sp.getNowLesson(sls)))
+                    .replace("%NEXT_LESSON%", getLessonText(sp.getNextLesson(sls)))
+            );
 
         } else if (state.isRest()) {
             leftTime = sp.getTimeBeforeStartLesson(sls);
-            title = new SpannableString(REST + (state.isEnding() ? " "+HURRY_UP : ""));
-        }
+            String titleS = getString(R.string.notification_rest_title);
+            String contentS = getString(R.string.notification_rest_text);
 
-        String contentS = String.format("Left: %s %s",
-                TimeUtil.secondsToHumanTime(leftTime, false),
-                (((state.isLesson() && state.isEnding()) || state.isRest()) && nextLesson != null ? "Next: " + getLessonText(nextLesson) : "")
-        );
-        content = new SpannableString(contentS);
+            if (state.isEnding()) {
+                titleS = getString(R.string.notification_rest_title_hurryup);
+                contentS = getString(R.string.notification_rest_text_hurryup);
+            }
+
+            title = new SpannableString(titleS
+                    .replace("%LEFT%", TimeUtil.secondsToHumanTime(leftTime, false))
+            );
+            content = new SpannableString(contentS
+                    .replace("%LESSON%", getLessonText(sp.getNowLesson(sls)))
+                    .replace("%NEXT_LESSON%", getLessonText(sp.getNextLesson(sls))));
+        }
 
         updateVibration(state);
         updateUserNotification(title, subText, content);

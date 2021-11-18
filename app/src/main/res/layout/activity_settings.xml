@@ -46,5 +46,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_checkUpdate" />
+
+        <Button
+            android:id="@+id/setDeveloperSchedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#ffffff"
+            android:text="Устанановить\nрасписание\nразработчика" />
     </LinearLayout>
 </ScrollView>

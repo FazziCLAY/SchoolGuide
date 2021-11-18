@@ -18,6 +18,7 @@ import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.android.SpinnerAdapter;
 import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
+import ru.fazziclay.schoolguide.android.activity.developer.SetDeveloperScheduleActivity;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
@@ -72,6 +73,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Check update
         binding.checkUpdate.setOnClickListener(ignore -> startActivity(new Intent(this, UpdateCheckerActivity.class)));
+
+        // developer schedule
+        binding.setDeveloperSchedule.setOnClickListener(ignore -> {
+            startActivity(new Intent(this, SetDeveloperScheduleActivity.class));
+        });
     }
 
     private void initUserNotificationSpinner() {

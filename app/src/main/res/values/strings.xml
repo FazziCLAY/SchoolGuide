@@ -34,6 +34,17 @@
     <string name="notificationChannel_external_description">External notification for showing the schedule (you can enable it in the app settings)</string>
     <string name="notification_foreground_defaultTitle">The application is active</string>
     <string name="notification_foreground_defaultText">This is necessary to keep the application open</string>
+
+    <string name="notification_lesson_title">Lesson! Left: %LEFT%</string>
+    <string name="notification_lesson_text">Lesson: %LESSON%</string>
+    <string name="notification_lesson_text_z">Lesson: %LESSON% Next: %NEXT_LESSON%</string>
+
+    <string name="notification_rest_title">Rest! Left: %LEFT%</string>
+    <string name="notification_rest_title_hurryup">Rest! Left: %LEFT% (HURRY UP)</string>
+    <string name="notification_rest_text">Next: %NEXT_LESSON%</string>
+    <string name="notification_rest_text_hurryup">Next: %NEXT_LESSON%</string>
+
+
     <string name="notificationChannel_updatechecker_name">UpdateChecker</string>
     <string name="notificationChannel_updatechecker_description">Update checker notifications</string>
     <string name="notification_updatechecker_newVersion_title">New version available</string>
@@ -57,7 +68,7 @@
     <string name="updateCenter_downloading_title_success">Downloaded!</string>
     <string name="activityTitle_updateChecker">Update Center</string>
     <string name="updateCenter_title_latest">Updated!</string>
-    <string name="updateCenter_text_latest">TODO</string>
+    <string name="updateCenter_text_latest">Client updated!</string>
     <string name="settings_title_enterScheduleHubCode">Enter code?</string>
     <string name="settings_hint_enterScheduleHubCode">Code</string>
     <string name="settings_button_enterScheduleHubCode">Send</string>
@@ -75,4 +86,5 @@
     <string name="settings_selectedLocalSchedule_empty">Empty</string>
     <string name="abc_set">Set</string>
     <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
+    <string name="abc_empty">Empty</string>
 </resources>

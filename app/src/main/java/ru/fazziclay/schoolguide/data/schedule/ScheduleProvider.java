@@ -35,6 +35,7 @@ public class ScheduleProvider extends BaseProvider {
 
     public void setSchedule(Schedule schedule) {
         data = schedule;
+        save();
     }
 
     // Получить UUID всех информаций уроков
@@ -159,10 +160,10 @@ public class ScheduleProvider extends BaseProvider {
     public State getState(UUID localScheduleUUID) {
         if (getNowLesson(localScheduleUUID) != null) {
             return State.LESSON
-                    .setEnding(getTimeBeforeStartRest(localScheduleUUID) < 5);
+                    .setEnding(getTimeBeforeStartRest(localScheduleUUID) < 5*60);
         } else if (getNextLesson(localScheduleUUID) != null) {
             return State.REST
-                    .setEnding(getTimeBeforeStartLesson(localScheduleUUID) < 3);
+                    .setEnding(getTimeBeforeStartLesson(localScheduleUUID) < 2*60);
         } else {
             return State.END;
         }
