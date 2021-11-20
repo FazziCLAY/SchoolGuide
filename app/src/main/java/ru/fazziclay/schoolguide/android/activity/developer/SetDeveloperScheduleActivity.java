@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
 import ru.fazziclay.schoolguide.data.schedule.Schedule;
@@ -44,8 +45,8 @@ public class SetDeveloperScheduleActivity extends AppCompatActivity {
         background.setOrientation(LinearLayout.VERTICAL);
         background.addView(loadingText);
 
-        manifestProvider = ForegroundService.getInstance().getManifestProvider();
-        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+        manifestProvider = SchoolGuide.getInstance().getManifestProvider();
+        scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
 
 
         new Thread(() -> {

@@ -35,14 +35,13 @@
     <string name="notification_foreground_defaultTitle">The application is active</string>
     <string name="notification_foreground_defaultText">This is necessary to keep the application open</string>
 
-    <string name="notification_lesson_title">Lesson! Left: %LEFT%</string>
-    <string name="notification_lesson_text">Lesson: %LESSON%</string>
-    <string name="notification_lesson_text_z">Lesson: %LESSON% Next: %NEXT_LESSON%</string>
+    <string name="notification_lesson_title">%LESSON%! Left: %LEFT%</string>
+    <string name="notification_lesson_text_ending">Next: %NEXT_LESSON%</string>
 
     <string name="notification_rest_title">Rest! Left: %LEFT%</string>
-    <string name="notification_rest_title_hurryup">Rest! Left: %LEFT% (HURRY UP)</string>
+    <string name="notification_rest_title_ending">Rest! Left: %LEFT% (HURRY UP)</string>
     <string name="notification_rest_text">Next: %NEXT_LESSON%</string>
-    <string name="notification_rest_text_hurryup">Next: %NEXT_LESSON%</string>
+    <string name="notification_rest_text_ending">Next: %NEXT_LESSON%</string>
 
 
     <string name="notificationChannel_updatechecker_name">UpdateChecker</string>
@@ -87,4 +86,9 @@
     <string name="abc_set">Set</string>
     <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
     <string name="abc_empty">Empty</string>
+    <string name="notification_lesson_title_ending">Lesson! Left: %LEFT%</string>
+    <string name="todaySchedule_todayLessons_title">Today lessons:</string>
+    <string name="schedules_empty_title">Schedules not found!</string>
+    <string name="schedules_empty_content">Create your schedule + button</string>
+    <string name="notification_lesson_text" translatable="false">" "</string>
 </resources>

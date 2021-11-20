@@ -3,19 +3,18 @@ package ru.fazziclay.schoolguide;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.io.File;
-
 import ru.fazziclay.schoolguide.util.FileUtil;
 
 public class CrashReport {
     public static final String CRASH_REPORT_FOLDER = "/crash_reports/";
-    public static final int CRASH_REPORT_VERSION = 2;
-    public static final String CRASH_REPORT_PATTERN = "Crash Report! Version=%CRASH_REPORT_VERSION%\n\nThread: %ERROR_THREAD_NAME%\n\nInit StackTrace:\n%INIT_STACK_TRACE%\n\nError: %ERROR_TEXT%\nStackTrace:\n%ERROR_STACK_TRACE%";
+    public static final int CRASH_REPORT_VERSION = 3;
+    public static final String CRASH_REPORT_PATTERN = "Crash Report! Version=%CRASH_REPORT_VERSION%\n\nThread: %ERROR_THREAD_NAME%\n\nInit StackTrace:\n%INIT_STACK_TRACE%\n\nError: %ERROR_TEXT%\nStackTrace:\n%ERROR_STACK_TRACE%\n\nSystem Information: %SYSTEM_INFORMATION%";
 
     String crashReportsFolded = "";
     StackTraceElement[] initStackTrace;
@@ -23,22 +22,15 @@ public class CrashReport {
 
     String finalReport = "";
 
-    public CrashReport(File file) {
-        this.crashReportsFolded = file.getAbsolutePath();
+    public CrashReport(Context context, Throwable throwable) {
+        this.crashReportsFolded = getFolder(context);
         try {
             throw new GetInitException();
         } catch (Throwable e) {
             initStackTrace = e.getStackTrace();
         }
-    }
-
-    public CrashReport(String crashReportsFolded) {
-        this.crashReportsFolded = crashReportsFolded;
-        try {
-            throw new GetInitException();
-        } catch (Throwable e) {
-            initStackTrace = e.getStackTrace();
-        }
+        error(throwable);
+        notifyUser(context);
     }
 
     public static String getFolder(Context context) {
@@ -67,13 +59,36 @@ public class CrashReport {
 
     public void error(Throwable throwable) {
         errorStackTrace = throwable.getStackTrace();
+        String details
+                ="\n * VERSION.RELEASE : "+Build.VERSION.RELEASE
+                +"\n * VERSION.INCREMENTAL : "+Build.VERSION.INCREMENTAL
+                +"\n * VERSION.SDK.NUMBER : "+Build.VERSION.SDK_INT
+                +"\n * BOARD : "+Build.BOARD
+                +"\n * BOOTLOADER : "+Build.BOOTLOADER
+                +"\n * BRAND : "+Build.BRAND
+                +"\n * CPU_ABI : "+Build.CPU_ABI
+                +"\n * CPU_ABI2 : "+Build.CPU_ABI2
+                +"\n * DISPLAY : "+Build.DISPLAY
+                +"\n * FINGERPRINT : "+Build.FINGERPRINT
+                +"\n * HARDWARE : "+Build.HARDWARE
+                +"\n * HOST : "+Build.HOST
+                +"\n * ID : "+Build.ID
+                +"\n * MANUFACTURER : "+Build.MANUFACTURER
+                +"\n * MODEL : "+Build.MODEL
+                +"\n * PRODUCT : "+Build.PRODUCT
+                +"\n * TAGS : "+Build.TAGS
+                +"\n * TIME : "+Build.TIME
+                +"\n * TYPE : "+Build.TYPE
+                +"\n * UNKNOWN : "+Build.UNKNOWN
+                +"\n * USER : "+Build.USER;
 
         finalReport = CRASH_REPORT_PATTERN
                 .replace("%INIT_STACK_TRACE%", stackTraceToString(initStackTrace))
                 .replace("%ERROR_TEXT%", throwable.toString())
                 .replace("%ERROR_STACK_TRACE%", stackTraceToString(errorStackTrace))
                 .replace("%ERROR_THREAD_NAME%", Thread.currentThread().getName())
-                .replace("%CRASH_REPORT_VERSION%", CRASH_REPORT_VERSION+"");
+                .replace("%CRASH_REPORT_VERSION%", CRASH_REPORT_VERSION+"")
+                .replace("%SYSTEM_INFORMATION%", details);
 
         FileUtil.write(crashReportsFolded + "/crash_report_"+(System.currentTimeMillis() / 1000)+".txt", finalReport);
         Log.e("Crash Report", finalReport);

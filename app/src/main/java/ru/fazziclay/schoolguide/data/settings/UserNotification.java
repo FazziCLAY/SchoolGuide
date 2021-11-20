@@ -6,5 +6,7 @@ public enum UserNotification {
     @SerializedName("foreground")
     FOREGROUND,
     @SerializedName("external")
-    EXTERNAL
+    EXTERNAL,
+    @SerializedName("disabled")
+    DISABLED
 }

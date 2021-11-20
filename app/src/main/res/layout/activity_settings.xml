@@ -12,21 +12,6 @@
         android:padding="8sp">
 
         <CheckBox
-            android:id="@+id/isNotification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="?attr/checkboxTextColor"
-            android:text="@string/settings_isNotification" />
-
-        <Spinner
-            android:id="@+id/userNotification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/settings_userNotificationSinner"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <CheckBox
             android:id="@+id/isVibration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

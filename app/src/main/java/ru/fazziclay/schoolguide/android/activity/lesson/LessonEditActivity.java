@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityLessonEditBinding;
@@ -21,7 +21,6 @@ public class LessonEditActivity extends AppCompatActivity {
     public static final String KEY_LESSON_INFO_UUID = "lessonInfoUUID";
     public static final String KEY_CREATING_MODE = "isCreating";
 
-    CrashReport crashReport;
     ActivityLessonEditBinding binding;
     ScheduleProvider scheduleProvider;
     UUID lessonInfoUUID;
@@ -31,12 +30,11 @@ public class LessonEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             binding = ActivityLessonEditBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
-            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
             isCreatingMode = getIntent().getExtras().getBoolean(KEY_CREATING_MODE, true);
             if (!isCreatingMode) {
                 lessonInfoUUID = UUID.fromString(getIntent().getExtras().getString(KEY_LESSON_INFO_UUID));
@@ -45,8 +43,7 @@ public class LessonEditActivity extends AppCompatActivity {
 
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }

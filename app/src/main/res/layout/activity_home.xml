@@ -9,21 +9,38 @@
     tools:context=".android.activity.HomeActivity">
 
     <LinearLayout
+        android:id="@+id/emptyText"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-
-
-
-
-        <ListView
-            android:id="@+id/schedulesList"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:text="@string/schedules_empty_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:text="@string/schedules_empty_content" />
+
     </LinearLayout>
 
+
+    <ListView
+        android:id="@+id/schedulesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Action Bar -->
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -54,8 +71,5 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_input_add"
             android:contentDescription="@string/fab_content_schedules" />
-
     </LinearLayout>
-
-
 </RelativeLayout>

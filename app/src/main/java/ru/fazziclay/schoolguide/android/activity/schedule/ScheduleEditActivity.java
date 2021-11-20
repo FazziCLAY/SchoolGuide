@@ -15,12 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
@@ -33,7 +34,6 @@ public class ScheduleEditActivity extends AppCompatActivity {
     public static final String KEY_LOCAL_SCHEDULE_UUID = "localScheduleUUID";
     private static final boolean IS_MONDAY_FIRST = true;
 
-    CrashReport crashReport;
     int[] weekDays = new int[]{Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
     String[] weekDaysNames = new DateFormatSymbols().getWeekdays();
 
@@ -47,14 +47,13 @@ public class ScheduleEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             binding = ActivityScheduleEditBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
 
-            settingsProvider = ForegroundService.getInstance().getSettingsProvider();
-            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            settingsProvider = SchoolGuide.getInstance().getSettingsProvider();
+            scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
             localScheduleUUID = UUID.fromString(getIntent().getExtras().getString(KEY_LOCAL_SCHEDULE_UUID));
             localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
 
@@ -64,8 +63,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
@@ -76,8 +74,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
         try {
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
@@ -134,6 +131,10 @@ public class ScheduleEditActivity extends AppCompatActivity {
             public View getGroupView(int groupId, boolean isExpanded, View convertView, ViewGroup parent) {
                 int weekValue = weekDays[groupId];
                 String weekName = weekDaysNames[weekValue];
+                Calendar calendar = new GregorianCalendar();
+                if (calendar.get(Calendar.DAY_OF_WEEK) == weekValue) {
+                    weekName += " <---";
+                }
 
                 TextView textView = new TextView(ScheduleEditActivity.this);
                 textView.setTextColor(Color.CYAN);
@@ -180,6 +181,9 @@ public class ScheduleEditActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
+                if (lesson.equals(localSchedule.getNowLesson())) color = Color.CYAN;
+                if (lesson.equals(localSchedule.getNextLesson())) color = Color.RED;
 
                 TextView textView = new TextView(ScheduleEditActivity.this);
                 textView.setTextSize(21);

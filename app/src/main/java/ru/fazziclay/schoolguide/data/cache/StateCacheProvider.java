@@ -18,6 +18,10 @@ public class StateCacheProvider extends BaseProvider {
         if (data.isFormatVersionDefault()) data.formatVersion = 1;
     }
 
+    public int getLatestAppVersionUseCode() {
+        return getStateCache().latestAppVersionUseCode;
+    }
+
     public StateCache getStateCache() {
         return (StateCache) data;
     }
@@ -51,28 +55,6 @@ public class StateCacheProvider extends BaseProvider {
     public void setVibratedFor(State state) {
         if (getStateCache().vibratedFor != state) {
             getStateCache().vibratedFor = state;
-            save();
-        }
-    }
-
-    public int getLessonsActivityLastClickedTo() {
-        return getStateCache().lessonsActivityLastClickedTo;
-    }
-
-    public void setLessonsActivityLastClickedTo(int i) {
-        if (getStateCache().lessonsActivityLastClickedTo != i) {
-            getStateCache().lessonsActivityLastClickedTo = i;
-            save();
-        }
-    }
-
-    public long getLessonsActivityLastClickedTime() {
-        return getStateCache().lessonsActivityLastClickedTime;
-    }
-
-    public void setLessonsActivityLastClickedTime(long i) {
-        if (getStateCache().lessonsActivityLastClickedTime != i) {
-            getStateCache().lessonsActivityLastClickedTime = i;
             save();
         }
     }

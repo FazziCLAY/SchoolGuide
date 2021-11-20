@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 
 import android.content.Context;
 
+import java.util.List;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.util.FileUtil;
 import ru.fazziclay.schoolguide.data.BaseData;
 import ru.fazziclay.schoolguide.data.BaseProvider;
@@ -25,15 +27,6 @@ public class SettingsProvider extends BaseProvider {
         return (Settings) data;
     }
 
-    public void setNotification(boolean s) {
-        getSettings().isNotification = s;
-        save();
-    }
-
-    public boolean isNotification() {
-        return getSettings().isNotification;
-    }
-
     public void setVibration(boolean s) {
         getSettings().isVibration = s;
         save();
@@ -42,49 +35,25 @@ public class SettingsProvider extends BaseProvider {
         return getSettings().isVibration;
     }
 
-    public void getUserNotification(UserNotification s) {
-        getSettings().userNotification = s;
-        save();
-    }
-
-    public UserNotification getUserNotification() {
-        return getSettings().userNotification;
-    }
-
-    public void setUserNotification(UserNotification s) {
-        getSettings().userNotification = s;
-        save();
-    }
-
     public void setSelectedLocalSchedule(UUID uuid) {
         getSettings().selectedLocalSchedule = uuid;
         save();
+        SchoolGuide.getInstance().onSelectedLocalScheduleChanged();
     }
 
     public UUID getSelectedLocalSchedule() {
         return getSettings().selectedLocalSchedule;
     }
 
-    public DeveloperSettings getDeveloperSettings() {
-        return getSettings().developerSettings;
+    public List<Integer> getVersionsHistory() {
+        return getSettings().versionsHistory;
     }
 
-    public AppTheme getTheme() {
-        return getSettings().theme;
-    }
-
-    public void setTheme(AppTheme theme) {
-        getSettings().theme = theme;
-        save();
-    }
-
-    public void setFirstWeekDay(int firstWeekDay) {
-        getSettings().firstWeekDay = firstWeekDay;
-        save();
-    }
-
-    public int getFirstWeekDay() {
-        return getSettings().firstWeekDay;
+    public void addVersionsHistory(int version) {
+        if (!getSettings().versionsHistory.contains(version)) {
+            getSettings().versionsHistory.add(version);
+            save();
+        }
     }
 
     @Override

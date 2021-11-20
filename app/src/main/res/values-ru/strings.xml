@@ -72,12 +72,15 @@
     <string name="settings_selectedLocalSchedule_empty">Пусто</string>
     <string name="abc_set">Установить</string>
     <string name="scheduleEdit_emptyDay"><![CDATA[<Пусто>]]></string>
-    <string name="notification_lesson_title">Идёт урок! Осталось: %LEFT%</string>
-    <string name="notification_lesson_text">Урок: %LESSON%</string>
-    <string name="notification_lesson_text_z">Урок: %LESSON% След. урок: %NEXT_LESSON%</string>
+    <string name="notification_lesson_title">%LESSON%! Осталось: %LEFT%</string>
+    <string name="notification_lesson_text_ending">След. урок: %NEXT_LESSON%</string>
     <string name="notification_rest_title">Перемена! Осталось: %LEFT%</string>
-    <string name="notification_rest_title_hurryup">Перемена! Осталось: %LEFT% (СРОЧНО)</string>
+    <string name="notification_rest_title_ending">Перемена! Осталось: %LEFT% (СРОЧНО)</string>
     <string name="notification_rest_text">След. урок: %NEXT_LESSON%</string>
-    <string name="notification_rest_text_hurryup">След. урок: %NEXT_LESSON%</string>
+    <string name="notification_rest_text_ending">След. урок: %NEXT_LESSON%</string>
     <string name="abc_empty">Пусто</string>
+    <string name="notification_lesson_title_ending">Идёт урок! Осталось: %LEFT%</string>
+    <string name="schedules_empty_title">Расписаний не найдено!</string>
+    <string name="schedules_empty_content">Создайте своё расписание кнопкой + в низу!</string>
+    <string name="todaySchedule_todayLessons_title">Уроки сегодня:</string>
 </resources>

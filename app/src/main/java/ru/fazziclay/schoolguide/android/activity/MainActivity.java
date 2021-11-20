@@ -1,56 +1,56 @@
 package ru.fazziclay.schoolguide.android.activity;
 
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import java.util.Calendar;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import java.io.File;
 
 import ru.fazziclay.schoolguide.CrashReport;
-import ru.fazziclay.schoolguide.android.activity.schedule.ScheduleLessonEditActivity;
+import ru.fazziclay.schoolguide.SchoolGuide;
+import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
-import ru.fazziclay.schoolguide.data.settings.DeveloperSettings;
-import ru.fazziclay.schoolguide.data.settings.ExternalLoading;
-import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
+import ru.fazziclay.schoolguide.data.cache.StateCacheProvider;
 
 public class MainActivity extends Activity {
-    CrashReport crashReport;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         super.onCreate(savedInstanceState);
         try {
-            SettingsProvider preLoadSettingsProvider = new SettingsProvider(this);
-            DeveloperSettings ds = preLoadSettingsProvider.getDeveloperSettings();
+            new SchoolGuide(this);
 
-            if (!ds.isEnable || ds.startForegroundService) startService(new Intent(this, ForegroundService.class));
-            if (!ds.isEnable || ds.startHomeActivity) startActivity(new Intent(this, HomeActivity.class));
+            // Патчи
+            try {
+                patch_2021_11_19_v25();
+            } catch (Exception ignored) {}
 
-            if (ds.isEnable) {
-                if (ds.externalLoading) {
-                    for (ExternalLoading externalLoading : ds.externalLoadings) {
-                        Intent intent = new Intent(this, externalLoading.getActivity());
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
 
-                        // I S   C O D E D   F E A T U R E S
-                        if (externalLoading.isCodedFeatures()) {
-                            intent.putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, preLoadSettingsProvider.getSelectedLocalSchedule().toString());
-                            intent.putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, Calendar.MONDAY);
-                            //intent.putExtra(ScheduleLessonEditActivity.KEY_LESSON_POSITION, 0);
-                        }
+            SchoolGuide.getInstance().getSettingsProvider().addVersionsHistory(SharedConstrains.APPLICATION_VERSION_CODE);
 
-                        startActivity(intent);
-                    }
-                }
-            }
+            startActivity(new Intent(this, HomeActivity.class));
+            startService(new Intent(this, ForegroundService.class));
             finish();
 
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
-            Toast.makeText(this, "Error for starting!\n"+throwable.toString(), Toast.LENGTH_SHORT).show();
-            finish();
+            new CrashReport(this, throwable);
+        }
+    }
+
+    // Старая версия не поддерживала developerSchedule а сохраняла она не удалённый файл а его дересиализованную сериализацию (удалённый файл -> объект -> сохранить)
+    // из за этого developerSchedule Null а загружатся с сервера не желает так как manifest.key
+    //
+    // Суть патча отследить в state_cache.json первую версию установки(по названию послеюную использованную, но на деле там версия первого запуска)
+    // ИТОГ: Файл manifest.json переезжает в папку с кешем а из папки данных мы его удаляем в этом патче если версия ниже версии написания этого патча x < 25
+    private void patch_2021_11_19_v25() {
+        StateCacheProvider stateCacheProvider = SchoolGuide.getInstance().getStateCacheProvider();
+        if (stateCacheProvider.getLatestAppVersionUseCode() < 26) { // 26 - версия внедрения патча
+            File f = new File(getExternalFilesDir(null), "manifest.json");
+            f.delete();
         }
     }
 }

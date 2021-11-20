@@ -23,12 +23,10 @@ public class ManifestProvider extends BaseProvider {
     public static final int CURRENT_FORMAT_VERSION = 4;
 
     public ManifestProvider(Context context) {
-        filePath = context.getExternalFilesDir(null).getAbsolutePath().concat("/").concat(MANIFEST_LOCAL_FILE);
+        filePath = context.getExternalCacheDir().getAbsolutePath().concat("/").concat(MANIFEST_LOCAL_FILE);
         data = load();
 
-        if (data.isFormatVersionDefault()) data.formatVersion = CURRENT_FORMAT_VERSION;
         new Thread(() -> updateForGlobal((exception, manifestProvider) -> {})).start();
-        save();
     }
 
     @Override
@@ -45,15 +43,15 @@ public class ManifestProvider extends BaseProvider {
             int key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
 
             if (getManifest().manifestKey != key) {
-                Manifest globalManifest = gson.fromJson(parseUrl(MANIFEST_URL), Manifest.class);
+                String parsed = parseUrl(MANIFEST_URL);
+                Manifest globalManifest = gson.fromJson(parsed, Manifest.class);
                 setManifest(globalManifest);
+                FileUtil.write(filePath, parsed);
             }
         } catch (Exception e) {
             exception = e;
         }
         updateForGlobalInterface.run(exception, this);
-
-        save();
     }
 
     public void setManifest(Manifest manifest) {

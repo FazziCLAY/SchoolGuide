@@ -13,6 +13,12 @@ public class ScheduleProvider extends BaseProvider {
     private static final String SCHEDULE_FILE = "schedule.json";
     public static final int CURRENT_FORMAT_VERSION = 4;
 
+    public static LocalSchedule copyLocalSchedule(LocalSchedule localSchedule) {
+        Class<? extends LocalSchedule> l = LocalSchedule.class;
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(localSchedule, l), l);
+    }
+
     public ScheduleProvider(Context context) {
         filePath = context.getExternalFilesDir(null).getAbsolutePath().concat("/").concat(SCHEDULE_FILE);
         data = load();
@@ -94,122 +100,5 @@ public class ScheduleProvider extends BaseProvider {
     public void removeLocalSchedule(UUID scheduleUUID) {
         getSchedule().schedules.remove(scheduleUUID);
         save();
-    }
-
-    public List<Lesson> getToday(UUID localScheduleUUID) {
-        LocalSchedule localSchedule = getLocalSchedule(localScheduleUUID);
-        if (localSchedule == null) {
-            List<Lesson> a = new ArrayList<>();
-            a.add(new Lesson(new UUID(0, 0), 0, 0));
-            return a;
-        }
-        return localSchedule.get(getCurrentDayOfWeek());
-    }
-
-    public Lesson getNowLesson(UUID localScheduleUUID) {
-        List<Lesson> nowLessons = new ArrayList<>();
-        for (Lesson lesson : getToday(localScheduleUUID)) {
-            if (isScheduledLessonNow(lesson)) nowLessons.add(lesson);
-        }
-
-        Lesson result = null;
-        int startTime = 24*60*60;
-        for (Lesson lesson : nowLessons) {
-            if (startTime > lesson.getStart()) {
-                startTime = lesson.getStart();
-                result = lesson;
-            }
-        }
-        return result;
-    }
-
-    public Lesson getNextLesson(UUID localScheduleUUID) {
-        List<Lesson> nextLessons = new ArrayList<>();
-        for (Lesson lesson : getToday(localScheduleUUID)) {
-            if (!isScheduledLessonStarted(lesson)) nextLessons.add(lesson);
-        }
-
-        Lesson result = null;
-        int startTime = 24*60*60;
-        for (Lesson lesson : nextLessons) {
-            if (startTime > lesson.getStart()) {
-                startTime = lesson.getStart();
-                result = lesson;
-            }
-        }
-
-        return result;
-    }
-    // До начала урока осталось
-
-    public int getTimeBeforeStartLesson(UUID localScheduleUUID) {
-        Lesson nextLesson = getNextLesson(localScheduleUUID);
-        if (nextLesson == null) return 0;
-        long globalStart = getCurrentDayInSeconds() + nextLesson.getStart();
-        return (int) (globalStart - getCurrentTimeInSeconds());
-    }
-    // До начала перемены осталось
-
-    public int getTimeBeforeStartRest(UUID localScheduleUUID) {
-        Lesson nowLesson = getNowLesson(localScheduleUUID);
-        if (nowLesson == null) return 0;
-        long globalEnd = getCurrentDayInSeconds() + nowLesson.getEnd();
-        return (int) (globalEnd - getCurrentTimeInSeconds());
-    }
-
-    public State getState(UUID localScheduleUUID) {
-        if (getNowLesson(localScheduleUUID) != null) {
-            return State.LESSON
-                    .setEnding(getTimeBeforeStartRest(localScheduleUUID) < 5*60);
-        } else if (getNextLesson(localScheduleUUID) != null) {
-            return State.REST
-                    .setEnding(getTimeBeforeStartLesson(localScheduleUUID) < 2*60);
-        } else {
-            return State.END;
-        }
-    }
-    // ===================================
-    // P  R  I  V  A  T  E      Z  O  N  E
-    // ===================================
-
-    private static int getCurrentDayOfWeek() {
-        Calendar calendar = new GregorianCalendar();
-        return calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
-    private long getCurrentTimeInSeconds() {
-        return System.currentTimeMillis() / 1000;
-    }
-
-    private static long getCurrentDayInSeconds() {
-        Calendar calendar = new GregorianCalendar();
-        Calendar currentDay = new GregorianCalendar(calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
-        return currentDay.getTimeInMillis() / 1000;
-    }
-
-    /**
-     * @param lesson урок на проверку
-     * @return начался ли уже урок (причём даже если уже закончился он всё равно начался(true))
-     * **/
-    private boolean isScheduledLessonStarted(Lesson lesson) {
-        return getCurrentTimeInSeconds() >= (getCurrentDayInSeconds() + lesson.getStart());
-    }
-
-    /**
-     * @param lesson урок на проверку
-     * @return закончился ли урок
-     * **/
-    private boolean isScheduledLessonEnded(Lesson lesson) {
-        return getCurrentTimeInSeconds() >= (getCurrentDayInSeconds() + lesson.getEnd());
-    }
-
-    /**
-     * @param lesson урок на проверку
-     * @return идёт ли этот урок прямо сейчас (начался и не закончился)
-     * **/
-    private boolean isScheduledLessonNow(Lesson lesson) {
-        return (isScheduledLessonStarted(lesson) && !isScheduledLessonEnded(lesson));
     }
 }

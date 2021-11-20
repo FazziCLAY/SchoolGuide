@@ -16,15 +16,14 @@ import ru.fazziclay.schoolguide.BuildConfig;
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.DownloadThread;
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.SharedConstrains;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.manifest.AppVersion;
 import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
 import ru.fazziclay.schoolguide.data.manifest.VersionState;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCheckerBinding;
 
 public class UpdateCheckerActivity extends AppCompatActivity {
-    CrashReport crashReport;
     ActivityUpdateCheckerBinding binding;
 
     ManifestProvider manifestProvider = null;
@@ -66,13 +65,12 @@ public class UpdateCheckerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             binding = ActivityUpdateCheckerBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
             setTitle(R.string.activityTitle_updateChecker);
 
-            manifestProvider = ForegroundService.getInstance().getManifestProvider();
+            manifestProvider = SchoolGuide.getInstance().getManifestProvider();
 
             preInit();
 
@@ -81,24 +79,21 @@ public class UpdateCheckerActivity extends AppCompatActivity {
                 try {
                     initState();
                 } catch (Throwable throwable) {
-                    crashReport.error(throwable);
-                    crashReport.notifyUser(this);
+                    new CrashReport(this, throwable);
                     finish();
                 }
                 runOnUiThread(() -> {
                     try {
                         initLayout();
                     } catch (Throwable throwable) {
-                        crashReport.error(throwable);
-                        crashReport.notifyUser(this);
+                        new CrashReport(this, throwable);
                         finish();
                     }
                 });
             })).start();
 
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
@@ -186,10 +181,9 @@ public class UpdateCheckerActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent);
 
-        } catch (Exception e) {
-            crashReport.error(e);
-            crashReport.notifyUser(this);
+        } catch (Throwable e) {
             Toast.makeText(this, getString(R.string.abc_error), Toast.LENGTH_SHORT).show();
+            new CrashReport(this, e);
         }
     }
 

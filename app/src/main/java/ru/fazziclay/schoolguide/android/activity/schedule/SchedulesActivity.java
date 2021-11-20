@@ -20,14 +20,13 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivitySchedulesBinding;
 
 public class SchedulesActivity extends AppCompatActivity {
-    CrashReport crashReport;
     ActivitySchedulesBinding binding;
     ScheduleProvider scheduleProvider;
     SettingsProvider settingsProvider;
@@ -35,18 +34,16 @@ public class SchedulesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             binding = ActivitySchedulesBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
-            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
-            settingsProvider = ForegroundService.getInstance().getSettingsProvider();
+            scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
+            settingsProvider = SchoolGuide.getInstance().getSettingsProvider();
 
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
@@ -57,8 +54,7 @@ public class SchedulesActivity extends AppCompatActivity {
         try {
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
@@ -131,7 +127,7 @@ public class SchedulesActivity extends AppCompatActivity {
 
                         UUID createdUUID = scheduleProvider.addLocalSchedule(localSchedule);
                         if (scheduleProvider.getAllSchedules().length == 0) {
-                            SettingsProvider settingsProvider = ForegroundService.getInstance().getSettingsProvider();
+                            SettingsProvider settingsProvider = SchoolGuide.getInstance().getSettingsProvider();
                             settingsProvider.setSelectedLocalSchedule(createdUUID);
                         }
                         Intent intent = new Intent(this, ScheduleEditActivity.class)

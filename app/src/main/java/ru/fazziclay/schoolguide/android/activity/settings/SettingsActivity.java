@@ -16,51 +16,39 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.android.SpinnerAdapter;
 import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
 import ru.fazziclay.schoolguide.android.activity.developer.SetDeveloperScheduleActivity;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
-import ru.fazziclay.schoolguide.data.settings.UserNotification;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
-    CrashReport crashReport;
     ActivitySettingsBinding binding;
     SettingsProvider settingsProvider = null;
     ScheduleProvider scheduleProvider = null;
 
-    SpinnerAdapter userNotificationAdapter = null;
     SpinnerAdapter selectedLocalScheduleAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             binding = ActivitySettingsBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
-            settingsProvider = ForegroundService.getInstance().getSettingsProvider();
-            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            settingsProvider = SchoolGuide.getInstance().getSettingsProvider();
+            scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
 
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
 
     private void initLayout() {
-        // Notification
-        binding.isNotification.setChecked(settingsProvider.isNotification());
-        binding.isNotification.setOnClickListener(checkbox -> {
-            settingsProvider.setNotification(((CheckBox)checkbox).isChecked());
-            binding.userNotification.setEnabled(settingsProvider.isNotification());
-        });
-
         // Notification spinner
         initUserNotificationSpinner();
 
@@ -75,30 +63,10 @@ public class SettingsActivity extends AppCompatActivity {
         binding.checkUpdate.setOnClickListener(ignore -> startActivity(new Intent(this, UpdateCheckerActivity.class)));
 
         // developer schedule
-        binding.setDeveloperSchedule.setOnClickListener(ignore -> {
-            startActivity(new Intent(this, SetDeveloperScheduleActivity.class));
-        });
+        binding.setDeveloperSchedule.setOnClickListener(ignore -> startActivity(new Intent(this, SetDeveloperScheduleActivity.class)));
     }
 
     private void initUserNotificationSpinner() {
-        // Adapter
-        List<SpinnerAdapter.SpinnerAdapterElement> userNotificationElements = new ArrayList<>();
-        userNotificationElements.add(new SpinnerAdapter.SpinnerAdapterElement(getString(R.string.userNotification_foreground), UserNotification.FOREGROUND));
-        userNotificationElements.add(new SpinnerAdapter.SpinnerAdapterElement(getString(R.string.userNotification_external), UserNotification.EXTERNAL));
-        userNotificationAdapter = new SpinnerAdapter(userNotificationElements, settingsProvider.getUserNotification());
-
-        // Layout
-        binding.userNotification.setEnabled(settingsProvider.isNotification());
-
-        binding.userNotification.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, userNotificationAdapter.getNames()));
-        binding.userNotification.setSelection(userNotificationAdapter.getSelected());
-        binding.userNotification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                settingsProvider.setUserNotification((UserNotification) userNotificationAdapter.getValue(i));
-            }
-            @Override public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
     }
 
     private void initSelectedLocalScheduleSpinner() {

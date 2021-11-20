@@ -1,16 +1,13 @@
 package ru.fazziclay.schoolguide.data.settings;
 
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.data.BaseData;
 
 public class Settings extends BaseData {
     boolean isVibration = true;
-    boolean isNotification = true;
-    UserNotification userNotification = UserNotification.EXTERNAL;
-    AppTheme theme = AppTheme.AUTO;
     UUID selectedLocalSchedule = null;
-    DeveloperSettings developerSettings = new DeveloperSettings();
-    int firstWeekDay = Calendar.MONDAY;
+    List<Integer> versionsHistory = new ArrayList<>();
 }

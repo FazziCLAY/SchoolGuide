@@ -1,8 +1,6 @@
 package ru.fazziclay.schoolguide.android.activity.schedule;
 
 import android.app.TimePickerDialog;
-import java.text.DateFormatSymbols;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,19 +11,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.android.activity.lesson.LessonEditActivity;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
-import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityScheduleLessonEditBinding;
 import ru.fazziclay.schoolguide.databinding.BigNotificationBinding;
 import ru.fazziclay.schoolguide.util.TimeUtil;
@@ -35,7 +33,6 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     public static final String KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK = "localScheduleEditDayOfWeek"; // день недели (Calendar.MONDAY) в на который нацелен активити
     public static final String KEY_LESSON_POSITION = "lessonPosition"; // Позиция редактируемого урока в неделе
 
-    CrashReport crashReport;
     ActivityScheduleLessonEditBinding binding;
 
     ScheduleProvider scheduleProvider = null; // для отображения доп. штук и сохранения
@@ -61,7 +58,6 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             if (inputInit()) {
                 finish();
@@ -99,8 +95,7 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
             init();
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
@@ -116,7 +111,7 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         localScheduleUUID = UUID.fromString(extras.getString(KEY_LOCAL_SCHEDULE_UUID));
         dayOfWeek = extras.getInt(KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK);
 
-        scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+        scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
         localSchedule = scheduleProvider.getLocalSchedule(localScheduleUUID);
         dayOfWeekLessons = localSchedule.get(dayOfWeek);
         if (extras.containsKey(KEY_LESSON_POSITION)) {

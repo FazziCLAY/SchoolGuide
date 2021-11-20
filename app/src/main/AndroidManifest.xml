@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ru.fazziclay.schoolguide">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:allowBackup="false"
@@ -15,11 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
         <activity
+            android:name=".android.activity.schedule.TodayScheduleActivity"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:exported="false"
+            tools:targetApi="o_mr1" />
+
+        <activity
             android:name=".android.activity.developer.SetDeveloperScheduleActivity"
             android:exported="false" />
-        <activity
-            android:name=".android.activity.AboutActivity"
-            android:exported="true" />
         <activity
             android:name=".android.activity.UpdateCheckerActivity"
             android:exported="true" />
@@ -58,7 +64,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

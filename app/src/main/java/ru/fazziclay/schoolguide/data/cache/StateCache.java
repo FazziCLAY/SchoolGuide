@@ -10,8 +10,6 @@ public class StateCache extends BaseData {
     State vibratedFor = State.END;
     NotificationState foregroundNotificationState = NotificationState.DEFAULT;
     NotificationState externalNotificationState = NotificationState.DEFAULT;
-    int lessonsActivityLastClickedTo = 0;
-    long lessonsActivityLastClickedTime = 0;
 
     @Override
     public void save(String filePath) {

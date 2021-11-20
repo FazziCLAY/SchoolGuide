@@ -11,30 +11,27 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.CrashReport;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
+import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityLessonsBinding;
 
 public class LessonsActivity extends AppCompatActivity {
-    CrashReport crashReport;
     ActivityLessonsBinding binding;
     ScheduleProvider scheduleProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crashReport = new CrashReport(CrashReport.getFolder(this));
         try {
             binding = ActivityLessonsBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
-            scheduleProvider = ForegroundService.getInstance().getScheduleProvider();
+            scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
 
             initLayout();
         } catch (Throwable throwable) {
-            crashReport.error(throwable);
-            crashReport.notifyUser(this);
+            new CrashReport(this, throwable);
             finish();
         }
     }
