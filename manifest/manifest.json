@@ -234,13 +234,13 @@
   "isTechnicalWorks": false,
   "latestVersion": {
     "changelog": {
-      "default": "* Добавлена функиця кнопка установки распиания разработчика (да да расписание моей школы!)\n* Тёмная тема теперь всегда!\n* Изменено главное меню\n* Исправлены баги!"
+      "default": "* Обновлён интерфейс\n * Мне лень писать список изменений!\n * Исправлены баги!"
     },
-    "code": 25,
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/25/app-debug.apk",
-    "name": "2.9.1 - Beta",
+    "code": 27,
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/27/app-debug.apk",
+    "name": "2.10.1 - Beta",
     "pageUrl": "https://github.com/fazziclay/schoolguide"
   },
-  "manifestKey": 7,
+  "manifestKey": 8,
   "version": 4
 }
