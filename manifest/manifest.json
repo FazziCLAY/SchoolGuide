@@ -236,11 +236,11 @@
     "changelog": {
       "default": "* Обновлён интерфейс\n * Мне лень писать список изменений!\n * Исправлены баги!"
     },
-    "code": 25,
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/27/app-debug.apk",
-    "name": "2.10.1 - Beta",
+    "code": 28,
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/28/app-debug.apk",
+    "name": "2.10.1.1 - Beta",
     "pageUrl": "https://github.com/fazziclay/schoolguide"
   },
-  "manifestKey": 8,
+  "manifestKey": 9,
   "version": 4
 }
