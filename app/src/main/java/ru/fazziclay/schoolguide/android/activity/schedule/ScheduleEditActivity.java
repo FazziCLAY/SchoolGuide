@@ -198,10 +198,10 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 if (lesson.equals(localSchedule.getNextLesson())) color = Color.RED;
 
                 TextView textView = new TextView(ScheduleEditActivity.this);
-                textView.setTextSize(21);
+                textView.setTextSize(20);
                 textView.setTextColor(color);
-                textView.setPadding(15, 1, 5, 1);
-                textView.setText(String.format("#%s [%s - %s] %s",
+                textView.setPadding(12, 1, 5, 1);
+                textView.setText(String.format("[%s. %s %s] %s",
                         childId + 1,
                         TimeUtil.secondsToHumanTime(lesson.getStart(), true).substring(0, 5),
                         TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60 - 1), true).substring(0, 5),

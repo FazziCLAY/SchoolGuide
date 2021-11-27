@@ -114,7 +114,7 @@ public class SchoolGuide {
         if (versionState == VersionState.OUTDATED) {
             sendUpdateCheckerNotify();
         } else {
-            getScheduleProvider().setSchedule(manifestProvider.getDeveloperSchedule().copy());
+            if (getSettingsProvider().isSyncDeveloperSchedule()) getScheduleProvider().setSchedule(manifestProvider.getDeveloperSchedule().copy());
             cancelUpdateCheckerNotify();
         }
     }
@@ -325,7 +325,7 @@ public class SchoolGuide {
     public static void showWarnSyncDeveloperScheduleDialog(Context context) {
         AlertDialog.Builder a = new AlertDialog.Builder(context)
                 .setTitle("Синхронизация расписания!")
-                .setMessage("Вы не можете редактировать расписания, пока синхронизация с расписанием разработчика включена!")
+                .setMessage("Вы не можете редактировать/создовать/удалять расписания, пока синхронизация с расписанием разработчика включена!")
                 .setPositiveButton("OK", null);
 
         a.show();
