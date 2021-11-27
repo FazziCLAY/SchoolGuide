@@ -7,10 +7,10 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "ru.fazziclay.schoolguide.dev"
+        applicationId "ru.fazziclay.schoolguide"
         minSdkVersion 16
         targetSdkVersion 31
-        versionCode 29
+        versionCode 30
         versionName "0.2.11 - Beta"
     }
 
