@@ -1,246 +1,410 @@
-{
-  "developerSchedule": {
-    "lessons": {
-      "d92f04be-4e1e-4344-8036-41e1eb55b9e9": {
-        "name": "История"
-      },
-      "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859": {
-        "name": "Химмя"
-      },
-      "f99ea75b-e716-41b6-b7f6-277147ca1bab": {
-        "name": "Русский язык"
-      },
-      "a9131509-8e70-4eed-bb45-c5d2a4fd9409": {
-        "name": "Информатика"
-      },
-      "781c0377-cb2d-4e91-882a-b89b811ab09a": {
-        "name": "Ф/К"
-      },
-      "87ca6d1e-2f70-4697-ae49-fde93e66217c": {
-        "name": "Физика"
-      },
-      "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8": {
-        "name": "География"
-      },
-      "d01ca7ac-7e98-47c1-b101-2167b76b3a2b": {
-        "name": "English language"
-      },
-      "f8a7569d-b466-4475-a4a7-cd79d63f9d47": {
-        "name": "Процент"
-      },
-      "b80480ed-73b8-4c4c-b0a2-85a62065b324": {
-        "name": "Матемематика"
-      },
-      "de7bfca7-8826-4cdd-a19e-4dfef52e0393": {
-        "name": "Литература"
-      },
-      "11745285-708e-4725-bc52-27e554d938ee": {
-        "name": "Обществознание"
-      },
-      "98c71e8e-5f90-48e1-87da-ac392787a027": {
-        "name": "ОБЖ"
-      },
-      "7d634319-08ad-496d-ab27-56e0641f7679": {
-        "name": "Субботник"
-      },
-      "e2794979-3433-43b2-9487-0224dcd4aa4a": {
-        "name": "Биология"
-      }
+{  "developerSchedule": {
+  "lessons": {
+    "d92f04be-4e1e-4344-8036-41e1eb55b9e9": {
+      "name": "История"
     },
-    "schedules": {
-      "25d4b091-f6db-457c-9811-6e15c86b7c50": {
-        "friday": [
-          {
-            "lesson": "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859",
-            "duration": 2400,
-            "start": 32700
-          },
-          {
-            "lesson": "d92f04be-4e1e-4344-8036-41e1eb55b9e9",
-            "duration": 2400,
-            "start": 35700
-          },
-          {
-            "lesson": "11745285-708e-4725-bc52-27e554d938ee",
-            "duration": 2400,
-            "start": 38700
-          },
-          {
-            "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
-            "duration": 2400,
-            "start": 41700
-          },
-          {
-            "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
-            "duration": 2400,
-            "start": 44700
-          },
-          {
-            "lesson": "f8a7569d-b466-4475-a4a7-cd79d63f9d47",
-            "duration": 2400,
-            "start": 47700
-          }
-        ],
-        "monday": [
-          {
-            "lesson": "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8",
-            "duration": 2400,
-            "start": 30600
-          },
-          {
-            "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
-            "duration": 2400,
-            "start": 33600
-          },
-          {
-            "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
-            "duration": 2400,
-            "start": 37200
-          },
-          {
-            "lesson": "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859",
-            "duration": 2400,
-            "start": 40800
-          },
-          {
-            "lesson": "98c71e8e-5f90-48e1-87da-ac392787a027",
-            "duration": 2400,
-            "start": 43800
-          },
-          {
-            "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
-            "duration": 2400,
-            "start": 46800
-          }
-        ],
-        "name": "9 класс - Основное",
-        "saturday": [],
-        "sunday": [],
-        "thursday": [
-          {
-            "lesson": "d92f04be-4e1e-4344-8036-41e1eb55b9e9",
-            "duration": 2400,
-            "start": 30600
-          },
-          {
-            "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
-            "duration": 2400,
-            "start": 33600
-          },
-          {
-            "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
-            "duration": 2400,
-            "start": 37200
-          },
-          {
-            "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
-            "duration": 2400,
-            "start": 40800
-          },
-          {
-            "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
-            "duration": 2400,
-            "start": 43800
-          },
-          {
-            "lesson": "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8",
-            "duration": 2400,
-            "start": 46800
-          },
-          {
-            "lesson": "e2794979-3433-43b2-9487-0224dcd4aa4a",
-            "duration": 2400,
-            "start": 49800
-          }
-        ],
-        "tuesday": [
-          {
-            "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
-            "duration": 2400,
-            "start": 30600
-          },
-          {
-            "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
-            "duration": 2400,
-            "start": 33600
-          },
-          {
-            "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
-            "duration": 2400,
-            "start": 37200
-          },
-          {
-            "lesson": "a9131509-8e70-4eed-bb45-c5d2a4fd9409",
-            "duration": 2400,
-            "start": 40800
-          },
-          {
-            "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
-            "duration": 2400,
-            "start": 43800
-          },
-          {
-            "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
-            "duration": 2400,
-            "start": 46800
-          },
-          {
-            "lesson": "e2794979-3433-43b2-9487-0224dcd4aa4a",
-            "duration": 2400,
-            "start": 49800
-          }
-        ],
-        "wednesday": [
-          {
-            "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
-            "duration": 2400,
-            "start": 30600
-          },
-          {
-            "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
-            "duration": 2400,
-            "start": 33600
-          },
-          {
-            "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
-            "duration": 2400,
-            "start": 37200
-          },
-          {
-            "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
-            "duration": 2400,
-            "start": 40800
-          },
-          {
-            "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
-            "duration": 2400,
-            "start": 43800
-          },
-          {
-            "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
-            "duration": 2400,
-            "start": 46800
-          },
-          {
-            "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
-            "duration": 2400,
-            "start": 49800
-          }
-        ]
-      }
+    "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859": {
+      "name": "Химмя"
     },
-    "version": 4
+    "f99ea75b-e716-41b6-b7f6-277147ca1bab": {
+      "name": "Русский язык"
+    },
+    "a9131509-8e70-4eed-bb45-c5d2a4fd9409": {
+      "name": "Информатика"
+    },
+    "e4882b01-f239-4f8b-b26b-aed1a89754b2": {
+      "name": "История К."
+    },
+    "781c0377-cb2d-4e91-882a-b89b811ab09a": {
+      "name": "Ф/К"
+    },
+    "87ca6d1e-2f70-4697-ae49-fde93e66217c": {
+      "name": "Физика"
+    },
+    "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8": {
+      "name": "География"
+    },
+    "d01ca7ac-7e98-47c1-b101-2167b76b3a2b": {
+      "name": "English language"
+    },
+    "f8a7569d-b466-4475-a4a7-cd79d63f9d47": {
+      "name": "Процент"
+    },
+    "b80480ed-73b8-4c4c-b0a2-85a62065b324": {
+      "name": "Матемематика"
+    },
+    "de7bfca7-8826-4cdd-a19e-4dfef52e0393": {
+      "name": "Литература"
+    },
+    "11745285-708e-4725-bc52-27e554d938ee": {
+      "name": "Обществознание"
+    },
+    "98c71e8e-5f90-48e1-87da-ac392787a027": {
+      "name": "ОБЖ"
+    },
+    "7d634319-08ad-496d-ab27-56e0641f7679": {
+      "name": "Субботник"
+    },
+    "e2794979-3433-43b2-9487-0224dcd4aa4a": {
+      "name": "Биология"
+    }
   },
-  "isTechnicalWorks": false,
-  "latestVersion": {
-    "changelog": {
-      "default": "* Добавлена функиця кнопка установки распиания разработчика (да да расписание моей школы!)\n* Тёмная тема теперь всегда!\n* Изменено главное меню\n* Исправлены баги!"
+  "schedules": {
+    "67139158-1238-4dc0-b2c5-62e23e7c5ecb": {
+      "friday": [
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 0,
+          "start": 32700
+        },
+        {
+          "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
+          "duration": 2400,
+          "start": 35700
+        },
+        {
+          "lesson": "e2794979-3433-43b2-9487-0224dcd4aa4a",
+          "duration": 2400,
+          "start": 38700
+        },
+        {
+          "lesson": "c8421d26-d2e0-4fe1-a109-bcd49a476f62",
+          "duration": 2400,
+          "start": 41700
+        },
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 44700
+        }
+      ],
+      "monday": [
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 30600
+        },
+        {
+          "lesson": "98c71e8e-5f90-48e1-87da-ac392787a027",
+          "duration": 2400,
+          "start": 33600
+        },
+        {
+          "lesson": "d92f04be-4e1e-4344-8036-41e1eb55b9e9",
+          "duration": 2400,
+          "start": 37200
+        },
+        {
+          "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
+          "duration": 2400,
+          "start": 40800
+        },
+        {
+          "lesson": "11745285-708e-4725-bc52-27e554d938ee",
+          "duration": 2400,
+          "start": 43800
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 46800
+        }
+      ],
+      "name": "8 Класс - Основное",
+      "saturday": [],
+      "sunday": [],
+      "thursday": [
+        {
+          "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
+          "duration": 2400,
+          "start": 30600
+        },
+        {
+          "lesson": "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8",
+          "duration": 2400,
+          "start": 33600
+        },
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 37200
+        },
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 40800
+        },
+        {
+          "lesson": "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859",
+          "duration": 2400,
+          "start": 43800
+        },
+        {
+          "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
+          "duration": 2400,
+          "start": 46800
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 49800
+        }
+      ],
+      "tuesday": [
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 30600
+        },
+        {
+          "lesson": "e2794979-3433-43b2-9487-0224dcd4aa4a",
+          "duration": 2400,
+          "start": 33600
+        },
+        {
+          "lesson": "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859",
+          "duration": 2400,
+          "start": 37200
+        },
+        {
+          "lesson": "d92f04be-4e1e-4344-8036-41e1eb55b9e9",
+          "duration": 2400,
+          "start": 40800
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 43800
+        },
+        {
+          "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
+          "duration": 2400,
+          "start": 46800
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 49800
+        }
+      ],
+      "wednesday": [
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 30600
+        },
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 33600
+        },
+        {
+          "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
+          "duration": 2400,
+          "start": 37200
+        },
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 40800
+        },
+        {
+          "lesson": "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8",
+          "duration": 2400,
+          "start": 43800
+        },
+        {
+          "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
+          "duration": 2400,
+          "start": 46800
+        },
+        {
+          "lesson": "14daf0dd-d76b-4c96-830f-a428843b257d",
+          "duration": 2400,
+          "start": 49800
+        }
+      ]
     },
-    "code": 25,
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/25/app-debug.apk",
-    "name": "2.9.1 - Beta",
-    "pageUrl": "https://github.com/fazziclay/schoolguide"
+    "25d4b091-f6db-457c-9811-6e15c86b7c50": {
+      "friday": [
+        {
+          "lesson": "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859",
+          "duration": 2400,
+          "start": 32100
+        },
+        {
+          "lesson": "d92f04be-4e1e-4344-8036-41e1eb55b9e9",
+          "duration": 2400,
+          "start": 35100
+        },
+        {
+          "lesson": "11745285-708e-4725-bc52-27e554d938ee",
+          "duration": 2400,
+          "start": 38100
+        },
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 41100
+        },
+        {
+          "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
+          "duration": 2400,
+          "start": 44100
+        },
+        {
+          "lesson": "f8a7569d-b466-4475-a4a7-cd79d63f9d47",
+          "duration": 2400,
+          "start": 47100
+        }
+      ],
+      "monday": [
+        {
+          "lesson": "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8",
+          "duration": 2400,
+          "start": 30000
+        },
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 33000
+        },
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 36600
+        },
+        {
+          "lesson": "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859",
+          "duration": 2400,
+          "start": 40200
+        },
+        {
+          "lesson": "98c71e8e-5f90-48e1-87da-ac392787a027",
+          "duration": 2400,
+          "start": 43200
+        },
+        {
+          "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
+          "duration": 2400,
+          "start": 46200
+        }
+      ],
+      "name": "9 класс - Основное",
+      "saturday": [],
+      "sunday": [],
+      "thursday": [
+        {
+          "lesson": "d92f04be-4e1e-4344-8036-41e1eb55b9e9",
+          "duration": 2400,
+          "start": 30000
+        },
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 33000
+        },
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 36600
+        },
+        {
+          "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
+          "duration": 2400,
+          "start": 40200
+        },
+        {
+          "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
+          "duration": 2400,
+          "start": 43200
+        },
+        {
+          "lesson": "f01a4e40-60e7-4b7e-89f1-7fdc6c1998f8",
+          "duration": 2400,
+          "start": 46200
+        },
+        {
+          "lesson": "e2794979-3433-43b2-9487-0224dcd4aa4a",
+          "duration": 2400,
+          "start": 49200
+        }
+      ],
+      "tuesday": [
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 30000
+        },
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 33000
+        },
+        {
+          "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
+          "duration": 2400,
+          "start": 36600
+        },
+        {
+          "lesson": "a9131509-8e70-4eed-bb45-c5d2a4fd9409",
+          "duration": 2400,
+          "start": 40200
+        },
+        {
+          "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
+          "duration": 2400,
+          "start": 43200
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 46200
+        },
+        {
+          "lesson": "e2794979-3433-43b2-9487-0224dcd4aa4a",
+          "duration": 2400,
+          "start": 49200
+        }
+      ],
+      "wednesday": [
+        {
+          "lesson": "b80480ed-73b8-4c4c-b0a2-85a62065b324",
+          "duration": 2400,
+          "start": 30000
+        },
+        {
+          "lesson": "f99ea75b-e716-41b6-b7f6-277147ca1bab",
+          "duration": 2400,
+          "start": 33000
+        },
+        {
+          "lesson": "de7bfca7-8826-4cdd-a19e-4dfef52e0393",
+          "duration": 2400,
+          "start": 36600
+        },
+        {
+          "lesson": "87ca6d1e-2f70-4697-ae49-fde93e66217c",
+          "duration": 2400,
+          "start": 40200
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 43200
+        },
+        {
+          "lesson": "d01ca7ac-7e98-47c1-b101-2167b76b3a2b",
+          "duration": 2400,
+          "start": 46200
+        },
+        {
+          "lesson": "781c0377-cb2d-4e91-882a-b89b811ab09a",
+          "duration": 2400,
+          "start": 49200
+        }
+      ]
+    }
   },
-  "manifestKey": 7,
   "version": 4
-}
+},  "isTechnicalWorks": false,  "latestVersion": {    "changelog": {      "default": "* Обновлён интерфейс\n * Мне лень писать список изменений!\n * Исправлены баги!"    },    "code": 28,    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/28/app-debug.apk",    "name": "2.10.1.1 - Beta",    "pageUrl": "https://github.com/fazziclay/schoolguide"  },  "manifestKey": 11,  "version": 4}
