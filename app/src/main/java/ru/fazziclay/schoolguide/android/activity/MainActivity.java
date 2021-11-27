@@ -21,19 +21,21 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            new SchoolGuide(this);
-
             // Патчи
             try {
                 patch_2021_11_19_v25();
             } catch (Exception ignored) {}
 
-            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
+            if (!SchoolGuide.isInstanceAvailable()) {
+                new SchoolGuide(this);
+            }
 
             SchoolGuide.getInstance().getSettingsProvider().addVersionsHistory(SharedConstrains.APPLICATION_VERSION_CODE);
+            SchoolGuide.getInstance().updateManifestTick(true);
 
-            startActivity(new Intent(this, HomeActivity.class));
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
             startService(new Intent(this, ForegroundService.class));
+            startActivity(new Intent(this, HomeActivity.class));
             finish();
 
         } catch (Throwable throwable) {
@@ -41,16 +43,13 @@ public class MainActivity extends Activity {
         }
     }
 
-    // Старая версия не поддерживала developerSchedule а сохраняла она не удалённый файл а его дересиализованную сериализацию (удалённый файл -> объект -> сохранить)
+    // Старая версия не поддерживала developerSchedule а сохраняла она не удалённый файл а его дересиализованную сериализацию (удалённый файл -> объект -> файл на устройстве)
     // из за этого developerSchedule Null а загружатся с сервера не желает так как manifest.key
     //
     // Суть патча отследить в state_cache.json первую версию установки(по названию послеюную использованную, но на деле там версия первого запуска)
     // ИТОГ: Файл manifest.json переезжает в папку с кешем а из папки данных мы его удаляем в этом патче если версия ниже версии написания этого патча x < 25
     private void patch_2021_11_19_v25() {
-        StateCacheProvider stateCacheProvider = SchoolGuide.getInstance().getStateCacheProvider();
-        if (stateCacheProvider.getLatestAppVersionUseCode() < 26) { // 26 - версия внедрения патча
-            File f = new File(getExternalFilesDir(null), "manifest.json");
-            f.delete();
-        }
+        File f = new File(getExternalFilesDir(null), "manifest.json");
+        f.delete();
     }
 }

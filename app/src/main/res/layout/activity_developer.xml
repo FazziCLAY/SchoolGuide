@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/activityBackground"
+    tools:context=".android.activity.developer.DeveloperActivity">
+
+    <Button
+        android:id="@+id/setThisScheduleToDeveloperScheduleInManifest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set this schedule to developer schedule in manifest"
+        android:backgroundTint="#1E92A1"
+        tools:ignore="HardcodedText"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/saveManifest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="save manifest"
+        android:backgroundTint="#CDDC39"
+        tools:ignore="HardcodedText"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/loadManifest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="load manifest"
+        android:backgroundTint="#CDDC39"
+        tools:ignore="HardcodedText"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/openManifestUtil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="manifest util"
+        android:backgroundTint="#6439DC"
+        tools:ignore="HardcodedText"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/sendUpdateCheckerNotify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="send update checker notify"
+        android:backgroundTint="#DC9339"
+        tools:ignore="HardcodedText"
+        tools:targetApi="lollipop" />
+
+</LinearLayout>

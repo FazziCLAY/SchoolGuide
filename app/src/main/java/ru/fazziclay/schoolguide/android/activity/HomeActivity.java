@@ -25,6 +25,7 @@ import java.util.UUID;
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SchoolGuide;
+import ru.fazziclay.schoolguide.android.activity.developer.DeveloperActivity;
 import ru.fazziclay.schoolguide.android.activity.lesson.LessonsActivity;
 import ru.fazziclay.schoolguide.android.activity.schedule.ScheduleEditActivity;
 import ru.fazziclay.schoolguide.android.activity.settings.SettingsActivity;
@@ -69,6 +70,8 @@ public class HomeActivity extends AppCompatActivity {
         binding.settingsButton.setOnClickListener(ignore -> startActivity(new Intent(this, SettingsActivity.class)));
         binding.lessonsButton.setOnClickListener(ignore -> startActivity(new Intent(this, LessonsActivity.class)));
         binding.addScheduleButton.setOnClickListener(ignore -> showCreateLocalScheduleDialog(SchoolGuide.getInstance().getScheduleProvider()));
+        binding.developerScreenButton.setOnClickListener(ignore -> startActivity(new Intent(this, DeveloperActivity.class)));
+        binding.developerScreenButton.setVisibility(SchoolGuide.getInstance().getSettingsProvider().isDeveloperFeatures() ? View.VISIBLE : View.GONE);
     }
 
     private void initSchedulesLayout() {
@@ -122,7 +125,13 @@ public class HomeActivity extends AppCompatActivity {
         binding.schedulesList.setAdapter(adapter);
     }
 
+    // Показать диалог создания (или копирование - по выбору пользовалетя) локального расписания
     private void showCreateLocalScheduleDialog(ScheduleProvider scheduleProvider) {
+        if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+            SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+            return;
+        }
+
         List<String> scheduleNames = new ArrayList<>();
         scheduleNames.add(getString(R.string.schedules_createNew_empty));
 

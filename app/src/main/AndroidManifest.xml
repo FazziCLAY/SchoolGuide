@@ -17,12 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
         <activity
+            android:name=".android.activity.developer.DeveloperActivity"
+            android:exported="false" />
+        <activity
             android:name=".android.activity.schedule.TodayScheduleActivity"
+            android:exported="false"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
-            android:exported="false"
             tools:targetApi="o_mr1" />
-
         <activity
             android:name=".android.activity.developer.SetDeveloperScheduleActivity"
             android:exported="false" />
@@ -64,6 +66,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

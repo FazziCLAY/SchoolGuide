@@ -206,6 +206,11 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     }
 
     private void delete() {
+        if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+            SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.scheduleLessonEdit_delete_title)
                 .setMessage(R.string.scheduleLessonEdit_delete_message)
@@ -220,6 +225,11 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
     }
 
     private void save() {
+        if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+            SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+            return;
+        }
+
         if (lesson == null) {
             lesson = new Lesson(null, 0, 0);
             dayOfWeekLessons.add(lesson);
@@ -228,7 +238,7 @@ public class ScheduleLessonEditActivity extends AppCompatActivity {
         lesson.setLessonInfo(lessonInfoUUID);
         lesson.setStart(startTime);
         lesson.setDuration(duration);
-        scheduleProvider.save();
+        localSchedule.sortDay(scheduleProvider, dayOfWeekLessons);
         finish();
     }
 }

@@ -7,7 +7,9 @@ import java.util.UUID;
 import ru.fazziclay.schoolguide.data.BaseData;
 
 public class Settings extends BaseData {
+    boolean isDeveloperFeatures = false;
     boolean isVibration = true;
     UUID selectedLocalSchedule = null;
     List<Integer> versionsHistory = new ArrayList<>();
+    boolean isSyncDeveloperSchedule = false;
 }

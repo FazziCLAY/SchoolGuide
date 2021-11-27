@@ -26,9 +26,7 @@ public class FileUtil {
         File file = new File(fixPathSeparator(path));
 
         try {
-            if (!file.exists())
-                //noinspection ResultOfMethodCallIgnored
-                file.createNewFile();
+            if (!file.exists()) file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

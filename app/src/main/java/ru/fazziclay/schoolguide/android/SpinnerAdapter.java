@@ -13,6 +13,10 @@ public class SpinnerAdapter {
         setSelected(selected);
     }
 
+    public boolean isEmpty() {
+        return names.isEmpty();
+    }
+
     public void init(SpinnerAdapterElement[] elements) {
         names = new ArrayList<>();
         values = new ArrayList<>();

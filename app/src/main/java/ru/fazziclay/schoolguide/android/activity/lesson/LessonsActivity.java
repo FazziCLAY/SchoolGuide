@@ -39,11 +39,15 @@ public class LessonsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initLayout();
+        try {
+            initLayout();
+        } catch (Throwable throwable) {
+            new CrashReport(this, throwable);
+            finish();
+        }
     }
 
     private void initLayout() {
-        // Init lessons list
         UUID[] lessonsIds = scheduleProvider.getAllLessons();
         List<String> names = new ArrayList<>();
 
@@ -55,6 +59,11 @@ public class LessonsActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, names);
         binding.lessonsList.setAdapter(adapter);
         binding.lessonsList.setOnItemClickListener((adapterView, view, i, l) -> {
+            if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+                SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+                return;
+            }
+
             Intent intent = new Intent(this, LessonEditActivity.class)
                     .putExtra(LessonEditActivity.KEY_LESSON_INFO_UUID, lessonsIds[i].toString())
                     .putExtra(LessonEditActivity.KEY_CREATING_MODE, false);
@@ -63,6 +72,10 @@ public class LessonsActivity extends AppCompatActivity {
 
         // Fab
         binding.addLessonButton.setOnClickListener(ignore -> {
+            if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+                SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+                return;
+            }
             Intent intent = new Intent(this, LessonEditActivity.class)
                     .putExtra(LessonEditActivity.KEY_CREATING_MODE, true);
             startActivity(intent);

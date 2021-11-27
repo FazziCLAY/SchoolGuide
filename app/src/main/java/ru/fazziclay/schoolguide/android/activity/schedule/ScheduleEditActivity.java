@@ -80,7 +80,8 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     private void initLayout() {
-        binding.setButton.setVisibility(localScheduleUUID.equals(settingsProvider.getSelectedLocalSchedule()) ? View.GONE : View.VISIBLE);
+        binding.deleteButton.setEnabled(!settingsProvider.isSyncDeveloperSchedule());
+        binding.scheduleName.setEnabled(!settingsProvider.isSyncDeveloperSchedule());
         binding.scheduleName.setText(localSchedule.getName());
         binding.scheduleName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,6 +92,10 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+                    return;
+                }
+
                 localSchedule.setName(editable.toString());
                 scheduleProvider.save();
             }
@@ -140,9 +145,16 @@ public class ScheduleEditActivity extends AppCompatActivity {
                 textView.setTextColor(Color.CYAN);
                 textView.setTextSize(30);
                 textView.setText(weekName.toUpperCase());
-                textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
-                        .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
-                        .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue))
+                textView.setOnClickListener(ignore -> {
+                            if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+                                SchoolGuide.showWarnSyncDeveloperScheduleDialog(ScheduleEditActivity.this);
+                                return;
+                            }
+
+                            startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
+                                    .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
+                                    .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue));
+                        }
                 );
 
                 convertView = textView;
@@ -194,11 +206,18 @@ public class ScheduleEditActivity extends AppCompatActivity {
                         TimeUtil.secondsToHumanTime(lesson.getStart(), true).substring(0, 5),
                         TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60 - 1), true).substring(0, 5),
                         getLessonText(lesson)));
-                textView.setOnClickListener(ignore -> startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
-                        .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
-                        .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue)
-                        .putExtra(ScheduleLessonEditActivity.KEY_LESSON_POSITION, childId)
-                ));
+                textView.setOnClickListener(ignore -> {
+                    if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+                        SchoolGuide.showWarnSyncDeveloperScheduleDialog(ScheduleEditActivity.this);
+                        return;
+                    }
+
+                    startActivity(new Intent(ScheduleEditActivity.this, ScheduleLessonEditActivity.class)
+                            .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_UUID, localScheduleUUID.toString())
+                            .putExtra(ScheduleLessonEditActivity.KEY_LOCAL_SCHEDULE_EDIT_DAY_OF_WEEK, weekValue)
+                            .putExtra(ScheduleLessonEditActivity.KEY_LESSON_POSITION, childId)
+                    );
+                });
                 return textView;
             }
 
@@ -214,7 +233,9 @@ public class ScheduleEditActivity extends AppCompatActivity {
         };
         binding.lessonsList.setAdapter(listAdapter);
 
+        binding.deleteButton.setEnabled(!settingsProvider.isSyncDeveloperSchedule());
         binding.deleteButton.setOnClickListener(ignore -> delete());
+        binding.setButton.setVisibility(localScheduleUUID.equals(settingsProvider.getSelectedLocalSchedule()) ? View.GONE : View.VISIBLE);
         binding.setButton.setOnClickListener(ignore -> set());
     }
 
@@ -225,6 +246,11 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     private void delete() {
+        if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+            SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.scheduleEdit_delete_title)
                 .setMessage(R.string.scheduleEdit_delete_message)

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -31,6 +32,11 @@ public class LocalSchedule {
         if (dayOfWeek == Calendar.SATURDAY)  return saturday;
         if (dayOfWeek == Calendar.SUNDAY)    return sunday;
         throw new Error("dayOfWeek("+dayOfWeek+") is not found!");
+    }
+
+    public void sortDay(ScheduleProvider sp, List<Lesson> dayLessons) {
+        Collections.sort(dayLessons, (o1, o2) -> Integer.compare(o1.getStart(), o2.getStart()));
+        sp.save();
     }
 
     public String getName() {

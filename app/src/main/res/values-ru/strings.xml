@@ -26,7 +26,7 @@
     <string name="notification_foreground_defaultText">Это необходимо, чтобы приложение оставалось открытым</string>
     <string name="notificationChannel_updatechecker_name">Проверка новых версий</string>
     <string name="notificationChannel_updatechecker_description">Уведомит вас о выходе новой версии</string>
-    <string name="notification_updatechecker_newVersion_title">Новая версия доступна!</string>
+    <string name="notification_updatechecker_newVersion_title">Новая версия SchoolGuide доступна!</string>
     <string name="notification_updatechecker_newVersion_text">Нажмите что бы скачать и установить</string>
     <string name="abc_cancel">Отмена</string>
     <string name="lessonEdit_delete_title">Вы уверены?</string>
@@ -69,7 +69,7 @@
     <string name="settings_userNotificationSinner">Уведомление польхователя</string>
     <string name="abc_unknown">Неизвестный</string>
     <string name="settings_checkUpdate">Проверить обновления</string>
-    <string name="settings_selectedLocalSchedule_empty">Пусто</string>
+    <string name="settings_selectedLocalSchedule_empty"><![CDATA[<Расписаний нету>]]></string>
     <string name="abc_set">Установить</string>
     <string name="scheduleEdit_emptyDay"><![CDATA[<Пусто>]]></string>
     <string name="notification_lesson_title">%LESSON%! Осталось: %LEFT%</string>

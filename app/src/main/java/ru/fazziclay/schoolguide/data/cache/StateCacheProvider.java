@@ -16,36 +16,17 @@ public class StateCacheProvider extends BaseProvider {
         filePath = context.getExternalCacheDir().getAbsolutePath().concat("/").concat(STATE_CACHE_FILE);
         data = load();
         if (data.isFormatVersionDefault()) data.formatVersion = 1;
+        save();
     }
 
-    public int getLatestAppVersionUseCode() {
-        return getStateCache().latestAppVersionUseCode;
+    @Override
+    public BaseData load() {
+        Gson gson = new Gson();
+        return gson.fromJson(FileUtil.read(filePath, "{}"), StateCache.class);
     }
 
     public StateCache getStateCache() {
         return (StateCache) data;
-    }
-
-    public void setForegroundNotificationState(NotificationState s) {
-        if (getStateCache().foregroundNotificationState != s) {
-            getStateCache().foregroundNotificationState = s;
-            save();
-        }
-    }
-
-    public boolean isForegroundNotificationStateDefault() {
-        return getStateCache().foregroundNotificationState == NotificationState.DEFAULT;
-    }
-
-    public void setExternalNotificationState(NotificationState s) {
-        if (getStateCache().externalNotificationState != s) {
-            getStateCache().externalNotificationState = s;
-            save();
-        }
-    }
-
-    public boolean isExternalNotificationStateDefault() {
-        return getStateCache().externalNotificationState == NotificationState.DEFAULT;
     }
 
     public State getVibratedFor() {
@@ -59,9 +40,12 @@ public class StateCacheProvider extends BaseProvider {
         }
     }
 
-    @Override
-    public BaseData load() {
-        Gson gson = new Gson();
-        return gson.fromJson(FileUtil.read(filePath, "{}"), StateCache.class);
+    public long getLatestAutoManifestCheck() {
+        return getStateCache().latestAutoManifestCheck;
+    }
+
+    public void setLatestAutoManifestCheck() {
+        getStateCache().latestAutoManifestCheck = System.currentTimeMillis() / 1000;
+        save();
     }
 }

@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.android.SpinnerAdapter;
 import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
-import ru.fazziclay.schoolguide.android.activity.developer.SetDeveloperScheduleActivity;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
@@ -38,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
             binding = ActivitySettingsBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
 
+            SchoolGuide.fixInstance(getApplicationContext());
             settingsProvider = SchoolGuide.getInstance().getSettingsProvider();
             scheduleProvider = SchoolGuide.getInstance().getScheduleProvider();
 
@@ -62,8 +62,28 @@ public class SettingsActivity extends AppCompatActivity {
         // Check update
         binding.checkUpdate.setOnClickListener(ignore -> startActivity(new Intent(this, UpdateCheckerActivity.class)));
 
-        // developer schedule
-        binding.setDeveloperSchedule.setOnClickListener(ignore -> startActivity(new Intent(this, SetDeveloperScheduleActivity.class)));
+        binding.isSyncDeveloperSchedule.setChecked(settingsProvider.isSyncDeveloperSchedule());
+        binding.isSyncDeveloperSchedule.setOnClickListener(checkbox -> {
+            if (binding.isSyncDeveloperSchedule.isChecked()) {
+                binding.isSyncDeveloperSchedule.setChecked(false);
+                AlertDialog.Builder a = new AlertDialog.Builder(this)
+                        .setTitle("ВСЁ УДАЛИТСЯ!!!")
+                        .setMessage("Эта функция может работать не корректно, т.к. она ещё тестируется!\nФункция эта синхронизирует расписание на вашем телефоне с расписанием на сервере. При включении все ваши расписания буду автоматически ЗАМЕНЯТСЯ теми, что находятся на сервере!\n\nЕсли ваша версия устареет то вам придётся обновится что бы функция работала!")
+                        .setPositiveButton("ВКЛючить", (dialog, which) -> {
+                            settingsProvider.setSyncDeveloperSchedule(true);
+                            binding.isSyncDeveloperSchedule.setChecked(true);
+                            SchoolGuide.getInstance().getManifestProvider().updateForGlobal((e, m) -> SchoolGuide.getInstance().getScheduleProvider().setSchedule(m.getDeveloperSchedule().copy()));
+                        })
+                        .setNegativeButton("ВЫКЛючить", (dialog, which) -> {
+                            settingsProvider.setSyncDeveloperSchedule(false);
+                            binding.isSyncDeveloperSchedule.setChecked(false);
+                        });
+                a.show();
+            } else {
+                settingsProvider.setSyncDeveloperSchedule(false);
+                binding.isSyncDeveloperSchedule.setChecked(false);
+            }
+        });
     }
 
     private void initUserNotificationSpinner() {
@@ -75,18 +95,20 @@ public class SettingsActivity extends AppCompatActivity {
         for (UUID uuid : scheduleProvider.getAllSchedules()) selectedLocalScheduleElements.add(new SpinnerAdapter.SpinnerAdapterElement(scheduleProvider.getLocalSchedule(uuid).getName(), uuid));
         selectedLocalScheduleAdapter = new SpinnerAdapter(selectedLocalScheduleElements, settingsProvider.getSelectedLocalSchedule());
 
-        // Layout
-        binding.selectedLocalSchedule.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, selectedLocalScheduleAdapter.getNames()));
-        binding.selectedLocalSchedule.setSelection(selectedLocalScheduleAdapter.getSelected());
-        TextView emptyText = new TextView(SettingsActivity.this);
-        emptyText.setText(R.string.settings_selectedLocalSchedule_empty);
-        binding.selectedLocalSchedule.setEmptyView(emptyText);
-        binding.selectedLocalSchedule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                settingsProvider.setSelectedLocalSchedule((UUID) selectedLocalScheduleAdapter.getValue(i));
-            }
-            @Override public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
+        if (selectedLocalScheduleAdapter.isEmpty()) {
+            binding.selectedLocalSchedule.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{getString(R.string.settings_selectedLocalSchedule_empty)}));
+            binding.selectedLocalSchedule.setSelection(0);
+
+        } else {
+            binding.selectedLocalSchedule.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, selectedLocalScheduleAdapter.getNames()));
+            binding.selectedLocalSchedule.setSelection(selectedLocalScheduleAdapter.getSelected());
+            binding.selectedLocalSchedule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    settingsProvider.setSelectedLocalSchedule((UUID) selectedLocalScheduleAdapter.getValue(i));
+                }
+                @Override public void onNothingSelected(AdapterView<?> adapterView) {}
+            });
+        }
     }
 }

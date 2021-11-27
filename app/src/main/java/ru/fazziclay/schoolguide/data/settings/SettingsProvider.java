@@ -23,6 +23,12 @@ public class SettingsProvider extends BaseProvider {
         save();
     }
 
+    @Override
+    public BaseData load() {
+        Gson gson = new Gson();
+        return gson.fromJson(FileUtil.read(filePath, "{}"), Settings.class);
+    }
+
     public Settings getSettings() {
         return (Settings) data;
     }
@@ -56,9 +62,17 @@ public class SettingsProvider extends BaseProvider {
         }
     }
 
-    @Override
-    public BaseData load() {
-        Gson gson = new Gson();
-        return gson.fromJson(FileUtil.read(filePath, "{}"), Settings.class);
+    public boolean isDeveloperFeatures() {
+        return getSettings().isDeveloperFeatures;
+    }
+
+
+    public boolean isSyncDeveloperSchedule() {
+        return getSettings().isSyncDeveloperSchedule;
+    }
+
+    public void setSyncDeveloperSchedule(boolean syncDeveloperSchedule) {
+        getSettings().isSyncDeveloperSchedule = syncDeveloperSchedule;
+        save();
     }
 }

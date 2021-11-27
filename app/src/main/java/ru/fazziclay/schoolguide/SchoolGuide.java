@@ -12,13 +12,15 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
 import ru.fazziclay.schoolguide.android.activity.schedule.TodayScheduleActivity;
-import ru.fazziclay.schoolguide.android.service.ForegroundService;
 import ru.fazziclay.schoolguide.data.cache.StateCacheProvider;
 import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
+import ru.fazziclay.schoolguide.data.manifest.VersionState;
 import ru.fazziclay.schoolguide.data.schedule.Lesson;
 import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
@@ -40,8 +42,22 @@ public class SchoolGuide {
 
     LocalSchedule selectedLocalSchedule = null;
 
+    public static boolean isInstanceAvailable() {
+        return instance != null;
+    }
+
+    public static SchoolGuide getInstance() {
+        return instance;
+    }
+
+    public static void fixInstance(Context context) {
+        if (!isInstanceAvailable()) {
+            new SchoolGuide(context);
+        }
+    }
+
     public SchoolGuide(Context context) {
-        if (instance != null) {
+        if (isInstanceAvailable()) {
             return;
         }
         instance = this;
@@ -53,11 +69,7 @@ public class SchoolGuide {
         loadNotificationChannels();
     }
 
-    public static SchoolGuide getInstance() {
-        return instance;
-    }
-
-    public void load() {
+    private void load() {
         settingsProvider = new SettingsProvider(getApplicationContext());
         scheduleProvider = new ScheduleProvider(getApplicationContext());
         stateCacheProvider = new StateCacheProvider(getApplicationContext());
@@ -71,8 +83,40 @@ public class SchoolGuide {
         if (selectedLocalSchedule == null) selectedLocalSchedule = new LocalSchedule(getString(R.string.abc_unknown));
     }
 
-    public LocalSchedule getSelectedLocalSchedule() {
-        return selectedLocalSchedule;
+    public void updateManifestTick(boolean activity) {
+        int delay = SharedConstrains.UPDATE_MANIFEST_DELAY;
+        if (activity) delay = SharedConstrains.UPDATE_MANIFEST_DELAY_ACTIVITY;
+
+        long outside = (System.currentTimeMillis() / 1000) - getStateCacheProvider().getLatestAutoManifestCheck();
+
+        if (outside > delay) {
+            getManifestProvider().updateForGlobal((exception, manifestProvider) -> {
+                try {
+                    onManifestUpdate(exception, manifestProvider);
+                } catch (Throwable throwable) {
+                    new CrashReport(getApplicationContext(), throwable);
+                }
+            });
+            getStateCacheProvider().setLatestAutoManifestCheck();
+        }
+    }
+
+    private void onManifestUpdate(Exception exception, ManifestProvider manifestProvider) {
+        if (manifestProvider.isTechnicalWorks()) {
+            return;
+        }
+
+        if (exception != null) {
+            return;
+        }
+
+        VersionState versionState = manifestProvider.getAppVersionState();
+        if (versionState == VersionState.OUTDATED) {
+            sendUpdateCheckerNotify();
+        } else {
+            getScheduleProvider().setSchedule(manifestProvider.getDeveloperSchedule().copy());
+            cancelUpdateCheckerNotify();
+        }
     }
 
     public void notificationTick() {
@@ -129,12 +173,12 @@ public class SchoolGuide {
                     .replace("%LEFT%", TimeUtil.secondsToHumanTime(localSchedule.getTimeBeforeStartLesson(), false));
 
         } else {
-            sendNotify(SharedConstrains.FOREGROUND_NOTIFICATION_ID, ForegroundService.getDefaultForegroundNotification(getApplicationContext()));
+            notificationManagerCompat.cancel(SharedConstrains.FOREGROUND_NOTIFICATION_ID);
             return;
         }
 
         updateVibration(scheduleState);
-        updateNotification(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID, SharedConstrains.FOREGROUND_NOTIFICATION_ID, titleText, subText, contentText, color, max, progress);
+        updateNotification(titleText, subText, contentText, color, max, progress);
     }
 
     public String getLessonDisplayName(Lesson lesson) {
@@ -144,12 +188,34 @@ public class SchoolGuide {
         return a.getName();
     }
 
-    public void updateNotification(String notificationChannelId, int notificationId, String title, String subText, String contentText, int color, int max, int progress) {
+    public void sendUpdateCheckerNotify() {
+        Intent intent = new Intent(getApplicationContext(), UpdateCheckerActivity.class);
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.UPDATECHECKER_NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.notification_updatechecker_newVersion_title))
+                .setSubText(getString(R.string.notification_updatechecker_newVersion_subText))
+                .setContentText(getString(R.string.notification_updatechecker_newVersion_text))
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setSound(null);
+
+        sendNotify(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID, builder.build());
+    }
+
+    private void cancelUpdateCheckerNotify() {
+        notificationManagerCompat.cancel(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID);
+    }
+
+    private void updateNotification(String title, String subText, String contentText, int color, int max, int progress) {
         Intent intent = new Intent(getApplicationContext(), TodayScheduleActivity.class);
         @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.InboxStyle a = new NotificationCompat.InboxStyle();
-        a.addLine(getString(R.string.todaySchedule_todayLessons_title));
+        a.addLine(contentText.equals(" ") ? null : contentText);
         for (Lesson lesson : getSelectedLocalSchedule().getToday()) {
             boolean aa = lesson.equals(getSelectedLocalSchedule().getNowLesson());
             String ptrStart = aa ? "-->\t" : "\t\t";
@@ -164,7 +230,7 @@ public class SchoolGuide {
             a.addLine(ss);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), notificationChannelId)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setSubText(subText)
@@ -181,14 +247,14 @@ public class SchoolGuide {
 
         if (max > 0) builder.setProgress(max, progress, false);
 
-        sendNotify(notificationId, builder.build());
+        sendNotify(SharedConstrains.FOREGROUND_NOTIFICATION_ID, builder.build());
     }
 
-    public void sendNotify(int nId, Notification n) {
+    private void sendNotify(int nId, Notification n) {
         notificationManagerCompat.notify(nId, n);
     }
 
-    public void updateVibration(State state) {
+    private void updateVibration(State state) {
         if (getStateCacheProvider().getVibratedFor() != state) {
             if (state == State.LESSON) vibrate(SharedConstrains.VIBRATION_NOTIFY_LESSON);
             if (state == State.REST) {
@@ -211,7 +277,7 @@ public class SchoolGuide {
         }
     }
 
-    public void loadNotificationChannels() {
+    private void loadNotificationChannels() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
             NotificationChannel foregroundChannel = new NotificationChannel(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_foreground_name), NotificationManager.IMPORTANCE_HIGH);
@@ -250,5 +316,18 @@ public class SchoolGuide {
 
     public ManifestProvider getManifestProvider() {
         return manifestProvider;
+    }
+
+    public LocalSchedule getSelectedLocalSchedule() {
+        return selectedLocalSchedule;
+    }
+
+    public static void showWarnSyncDeveloperScheduleDialog(Context context) {
+        AlertDialog.Builder a = new AlertDialog.Builder(context)
+                .setTitle("Синхронизация расписания!")
+                .setMessage("Вы не можете редактировать расписания, пока синхронизация с расписанием разработчика включена!")
+                .setPositiveButton("OK", null);
+
+        a.show();
     }
 }

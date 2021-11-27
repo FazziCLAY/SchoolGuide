@@ -82,7 +82,6 @@
     <string name="updateCenter_text_technicalWorks">TODO</string>
     <string name="fab_content_market">Market</string>
     <string name="settings_checkUpdate">Check Update</string>
-    <string name="settings_selectedLocalSchedule_empty">Empty</string>
     <string name="abc_set">Set</string>
     <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
     <string name="abc_empty">Empty</string>
@@ -91,4 +90,7 @@
     <string name="schedules_empty_title">Schedules not found!</string>
     <string name="schedules_empty_content">Create your schedule + button</string>
     <string name="notification_lesson_text" translatable="false">" "</string>
+    <string name="settings_selectedLocalSchedule_empty"><![CDATA[<Not schedules>]]></string>
+    <string name="notification_updatechecker_newVersion_subText" translatable="false">" "</string>
+    <string name="settings_isSyncDeveloperSchedule" translatable="false">Синхронизировать расписанием разработчика</string>
 </resources>

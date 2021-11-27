@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_checkUpdate" />
 
-        <Button
-            android:id="@+id/setDeveloperSchedule"
+        <CheckBox
+            android:id="@+id/isSyncDeveloperSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#ffffff"
-            android:text="Устанановить\nрасписание\nразработчика" />
+            android:textColor="?attr/checkboxTextColor"
+            android:text="@string/settings_isSyncDeveloperSchedule" />
     </LinearLayout>
 </ScrollView>

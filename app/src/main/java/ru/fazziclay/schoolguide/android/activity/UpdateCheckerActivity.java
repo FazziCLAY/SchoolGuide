@@ -70,11 +70,12 @@ public class UpdateCheckerActivity extends AppCompatActivity {
             setContentView(binding.getRoot());
             setTitle(R.string.activityTitle_updateChecker);
 
+            SchoolGuide.fixInstance(getApplicationContext());
             manifestProvider = SchoolGuide.getInstance().getManifestProvider();
 
             preInit();
 
-            new Thread(() -> manifestProvider.updateForGlobal((e, manifestProvider) -> {
+            manifestProvider.updateForGlobal((e, manifestProvider) -> {
                 exception = e;
                 try {
                     initState();
@@ -90,7 +91,7 @@ public class UpdateCheckerActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-            })).start();
+            });
 
         } catch (Throwable throwable) {
             new CrashReport(this, throwable);

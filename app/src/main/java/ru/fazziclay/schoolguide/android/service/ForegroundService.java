@@ -22,20 +22,29 @@ public class ForegroundService extends Service {
     Handler loopHandler = null;
     Runnable loopRunnable = null;
 
+    boolean isForeground = false;
+
     @Override
     public void onCreate() {
-        if (app == null) {
+        if (!SchoolGuide.isInstanceAvailable()) {
             new SchoolGuide(this);
         }
         app = SchoolGuide.getInstance();
 
         loopHandler = new Handler(Looper.myLooper());
         loopRunnable = () -> {
+            if (app.getSelectedLocalSchedule().getState().isEnded()) {
+                stopForeground(true);
+                isForeground = false;
+            } else {
+                if (!isForeground) startForeground(SharedConstrains.FOREGROUND_NOTIFICATION_ID, getDefaultForegroundNotification(this));
+            }
+
             app.notificationTick();
+            app.updateManifestTick(false);
+
             loopHandler.postDelayed(loopRunnable, LOOP_DELAY);
         };
-
-        startForeground(SharedConstrains.FOREGROUND_NOTIFICATION_ID, getDefaultForegroundNotification(this));
     }
 
     @Override

@@ -1,6 +1,9 @@
 package ru.fazziclay.schoolguide.data.schedule;
 
 import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
+
 import ru.fazziclay.schoolguide.data.BaseData;
 
 import java.util.HashMap;
@@ -18,5 +21,10 @@ public class Schedule extends BaseData {
                 ", lessons=" + lessons +
                 ", schedules=" + schedules +
                 '}';
+    }
+
+    public Schedule copy() {
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(this, this.getClass()), this.getClass());
     }
 }

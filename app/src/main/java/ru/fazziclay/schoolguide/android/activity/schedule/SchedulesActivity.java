@@ -100,6 +100,11 @@ public class SchedulesActivity extends AppCompatActivity {
 
         // Fab (Floating action button)
         binding.addScheduleButton.setOnClickListener(ignore -> {
+            if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+                SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+                return;
+            }
+
             List<String> scheduleNames = new ArrayList<>();
             scheduleNames.add(getString(R.string.schedules_createNew_empty));
 

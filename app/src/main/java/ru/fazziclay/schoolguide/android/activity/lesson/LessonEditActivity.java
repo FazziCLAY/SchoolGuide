@@ -60,6 +60,11 @@ public class LessonEditActivity extends AppCompatActivity {
     }
 
     private void delete() {
+        if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+            SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.lessonEdit_delete_title)
                 .setMessage(R.string.lessonEdit_delete_message)
@@ -73,6 +78,11 @@ public class LessonEditActivity extends AppCompatActivity {
     }
 
     private void save() {
+        if (SchoolGuide.getInstance().getSettingsProvider().isSyncDeveloperSchedule()) {
+            SchoolGuide.showWarnSyncDeveloperScheduleDialog(this);
+            return;
+        }
+
         Editable editable = binding.lessonName.getText();
         if (editable == null || editable.toString().isEmpty()) {
             notify(R.string.abc_fillAllFields);

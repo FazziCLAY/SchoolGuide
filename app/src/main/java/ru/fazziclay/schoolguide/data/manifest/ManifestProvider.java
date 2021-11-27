@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,22 +38,24 @@ public class ManifestProvider extends BaseProvider {
     }
 
     public void updateForGlobal(UpdateForGlobalInterface updateForGlobalInterface) {
-        Gson gson = new Gson();
-        Exception exception = null;
+        new Thread(() -> {
+            Gson gson = new Gson();
+            Exception exception = null;
 
-        try {
-            int key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
+            try {
+                int key = Integer.parseInt(parseUrl(MANIFEST_KEY_URL));
 
-            if (getManifest().manifestKey != key) {
-                String parsed = parseUrl(MANIFEST_URL);
-                Manifest globalManifest = gson.fromJson(parsed, Manifest.class);
-                setManifest(globalManifest);
-                FileUtil.write(filePath, parsed);
+                if (getManifest().manifestKey != key) {
+                    String parsed = parseUrl(MANIFEST_URL);
+                    Manifest globalManifest = gson.fromJson(parsed, Manifest.class);
+                    setManifest(globalManifest);
+                    FileUtil.write(filePath, new JSONObject(parsed).toString(4));
+                }
+            } catch (Exception e) {
+                exception = e;
             }
-        } catch (Exception e) {
-            exception = e;
-        }
-        updateForGlobalInterface.run(exception, this);
+            updateForGlobalInterface.run(exception, ManifestProvider.this);
+        }).start();
     }
 
     public void setManifest(Manifest manifest) {
@@ -85,6 +89,11 @@ public class ManifestProvider extends BaseProvider {
 
     public Schedule getDeveloperSchedule() {
         return getManifest().developerSchedule;
+    }
+
+    public void setDeveloperSchedule(Schedule s) {
+        getManifest().developerSchedule = s;
+        save();
     }
 
     // ===================================
