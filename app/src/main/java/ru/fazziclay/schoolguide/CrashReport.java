@@ -109,7 +109,7 @@ public class CrashReport {
             bigTextStyle.setSummaryText("App Crash!");
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, SharedConstrains.CRASHREPORT_NOTIFICATION_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.planner_s)
                     .setStyle(bigTextStyle)
                     .setContentTitle("Slide down notification!")
                     .setContentTitle("Crash Report");
