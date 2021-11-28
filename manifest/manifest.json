@@ -29,7 +29,7 @@
         "name":"География"
       },
       "d01ca7ac-7e98-47c1-b101-2167b76b3a2b":{
-        "name":"English language"
+        "name":"English lang"
       },
       "f8a7569d-b466-4475-a4a7-cd79d63f9d47":{
         "name":"Процент"
@@ -430,6 +430,6 @@
     "name":"0.2.11.1 - Beta",
     "pageUrl":"https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey":14,
+  "manifestKey":15,
   "version":4
 }
