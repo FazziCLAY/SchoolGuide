@@ -423,13 +423,13 @@
   "isTechnicalWorks":false,
   "latestVersion":{
     "changelog":{
-      "default":"Версия 0.2.11 Beta (v30)\n\n* Изменено именование версий, так как это beta версии теперь начинается с 0\n* Немного измемено отображение расписания\n* Уведомление теперь скрывается когда оно ненужно\n* Удалёно всё неиспользуемое\n\nДобавлено:\n* Экран отладки (для разработчика)\n* Настройка 'Синхронизация с расписанием разработчика'\n\nИсправлены баги:\n* Вылет при установке обновления\n* Урок который начинался позже мог быть выше в списке уроков\n* Теперь уведомление о новой версии будет снова приходить!\n* Возможный вылет в LessonsActivity"
+      "default":"Версия 0.2.11.1 Beta (v31)\n\n* Изменена иконка приложения"
     },
-    "code":30,
-    "downloadUrl":"https://github.com/FazziCLAY/SchoolGuide/releases/download/30/app-debug.apk",
-    "name":"0.2.11 - Beta",
-    "pageUrl":"https://github.com/fazziclay/schoolguide"
+    "code":31,
+    "downloadUrl":"https://github.com/FazziCLAY/SchoolGuide/releases/download/31/schoolguide_v31.apk",
+    "name":"0.2.11.1 - Beta",
+    "pageUrl":"https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey":13,
+  "manifestKey":14,
   "version":4
 }
