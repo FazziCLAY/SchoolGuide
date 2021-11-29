@@ -415,13 +415,13 @@
   "isTechnicalWorks": false,
   "latestVersion": {
     "changelog": {
-      "default": "Версия 0.2.11.1 Beta (v31)\n\n* Изменена иконка приложения"
+      "default": "Версия 0.2.11.2 Beta (v32)\n\n* Исправлены баги"
     },
-    "code": 31,
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/31/schoolguide_v31.apk",
-    "name": "0.2.11.1 - Beta",
+    "code": 32,
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/v32/schoolguide_v32.apk",
+    "name": "0.2.11.2 - Beta",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 16,
+  "manifestKey": 17,
   "version": 4
 }
