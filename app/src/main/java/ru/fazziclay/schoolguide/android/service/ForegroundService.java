@@ -34,13 +34,18 @@ public class ForegroundService extends Service {
         loopHandler = new Handler(Looper.myLooper());
         loopRunnable = () -> {
             if (app.getSelectedLocalSchedule().getState().isEnded()) {
-                stopForeground(true);
-                isForeground = false;
+                if (isForeground) {
+                    stopForeground(true);
+                    isForeground = false;
+                }
             } else {
-                if (!isForeground) startForeground(SharedConstrains.FOREGROUND_NOTIFICATION_ID, getDefaultForegroundNotification(this));
+                if (!isForeground) {
+                    startForeground(SharedConstrains.MAIN_NOTIFICATION_ID, getDefaultForegroundNotification(this));
+                    isForeground = true;
+                }
             }
 
-            app.notificationTick();
+            if (isForeground) app.notificationTick();
             app.updateManifestTick(false);
 
             loopHandler.postDelayed(loopRunnable, LOOP_DELAY);
@@ -59,7 +64,7 @@ public class ForegroundService extends Service {
     }
 
     public static Notification getDefaultForegroundNotification(Context context) {
-        return new NotificationCompat.Builder(context, SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID)
+        return new NotificationCompat.Builder(context, SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setSound(null)

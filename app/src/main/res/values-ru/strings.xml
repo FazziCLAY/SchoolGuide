@@ -18,10 +18,8 @@
     <string name="schedule_lesson_duration">Длительность - %s</string>
     <string name="schedule_lesson_duration_title">Длительность</string>
     <string name="schedule_lesson_startTime_title">Время начала</string>
-    <string name="notificationChannel_foreground_name">Главное (О фоне)</string>
-    <string name="notificationChannel_external_name">Отдельное</string>
-    <string name="notificationChannel_external_description">Отдельное уведомление для показа расписания (включить можно в настройках приложения)</string>
-    <string name="notificationChannel_foreground_description">Главное уведомление которое уведомляет о фоновом использовании</string>
+    <string name="notificationChannel_main_name">Главное</string>
+    <string name="notificationChannel_main_description">Главное уведомление которое уведомляет вас</string>
     <string name="notification_foreground_defaultTitle">Приложение активно</string>
     <string name="notification_foreground_defaultText">Это необходимо, чтобы приложение оставалось открытым</string>
     <string name="notificationChannel_updatechecker_name">Проверка новых версий</string>

@@ -3,6 +3,7 @@ package ru.fazziclay.schoolguide.android.activity;
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,16 +15,20 @@ import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
-import ru.fazziclay.schoolguide.data.cache.StateCacheProvider;
 
 public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            try {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
+            } catch (Throwable ignored) {}
+
             // Патчи
             try {
                 patch_2021_11_19_v25();
+                patch_2021_11_29_v31();
             } catch (Exception ignored) {}
 
             if (!SchoolGuide.isInstanceAvailable()) {
@@ -33,13 +38,24 @@ public class MainActivity extends Activity {
             SchoolGuide.getInstance().getSettingsProvider().addVersionsHistory(SharedConstrains.APPLICATION_VERSION_CODE);
             SchoolGuide.getInstance().updateManifestTick(true);
 
-            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
             startService(new Intent(this, ForegroundService.class));
             startActivity(new Intent(this, HomeActivity.class));
             finish();
 
         } catch (Throwable throwable) {
             new CrashReport(this, throwable);
+        }
+    }
+
+    // Удалить каналы уведомлений старых версий
+    private void patch_2021_11_29_v31() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            String[] toDelete = new String[] {"UpdateChecker", "Foreground", "CrashReport", "External"};
+
+            NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
+            for (String channel : toDelete) {
+                notificationManager.deleteNotificationChannel(channel);
+            }
         }
     }
 

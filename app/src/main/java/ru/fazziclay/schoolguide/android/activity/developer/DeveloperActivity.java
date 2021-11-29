@@ -6,6 +6,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Random;
+
+import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.data.manifest.Manifest;
 import ru.fazziclay.schoolguide.data.schedule.Schedule;
@@ -56,6 +59,16 @@ public class DeveloperActivity extends AppCompatActivity {
                 return;
             }
             SchoolGuide.getInstance().sendUpdateCheckerNotify();
+            Toast.makeText(this, "Successfully!", Toast.LENGTH_SHORT).show();
+        });
+
+        binding.testCrash.setOnClickListener(ignore -> {
+            try {
+                throw new Exception("this a test exception in developer activity; randomNumber="+new Random().nextInt());
+
+            } catch (Exception e) {
+                new CrashReport(this, e);
+            }
             Toast.makeText(this, "Successfully!", Toast.LENGTH_SHORT).show();
         });
     }

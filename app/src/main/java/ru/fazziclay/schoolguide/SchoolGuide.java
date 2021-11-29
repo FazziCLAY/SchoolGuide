@@ -173,7 +173,7 @@ public class SchoolGuide {
                     .replace("%LEFT%", TimeUtil.secondsToHumanTime(localSchedule.getTimeBeforeStartLesson(), false));
 
         } else {
-            notificationManagerCompat.cancel(SharedConstrains.FOREGROUND_NOTIFICATION_ID);
+            notificationManagerCompat.cancel(SharedConstrains.MAIN_NOTIFICATION_ID);
             return;
         }
 
@@ -192,7 +192,7 @@ public class SchoolGuide {
         Intent intent = new Intent(getApplicationContext(), UpdateCheckerActivity.class);
         @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.UPDATECHECKER_NOTIFICATION_CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getString(R.string.notification_updatechecker_newVersion_title))
                 .setSubText(getString(R.string.notification_updatechecker_newVersion_subText))
@@ -203,11 +203,11 @@ public class SchoolGuide {
                 .setContentIntent(pendingIntent)
                 .setSound(null);
 
-        sendNotify(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID, builder.build());
+        sendNotify(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_ID, builder.build());
     }
 
     private void cancelUpdateCheckerNotify() {
-        notificationManagerCompat.cancel(SharedConstrains.UPDATECHECKER_NOTIFICATION_ID);
+        notificationManagerCompat.cancel(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_ID);
     }
 
     private void updateNotification(String title, String subText, String contentText, int color, int max, int progress) {
@@ -230,7 +230,7 @@ public class SchoolGuide {
             a.addLine(ss);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setSubText(subText)
@@ -247,7 +247,7 @@ public class SchoolGuide {
 
         if (max > 0) builder.setProgress(max, progress, false);
 
-        sendNotify(SharedConstrains.FOREGROUND_NOTIFICATION_ID, builder.build());
+        sendNotify(SharedConstrains.MAIN_NOTIFICATION_ID, builder.build());
     }
 
     private void sendNotify(int nId, Notification n) {
@@ -280,17 +280,12 @@ public class SchoolGuide {
     private void loadNotificationChannels() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
-            NotificationChannel foregroundChannel = new NotificationChannel(SharedConstrains.FOREGROUND_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_foreground_name), NotificationManager.IMPORTANCE_HIGH);
-            NotificationChannel externalChannel = new NotificationChannel(SharedConstrains.EXTERNAL_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_external_name), NotificationManager.IMPORTANCE_HIGH);
-            NotificationChannel updatecheckerChannel = new NotificationChannel(SharedConstrains.UPDATECHECKER_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updatechecker_name), NotificationManager.IMPORTANCE_HIGH);
-
-            foregroundChannel.setDescription(getString(R.string.notificationChannel_foreground_description));
-            externalChannel.setDescription(getString(R.string.notificationChannel_external_description));
-            updatecheckerChannel.setDescription(getString(R.string.notificationChannel_updatechecker_description));
-
-            notificationManager.createNotificationChannel(foregroundChannel);
-            notificationManager.createNotificationChannel(externalChannel);
-            notificationManager.createNotificationChannel(updatecheckerChannel);
+            NotificationChannel main = new NotificationChannel(SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_main_name), NotificationManager.IMPORTANCE_NONE);
+            NotificationChannel updateAvailable = new NotificationChannel(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updatechecker_name), NotificationManager.IMPORTANCE_HIGH);
+            main.setDescription(getString(R.string.notificationChannel_main_description));
+            updateAvailable.setDescription(getString(R.string.notificationChannel_updatechecker_description));
+            notificationManager.createNotificationChannel(main);
+            notificationManager.createNotificationChannel(updateAvailable);
         }
     }
 
@@ -319,6 +314,7 @@ public class SchoolGuide {
     }
 
     public LocalSchedule getSelectedLocalSchedule() {
+        onSelectedLocalScheduleChanged();
         return selectedLocalSchedule;
     }
 

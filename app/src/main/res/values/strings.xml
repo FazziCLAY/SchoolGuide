@@ -28,10 +28,8 @@
     <string name="schedule_lesson_duration">Duration - %s</string>
     <string name="schedule_lesson_duration_title">Duration</string>
     <string name="schedule_lesson_startTime_title">Start time</string>
-    <string name="notificationChannel_foreground_name">Main (Foreground)</string>
-    <string name="notificationChannel_external_name">External</string>
-    <string name="notificationChannel_foreground_description">The main notification that notified of background usage</string>
-    <string name="notificationChannel_external_description">External notification for showing the schedule (you can enable it in the app settings)</string>
+    <string name="notificationChannel_main_name">Main</string>
+    <string name="notificationChannel_main_description">The main notification that notified you</string>
     <string name="notification_foreground_defaultTitle">The application is active</string>
     <string name="notification_foreground_defaultText">This is necessary to keep the application open</string>
 

@@ -99,8 +99,8 @@ public class CrashReport {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
 
-                NotificationChannel channel = new NotificationChannel(SharedConstrains.CRASHREPORT_NOTIFICATION_CHANNEL_ID, "Crash Report", NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription("Crash Reporter");
+                NotificationChannel channel = new NotificationChannel(SharedConstrains.CRASH_NOTIFICATION_CHANNEL_ID, "App crashes", NotificationManager.IMPORTANCE_HIGH);
+                channel.setDescription("Report a app problem!");
                 notificationManager.createNotificationChannel(channel);
             }
 
@@ -108,14 +108,14 @@ public class CrashReport {
             bigTextStyle.bigText(finalReport);
             bigTextStyle.setSummaryText("App Crash!");
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, SharedConstrains.CRASHREPORT_NOTIFICATION_CHANNEL_ID)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, SharedConstrains.CRASH_NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.planner_s)
                     .setStyle(bigTextStyle)
                     .setContentTitle("Slide down notification!")
                     .setContentTitle("Crash Report");
 
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-            notificationManagerCompat.notify(SharedConstrains.CRASHREPORT_NOTIFICATION_ID, builder.build());
+            notificationManagerCompat.notify(SharedConstrains.CRASH_NOTIFICATION_ID, builder.build());
         } catch (Throwable ignored) {}
     }
 

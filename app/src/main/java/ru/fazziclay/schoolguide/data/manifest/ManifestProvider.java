@@ -72,7 +72,7 @@ public class ManifestProvider extends BaseProvider {
 
     public VersionState getAppVersionState() {
         AppVersion latestVersion = getLatestAppVersion();
-        AppVersion appVersion = SharedConstrains.APP_VERSION;
+        AppVersion appVersion = SharedConstrains.APPLICATION_VERSION;
 
         if (latestVersion == null) {
             return VersionState.UNKNOWN;
