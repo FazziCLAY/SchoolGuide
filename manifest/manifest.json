@@ -35,7 +35,7 @@
         "name": "Процент"
       },
       "b80480ed-73b8-4c4c-b0a2-85a62065b324": {
-        "name": "Матемематика"
+        "name": "Математика"
       },
       "de7bfca7-8826-4cdd-a19e-4dfef52e0393": {
         "name": "Литература"
@@ -422,6 +422,6 @@
     "name": "0.2.11.2 - Beta",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 17,
+  "manifestKey": 18,
   "version": 4
 }
