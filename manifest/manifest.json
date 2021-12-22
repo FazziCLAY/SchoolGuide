@@ -69,6 +69,12 @@
       },
       "e2794979-3433-43b2-9487-0224dcd4aa4a": {
         "name": "Биология"
+      },
+      "6a7a11af-0679-475d-9b41-1eaf16ce4fee": {
+        "name": "Классный час"
+      },
+      "b8e68279-578e-4fc4-8d79-550606d47b60": {
+        "name": "Простое решение задач"
       }
     },
     "schedules": {
@@ -630,6 +636,6 @@
     "name": "0.2.11.2 - Beta",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 19,
+  "manifestKey": 20,
   "version": 4
 }
