@@ -2,7 +2,10 @@ package ru.fazziclay.schoolguide.data.schedule;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LessonInfo {
+    @SerializedName("name")
     private String name;
 
     public LessonInfo(String name) {

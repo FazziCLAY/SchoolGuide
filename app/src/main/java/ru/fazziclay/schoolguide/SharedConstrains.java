@@ -2,6 +2,10 @@ package ru.fazziclay.schoolguide;
 
 import ru.fazziclay.schoolguide.data.manifest.AppVersion;
 
+/**
+ * @author FazziCLAY
+ * Все основные константы для приложения, некоторые автоматически берутся ещё от куда то но всё равно приложение обращается к этим а не тем
+ * */
 public class SharedConstrains {
     // = = V E R S I O N   S E T T I N G S
     public static final int APPLICATION_VERSION_CODE    = BuildConfig.VERSION_CODE;

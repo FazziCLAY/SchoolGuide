@@ -9,34 +9,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8sp">
+        android:padding="4sp">
 
         <CheckBox
             android:id="@+id/isVibration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?attr/checkboxTextColor"
+            android:background="#0C0C0C"
+            android:layout_margin="4sp"
             android:text="@string/settings_isVibration" />
 
         <Spinner
             android:id="@+id/selectedLocalSchedule"
             android:layout_width="match_parent"
+            android:spinnerMode="dialog"
             android:layout_height="wrap_content"
             android:prompt="@string/settings_selectedLocalSchedule"
             android:minHeight="48dp"
+            android:background="#0C0C0C"
+            android:layout_margin="4sp"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
             android:id="@+id/checkUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:layout_margin="4sp"
             android:text="@string/settings_checkUpdate" />
 
         <CheckBox
             android:id="@+id/isSyncDeveloperSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:background="#0C0C0C"
             android:textColor="?attr/checkboxTextColor"
             android:text="@string/settings_isSyncDeveloperSchedule" />
+
+        <Spinner
+            android:id="@+id/notificationStyle_clickAction"
+            android:layout_width="match_parent"
+            android:spinnerMode="dialog"
+            android:layout_height="wrap_content"
+            android:prompt="@string/settings_notificationStyle_clickAction"
+            android:minHeight="48dp"
+            android:background="#0C0C0C"
+            android:layout_margin="4sp"
+            tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 </ScrollView>

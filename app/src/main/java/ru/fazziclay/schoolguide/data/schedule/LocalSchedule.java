@@ -2,6 +2,8 @@ package ru.fazziclay.schoolguide.data.schedule;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -9,14 +11,22 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class LocalSchedule {
-    String name = "Unknown";
+    @SerializedName("name")
+    String name;
 
+    @SerializedName("monday")
     List<Lesson> monday    = new ArrayList<>();
+    @SerializedName("tuesday")
     List<Lesson> tuesday   = new ArrayList<>();
+    @SerializedName("wednesday")
     List<Lesson> wednesday = new ArrayList<>();
+    @SerializedName("thursday")
     List<Lesson> thursday  = new ArrayList<>();
+    @SerializedName("friday")
     List<Lesson> friday    = new ArrayList<>();
+    @SerializedName("saturday")
     List<Lesson> saturday  = new ArrayList<>();
+    @SerializedName("sunday")
     List<Lesson> sunday    = new ArrayList<>();
 
     public LocalSchedule(String name) {

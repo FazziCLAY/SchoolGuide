@@ -44,7 +44,7 @@ public class SettingsProvider extends BaseProvider {
     public void setSelectedLocalSchedule(UUID uuid) {
         getSettings().selectedLocalSchedule = uuid;
         save();
-        SchoolGuide.getInstance().onSelectedLocalScheduleChanged();
+        SchoolGuide.getInstance().updateSelectedLocalSchedule();
     }
 
     public UUID getSelectedLocalSchedule() {
@@ -74,5 +74,9 @@ public class SettingsProvider extends BaseProvider {
     public void setSyncDeveloperSchedule(boolean syncDeveloperSchedule) {
         getSettings().isSyncDeveloperSchedule = syncDeveloperSchedule;
         save();
+    }
+
+    public NotificationStyle getNotificationStyle() {
+        return getSettings().notificationStyle;
     }
 }

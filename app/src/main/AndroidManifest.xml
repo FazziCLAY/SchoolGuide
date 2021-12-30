@@ -26,9 +26,6 @@
             android:showWhenLocked="true"
             tools:targetApi="o_mr1" />
         <activity
-            android:name=".android.activity.developer.SetDeveloperScheduleActivity"
-            android:exported="false" />
-        <activity
             android:name=".android.activity.UpdateCheckerActivity"
             android:exported="true" />
         <activity
@@ -36,9 +33,6 @@
             android:exported="true" />
         <activity
             android:name=".android.activity.schedule.ScheduleEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.schedule.SchedulesActivity"
             android:exported="true" />
         <activity
             android:name=".android.activity.developer.DeveloperManifestUtilsActivity"

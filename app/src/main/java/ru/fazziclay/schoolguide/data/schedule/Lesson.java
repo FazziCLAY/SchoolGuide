@@ -2,9 +2,12 @@ package ru.fazziclay.schoolguide.data.schedule;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.UUID;
 
 public class Lesson extends TimeSegment {
+    @SerializedName("lesson")
     private UUID lesson;
 
     public Lesson(UUID lesson, int start, int duration) {

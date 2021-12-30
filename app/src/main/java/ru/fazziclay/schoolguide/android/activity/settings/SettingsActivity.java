@@ -20,6 +20,7 @@ import ru.fazziclay.schoolguide.SchoolGuide;
 import ru.fazziclay.schoolguide.android.SpinnerAdapter;
 import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
+import ru.fazziclay.schoolguide.data.settings.NotificationClickAction;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
 
@@ -29,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
     ScheduleProvider scheduleProvider = null;
 
     SpinnerAdapter selectedLocalScheduleAdapter = null;
+    SpinnerAdapter notificationClickActionAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initLayout() {
-        // Notification spinner
-        initUserNotificationSpinner();
+        initNotificationClickActionSpinner();
 
         // Vibration
         binding.isVibration.setChecked(settingsProvider.isVibration());
@@ -86,7 +87,26 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void initUserNotificationSpinner() {
+    private void initNotificationClickActionSpinner() {
+        // Adapter
+        List<SpinnerAdapter.SpinnerAdapterElement> elements = new ArrayList<>();
+        for (NotificationClickAction clickAction : NotificationClickAction.values())
+            elements.add(new SpinnerAdapter.SpinnerAdapterElement(getString(clickAction.getStringKey()), clickAction));
+        notificationClickActionAdapter = new SpinnerAdapter(elements, settingsProvider.getNotificationStyle().getClickAction());
+
+        binding.notificationStyleClickAction.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, notificationClickActionAdapter.getNames()));
+        binding.notificationStyleClickAction.setSelection(notificationClickActionAdapter.getSelected());
+        binding.notificationStyleClickAction.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settingsProvider.getNotificationStyle().setClickAction((NotificationClickAction) notificationClickActionAdapter.getValue(i));
+                SchoolGuide.getInstance().updateNotificationStyle();
+                settingsProvider.save();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
     }
 
     private void initSelectedLocalScheduleSpinner() {

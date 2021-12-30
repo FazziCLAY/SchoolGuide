@@ -1,6 +1,7 @@
 package ru.fazziclay.schoolguide.android.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import ru.fazziclay.schoolguide.data.manifest.AppVersion;
 import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
 import ru.fazziclay.schoolguide.data.manifest.VersionState;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCheckerBinding;
+import ru.fazziclay.schoolguide.util.ColorUtils;
 
 public class UpdateCheckerActivity extends AppCompatActivity {
     ActivityUpdateCheckerBinding binding;
@@ -152,9 +154,11 @@ public class UpdateCheckerActivity extends AppCompatActivity {
             binding.downloadingInstall.setOnClickListener(ignore -> installApk(tempDownloadedFilePath));
 
             binding.title.setText(R.string.updateCenter_title_updateAvailable);
-            binding.text.setText(latestVersion.getChangeLog(Locale.getDefault().getLanguage())
-                    .replace("%CLIENT_VERSION_CODE%", String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE))
-                    .replace("%CLIENT_VERSION_NAME%", SharedConstrains.APPLICATION_VERSION_NAME)
+            binding.text.setText(ColorUtils.colorizeText(
+                    latestVersion.getChangeLog(Locale.getDefault().getLanguage())
+                            .replace("%CLIENT_VERSION_CODE%", String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE))
+                            .replace("%CLIENT_VERSION_NAME%", SharedConstrains.APPLICATION_VERSION_NAME), Color.WHITE
+                    )
             );
             if (latestVersion.getDownloadUrl() != null) {
                 binding.downloadButton.setVisibility(View.VISIBLE);

@@ -3,6 +3,7 @@ package ru.fazziclay.schoolguide.android.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivityHomeBinding;
+import ru.fazziclay.schoolguide.util.ColorUtils;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
@@ -117,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
                             .putExtra(ScheduleEditActivity.KEY_LOCAL_SCHEDULE_UUID, schedulesIds[position].toString());
                     startActivity(intent);
                 });
-                textView.setText(scheduleProvider.getLocalSchedule(scheduleUUID).getName());
+                textView.setText(ColorUtils.colorizeText(scheduleProvider.getLocalSchedule(scheduleUUID).getName(), Color.WHITE));
                 textView.setChecked(scheduleUUID.equals(settingsProvider.getSelectedLocalSchedule()));
                 return textView;
             }

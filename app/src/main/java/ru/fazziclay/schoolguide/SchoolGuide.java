@@ -1,6 +1,5 @@
 package ru.fazziclay.schoolguide;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,7 +16,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import ru.fazziclay.schoolguide.android.activity.UpdateCheckerActivity;
-import ru.fazziclay.schoolguide.android.activity.schedule.TodayScheduleActivity;
 import ru.fazziclay.schoolguide.data.cache.StateCacheProvider;
 import ru.fazziclay.schoolguide.data.manifest.ManifestProvider;
 import ru.fazziclay.schoolguide.data.manifest.VersionState;
@@ -26,21 +24,34 @@ import ru.fazziclay.schoolguide.data.schedule.LessonInfo;
 import ru.fazziclay.schoolguide.data.schedule.LocalSchedule;
 import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.schedule.State;
+import ru.fazziclay.schoolguide.data.settings.NotificationStyle;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
+import ru.fazziclay.schoolguide.util.ColorUtils;
 import ru.fazziclay.schoolguide.util.TimeUtil;
 
+/**
+ * @author FazziCLAY
+ * Главный класс приложения, в нём вся логика самого приложения, дабы не засорять этим кодом классы связанные с андроидом
+ * */
 public class SchoolGuide {
     static SchoolGuide instance = null;
+
+    Context androidApplicationContext = null;
+    Vibrator vibrator = null;
 
     SettingsProvider settingsProvider = null;
     ScheduleProvider scheduleProvider = null;
     StateCacheProvider stateCacheProvider = null;
     ManifestProvider manifestProvider = null;
-    Context androidApplicationContext = null;
-    Vibrator vibrator = null;
-    NotificationManagerCompat notificationManagerCompat = null;
 
     LocalSchedule selectedLocalSchedule = null;
+
+    // Notification
+    NotificationManagerCompat notificationManagerCompat = null;
+    NotificationStyle notificationStyle = null;
+    NotificationData notificationData = new NotificationData();
+    boolean isNotificationVisible = false;
+
 
     public static boolean isInstanceAvailable() {
         return instance != null;
@@ -62,31 +73,176 @@ public class SchoolGuide {
         }
         instance = this;
         this.androidApplicationContext = context;
-        this.vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        this.notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
 
         load();
         loadNotificationChannels();
     }
 
+    // Загрузка
     private void load() {
+        vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+
         settingsProvider = new SettingsProvider(getApplicationContext());
         scheduleProvider = new ScheduleProvider(getApplicationContext());
         stateCacheProvider = new StateCacheProvider(getApplicationContext());
         manifestProvider = new ManifestProvider(getApplicationContext());
 
-        onSelectedLocalScheduleChanged();
+        // Notification
+        notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
+        updateNotificationStyle();
+
+        updateSelectedLocalSchedule();
     }
 
-    public void onSelectedLocalScheduleChanged() {
+    // Создать все необходимые каналы для уведомлений
+    private void loadNotificationChannels() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
+            NotificationChannel main = new NotificationChannel(SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_main_name), NotificationManager.IMPORTANCE_NONE);
+            NotificationChannel updateAvailable = new NotificationChannel(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updatechecker_name), NotificationManager.IMPORTANCE_HIGH);
+            main.setDescription(getString(R.string.notificationChannel_main_description));
+            updateAvailable.setDescription(getString(R.string.notificationChannel_updatechecker_description));
+            notificationManager.createNotificationChannel(main);
+            notificationManager.createNotificationChannel(updateAvailable);
+        }
+    }
+
+    // Обновить веь кеш. Загрузить всё из настроек в переменные
+    public void updateNotificationStyle() {
+        notificationStyle = settingsProvider.getNotificationStyle();
+        notificationStyle.updateCache();
+        notificationData.pendingIntent = notificationStyle.getClickAction().getStartActivityInterface().run(getApplicationContext(), this);
+    }
+
+    // Обновить переменную selectedLocalSchedule в соответствии с текущий выбором в настройках
+    public void updateSelectedLocalSchedule() {
         this.selectedLocalSchedule = scheduleProvider.getLocalSchedule(getSettingsProvider().getSelectedLocalSchedule());
         if (selectedLocalSchedule == null) selectedLocalSchedule = new LocalSchedule(getString(R.string.abc_unknown));
     }
 
+    // Тик уведомления, вызывается из службы ForegroundService а сам он обновляет уведомление
+    public void notificationTick() {
+        State state = selectedLocalSchedule.getState();
+
+        if (state.isLesson()) {
+            isNotificationVisible = true;
+            notificationData.isProgress = true;
+            notificationData.progressMax = selectedLocalSchedule.getNowLesson().getDuration();
+            notificationData.progress = selectedLocalSchedule.getTimeBeforeStartRest();
+
+            if (!state.isEnding()) {
+                notificationData.title = getString(R.string.mainNotification_lesson_title);
+                notificationData.content = getString(R.string.mainNotification_lesson_content);
+                notificationData.sub = getString(R.string.mainNotification_lesson_sub);
+
+            } else {
+                notificationData.title = getString(R.string.mainNotification_lesson_title_ending);
+                notificationData.content = getString(R.string.mainNotification_lesson_content_ending);
+                notificationData.sub = getString(R.string.mainNotification_lesson_sub_ending);
+            }
+
+        } else if (state.isRest()) {
+            isNotificationVisible = true;
+            notificationData.isProgress = false;
+
+            if (!state.isEnding()) {
+                notificationData.title = getString(R.string.mainNotification_rest_title);
+                notificationData.content = getString(R.string.mainNotification_rest_content);
+
+            } else {
+                notificationData.title = getString(R.string.mainNotification_rest_title_ending);
+                notificationData.content = getString(R.string.mainNotification_rest_content_ending);
+            }
+
+        } else {
+            if (isNotificationVisible) {
+                cancelNotify(SharedConstrains.MAIN_NOTIFICATION_ID);
+                isNotificationVisible = false;
+            }
+            return;
+        }
+
+        setMainNotificationReplacements();
+        updateMainNotification();
+
+        vibrationTick(state);
+    }
+
+    // Заменить все %переменные% в notificationData на нужные значения
+    public void setMainNotificationReplacements() {
+        String[][] replacements = {
+                {"%NOW_LESSON%", getLessonDisplayName(selectedLocalSchedule.getNowLesson())},
+                {"%NEXT_LESSON%", getLessonDisplayName(selectedLocalSchedule.getNextLesson())},
+                {"%TIME_BEFORE_START_LESSON%", TimeUtil.secondsToHumanTime(selectedLocalSchedule.getTimeBeforeStartLesson(), false)},
+                {"%TIME_BEFORE_START_REST%", TimeUtil.secondsToHumanTime(selectedLocalSchedule.getTimeBeforeStartRest(), false)}
+        };
+
+        for (String[] replacement : replacements) {
+            String r = replacement[0];
+            String v = replacement[1];
+            if (notificationData.title != null) notificationData.title = notificationData.title.replace(r, v);
+            if (notificationData.content != null) notificationData.content = notificationData.content.replace(r, v);
+            if (notificationData.sub != null) notificationData.sub = notificationData.sub.replace(r, v);
+        }
+
+        if (notificationData.title != null && notificationData.title.equals("-1")) notificationData.title = null;
+        if (notificationData.content != null && notificationData.content.equals("-1")) notificationData.content = null;
+        if (notificationData.sub != null && notificationData.sub.equals("-1")) notificationData.sub = null;
+    }
+
+    // Получить user-friendly имя урока, если урок пустой или имя пустое возвращяем abc_empty или abc_unknown
+    public String getLessonDisplayName(Lesson lesson) {
+        if (lesson == null) return getString(R.string.abc_empty);
+        LessonInfo lessonInfo = getScheduleProvider().getLessonInfo(lesson.getLessonInfo());
+        if (lessonInfo == null) return getString(R.string.abc_unknown);
+        return lessonInfo.getName();
+    }
+
+    // Отправляет главное уведомление в соответстствии с данными в notificationData
+    private void updateMainNotification() {
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        inboxStyle.addLine(notificationData.content == null ? null : notificationData.content);
+        for (Lesson lesson : selectedLocalSchedule.getToday()) {
+            boolean isNow = lesson.equals(selectedLocalSchedule.getNowLesson());
+            String ptrStart = isNow ? "-->\t" : "\t\t";
+            String ptrEnd = isNow ? "<--" : "";
+
+            String line = String.format(" %s [%s %s] %s %s",
+                    ptrStart,
+                    TimeUtil.secondsToHumanTime(lesson.getStart(), true).substring(0, 5),
+                    TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60 - 1), true).substring(0, 5),
+                    getLessonDisplayName(lesson),
+                    ptrEnd);
+            inboxStyle.addLine(line);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(ColorUtils.colorizeText(notificationData.title, Color.WHITE))
+                .setContentText(ColorUtils.colorizeText(notificationData.content, Color.WHITE))
+                .setSubText(ColorUtils.colorizeText(notificationData.sub, Color.WHITE))
+                .setStyle(inboxStyle)
+                .setSilent(true)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentIntent(notificationData.pendingIntent)
+                .setSound(null)
+                .setColorized(notificationStyle.isColorized())
+                .setColor(notificationStyle.getCachedColor())
+                .setAutoCancel(true);
+
+        if (notificationData.isProgress) builder.setProgress(notificationData.progressMax, notificationData.progress, notificationData.isProgressIndeterminate);
+
+        sendNotify(SharedConstrains.MAIN_NOTIFICATION_ID, builder.build());
+    }
+
+    // Тик обновления манифеста, нужно для того что бы манифест
+    // Время от времени проверялся на новую версию(самого манифеста благо manifest.key)
     public void updateManifestTick(boolean activity) {
         int delay = SharedConstrains.UPDATE_MANIFEST_DELAY;
         if (activity) delay = SharedConstrains.UPDATE_MANIFEST_DELAY_ACTIVITY;
 
+        // Сколько прошлос момента последнего обновления
         long outside = (System.currentTimeMillis() / 1000) - getStateCacheProvider().getLatestAutoManifestCheck();
 
         if (outside > delay) {
@@ -101,12 +257,9 @@ public class SchoolGuide {
         }
     }
 
+    // При обновлении манифеста, нужно в основном только для показа уведомления о новой версии и синхронизации developer schedule
     private void onManifestUpdate(Exception exception, ManifestProvider manifestProvider) {
-        if (manifestProvider.isTechnicalWorks()) {
-            return;
-        }
-
-        if (exception != null) {
+        if (exception != null || manifestProvider.isTechnicalWorks()) {
             return;
         }
 
@@ -114,83 +267,20 @@ public class SchoolGuide {
         if (versionState == VersionState.OUTDATED) {
             sendUpdateCheckerNotify();
         } else {
-            if (getSettingsProvider().isSyncDeveloperSchedule()) getScheduleProvider().setSchedule(manifestProvider.getDeveloperSchedule().copy());
-            cancelUpdateCheckerNotify();
+            if (settingsProvider.isSyncDeveloperSchedule()) scheduleProvider.setSchedule(manifestProvider.getDeveloperSchedule().copy());
+            cancelNotify(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_ID);
         }
     }
 
-    public void notificationTick() {
-        LocalSchedule localSchedule = selectedLocalSchedule;
-        State scheduleState = localSchedule.getState();
-
-        String titleText = "";
-        String subText = "";
-        String contentText = "";
-        int max = 0;
-        int progress = 0;
-        int color = Color.CYAN;
-
-        if (scheduleState.isLesson()) {
-            titleText = getString(R.string.notification_lesson_title);
-            contentText = getString(R.string.notification_lesson_text);
-
-            max = localSchedule.getNowLesson().getDuration();
-            progress = localSchedule.getTimeBeforeStartRest();
-
-            if (scheduleState.isEnding()) {
-                titleText = getString(R.string.notification_lesson_title_ending);
-                contentText = getString(R.string.notification_lesson_text_ending);
-                //max = 0;
-            }
-
-            titleText = titleText
-                    .replace("%LESSON%", getLessonDisplayName(localSchedule.getNowLesson()))
-                    .replace("%NEXT_LESSON%", getLessonDisplayName(localSchedule.getNextLesson()))
-                    .replace("%LEFT%", TimeUtil.secondsToHumanTime(localSchedule.getTimeBeforeStartRest(), false));
-
-            contentText = contentText
-                    .replace("%LESSON%", getLessonDisplayName(localSchedule.getNowLesson()))
-                    .replace("%NEXT_LESSON%", getLessonDisplayName(localSchedule.getNextLesson()))
-                    .replace("%LEFT%", TimeUtil.secondsToHumanTime(localSchedule.getTimeBeforeStartRest(), false));
-
-        } else if (scheduleState.isRest()) {
-            titleText = getString(R.string.notification_rest_title);
-            contentText = getString(R.string.notification_rest_text);
-
-            if (scheduleState.isEnding()) {
-                titleText = getString(R.string.notification_rest_title_ending);
-                contentText = getString(R.string.notification_rest_text_ending);
-            }
-
-            titleText = titleText
-                    .replace("%LESSON%", getLessonDisplayName(localSchedule.getNowLesson()))
-                    .replace("%NEXT_LESSON%", getLessonDisplayName(localSchedule.getNextLesson()))
-                    .replace("%LEFT%", TimeUtil.secondsToHumanTime(localSchedule.getTimeBeforeStartLesson(), false));
-
-            contentText = contentText
-                    .replace("%LESSON%", getLessonDisplayName(localSchedule.getNowLesson()))
-                    .replace("%NEXT_LESSON%", getLessonDisplayName(localSchedule.getNextLesson()))
-                    .replace("%LEFT%", TimeUtil.secondsToHumanTime(localSchedule.getTimeBeforeStartLesson(), false));
-
-        } else {
-            notificationManagerCompat.cancel(SharedConstrains.MAIN_NOTIFICATION_ID);
-            return;
-        }
-
-        updateVibration(scheduleState);
-        updateNotification(titleText, subText, contentText, color, max, progress);
-    }
-
-    public String getLessonDisplayName(Lesson lesson) {
-        if (lesson == null) return getString(R.string.abc_empty);
-        LessonInfo a = getScheduleProvider().getLessonInfo(lesson.getLessonInfo());
-        if (a == null) return getString(R.string.abc_unknown);
-        return a.getName();
-    }
-
+    // Отправляет уведомление о новой версии
     public void sendUpdateCheckerNotify() {
         Intent intent = new Intent(getApplicationContext(), UpdateCheckerActivity.class);
-        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -206,55 +296,18 @@ public class SchoolGuide {
         sendNotify(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_ID, builder.build());
     }
 
-    private void cancelUpdateCheckerNotify() {
-        notificationManagerCompat.cancel(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_ID);
+    // Отправляет нужное notification с айди notificationId
+    public void sendNotify(int notificationId, Notification notification) {
+        notificationManagerCompat.notify(notificationId, notification);
     }
 
-    private void updateNotification(String title, String subText, String contentText, int color, int max, int progress) {
-        Intent intent = new Intent(getApplicationContext(), TodayScheduleActivity.class);
-        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.InboxStyle a = new NotificationCompat.InboxStyle();
-        a.addLine(contentText.equals(" ") ? null : contentText);
-        for (Lesson lesson : getSelectedLocalSchedule().getToday()) {
-            boolean aa = lesson.equals(getSelectedLocalSchedule().getNowLesson());
-            String ptrStart = aa ? "-->\t" : "\t\t";
-            String ptrEnd = aa ? "<--" : "";
-
-            String ss = String.format(" %s [%s %s] %s %s",
-                    ptrStart,
-                    TimeUtil.secondsToHumanTime(lesson.getStart(), true).substring(0, 5),
-                    TimeUtil.secondsToHumanTime(Math.min(lesson.getEnd(), 24 * 60 * 60 - 1), true).substring(0, 5),
-                    getLessonDisplayName(lesson),
-                    ptrEnd);
-            a.addLine(ss);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setSubText(subText)
-                .setContentText(contentText)
-                .setStyle(a)
-                .setSilent(true)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setContentIntent(pendingIntent)
-                .setSound(null)
-                .setColorized(false)
-                .setColor(color)
-                .setAutoCancel(true);
-
-        if (max > 0) builder.setProgress(max, progress, false);
-
-        sendNotify(SharedConstrains.MAIN_NOTIFICATION_ID, builder.build());
+    // Отменяет нужное уведомление с айди notificationId
+    public void cancelNotify(int notificationId) {
+        notificationManagerCompat.cancel(notificationId);
     }
 
-    private void sendNotify(int nId, Notification n) {
-        notificationManagerCompat.notify(nId, n);
-    }
-
-    private void updateVibration(State state) {
+    // Обновляет вибрацию и стадию в кеше
+    private void vibrationTick(State state) {
         if (getStateCacheProvider().getVibratedFor() != state) {
             if (state == State.LESSON) vibrate(SharedConstrains.VIBRATION_NOTIFY_LESSON);
             if (state == State.REST) {
@@ -266,7 +319,7 @@ public class SchoolGuide {
         }
     }
 
-    @SuppressLint("deprecated")
+    // Провибрировать в нужный такт
     public void vibrate(long[] tact) {
         if (getSettingsProvider().isVibration()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -277,18 +330,17 @@ public class SchoolGuide {
         }
     }
 
-    private void loadNotificationChannels() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
-            NotificationChannel main = new NotificationChannel(SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_main_name), NotificationManager.IMPORTANCE_NONE);
-            NotificationChannel updateAvailable = new NotificationChannel(SharedConstrains.UPDATE_AVAILABLE_NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updatechecker_name), NotificationManager.IMPORTANCE_HIGH);
-            main.setDescription(getString(R.string.notificationChannel_main_description));
-            updateAvailable.setDescription(getString(R.string.notificationChannel_updatechecker_description));
-            notificationManager.createNotificationChannel(main);
-            notificationManager.createNotificationChannel(updateAvailable);
-        }
+    // Показать диолог который информирует о том что редактировать расписания во время включенной синхронизации нельзя!
+    public static void showWarnSyncDeveloperScheduleDialog(Context context) {
+        AlertDialog.Builder a = new AlertDialog.Builder(context)
+                .setTitle("Синхронизация расписания!")
+                .setMessage("Вы не можете редактировать/создовать/удалять расписания, пока синхронизация с расписанием разработчика включена!")
+                .setPositiveButton("OK", null);
+
+        a.show();
     }
 
+    // Getters
     public Context getApplicationContext() {
         return this.androidApplicationContext;
     }
@@ -314,16 +366,7 @@ public class SchoolGuide {
     }
 
     public LocalSchedule getSelectedLocalSchedule() {
-        onSelectedLocalScheduleChanged();
+        updateSelectedLocalSchedule();
         return selectedLocalSchedule;
-    }
-
-    public static void showWarnSyncDeveloperScheduleDialog(Context context) {
-        AlertDialog.Builder a = new AlertDialog.Builder(context)
-                .setTitle("Синхронизация расписания!")
-                .setMessage("Вы не можете редактировать/создовать/удалять расписания, пока синхронизация с расписанием разработчика включена!")
-                .setPositiveButton("OK", null);
-
-        a.show();
     }
 }

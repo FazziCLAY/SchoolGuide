@@ -12,4 +12,5 @@ public class Settings extends BaseData {
     UUID selectedLocalSchedule = null;
     List<Integer> versionsHistory = new ArrayList<>();
     boolean isSyncDeveloperSchedule = false;
+    NotificationStyle notificationStyle = new NotificationStyle();
 }

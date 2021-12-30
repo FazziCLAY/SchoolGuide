@@ -8,9 +8,6 @@
     <string name="abc_fillAllFields">Заполните все поля!</string>
     <string name="fab_content_lessons">Добавить урок</string>
     <string name="fab_content_schedules">Добавить расписание</string>
-    <string name="userNotification_foreground">Главное (О фоне)</string>
-    <string name="userNotification_external">Отдельное</string>
-    <string name="settings_isNotification">Уведомление</string>
     <string name="settings_isVibration">Вибрация</string>
     <string name="lessonName_hint">Имя урока</string>
     <string name="scheduleName_hint">Имя расписания</string>
@@ -50,9 +47,6 @@
     <string name="updateCenter_title_error">Ошибка</string>
     <string name="updateCenter_title_latest">Обновлено!</string>
     <string name="updateCenter_text_latest">Ваша версия последняя, обновления не требуется!</string>
-    <string name="settings_title_enterScheduleHubCode">Ввести код?</string>
-    <string name="settings_hint_enterScheduleHubCode">Код</string>
-    <string name="settings_button_enterScheduleHubCode">Отправить</string>
     <string name="schedules_createNew_copyOf">Копия \'%s\'</string>
     <string name="schedules_createNew_title">Создание нового расписания</string>
     <string name="abc_create">Создать</string>
@@ -60,7 +54,6 @@
     <string name="schedules_createNew_newEmptyName">Новое пустое расписание</string>
     <string name="abc_actionBefore">Внимание</string>
     <string name="schedule_lesson_lessonsNotFound">Уроков не найдено. Создайте!</string>
-    <string name="fab_content_market">Рынок</string>
     <string name="updateCenter_title_technicalWorks">Технические работы</string>
     <string name="updateCenter_text_technicalWorks">Извените. На сервере технические работы!</string>
     <string name="settings_selectedLocalSchedule">Выбранное расписание</string>
@@ -70,15 +63,19 @@
     <string name="settings_selectedLocalSchedule_empty"><![CDATA[<Расписаний нету>]]></string>
     <string name="abc_set">Установить</string>
     <string name="scheduleEdit_emptyDay"><![CDATA[<Пусто>]]></string>
-    <string name="notification_lesson_title">%LESSON%! Осталось: %LEFT%</string>
-    <string name="notification_lesson_text_ending">След. урок: %NEXT_LESSON%</string>
-    <string name="notification_rest_title">Перемена! Осталось: %LEFT%</string>
-    <string name="notification_rest_title_ending">Перемена! Осталось: %LEFT% (СРОЧНО)</string>
-    <string name="notification_rest_text">След. урок: %NEXT_LESSON%</string>
-    <string name="notification_rest_text_ending">След. урок: %NEXT_LESSON%</string>
+    <string name="mainNotification_lesson_title">%NOW_LESSON%! Осталось: %TIME_BEFORE_START_REST%</string>
+    <string name="mainNotification_lesson_content_ending">Слудующий: %NEXT_LESSON%</string>
+    <string name="mainNotification_rest_title">Перемена! Осталось: %TIME_BEFORE_START_LESSON%</string>
+    <string name="mainNotification_rest_title_ending">Перемена! Осталось: %TIME_BEFORE_START_LESSON% (ОЧЕНЬ СКОРО)</string>
+    <string name="mainNotification_rest_content">След. урок: %NEXT_LESSON%</string>
+    <string name="mainNotification_rest_content_ending">След. урок: %NEXT_LESSON%</string>
     <string name="abc_empty">Пусто</string>
-    <string name="notification_lesson_title_ending">Идёт урок! Осталось: %LEFT%</string>
+    <string name="mainNotification_lesson_title_ending">%NOW_LESSON%! Осталось: %TIME_BEFORE_START_REST%</string>
     <string name="schedules_empty_title">Расписаний не найдено!</string>
     <string name="schedules_empty_content">Создайте своё расписание кнопкой + в низу!</string>
     <string name="todaySchedule_todayLessons_title">Уроки сегодня:</string>
+    <string name="settings_notification_clickAction_fullSchedule">Полное расписание</string>
+    <string name="settings_notification_clickAction_todaySchedule">Уроки на сегодня</string>
+    <string name="settings_notification_clickAction_none">Ничего</string>
+    <string name="settings_notificationStyle_clickAction">Действие при нажатии на уведомление</string>
 </resources>

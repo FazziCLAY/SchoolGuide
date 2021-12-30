@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import java.io.File;
+import java.util.List;
 
 import ru.fazziclay.schoolguide.CrashReport;
 import ru.fazziclay.schoolguide.SchoolGuide;
@@ -17,6 +18,8 @@ import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.android.service.ForegroundService;
 
 public class MainActivity extends Activity {
+    SchoolGuide app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,16 +30,22 @@ public class MainActivity extends Activity {
 
             // Патчи
             try {
-                patch_2021_11_19_v25();
-                patch_2021_11_29_v31();
+                patch_a_2021_11_19_v25();
+                patch_a_2021_11_29_v31();
             } catch (Exception ignored) {}
 
-            if (!SchoolGuide.isInstanceAvailable()) {
-                new SchoolGuide(this);
+            if (SchoolGuide.isInstanceAvailable()) {
+                app = SchoolGuide.getInstance();
+            } else {
+                app = new SchoolGuide(this);
             }
 
-            SchoolGuide.getInstance().getSettingsProvider().addVersionsHistory(SharedConstrains.APPLICATION_VERSION_CODE);
-            SchoolGuide.getInstance().updateManifestTick(true);
+            try {
+                patch_b_2021_12_22_v33_generic();
+            } catch (Exception ignored) {}
+
+            app.getSettingsProvider().addVersionsHistory(SharedConstrains.APPLICATION_VERSION_CODE);
+            app.updateManifestTick(true);
 
             startService(new Intent(this, ForegroundService.class));
             startActivity(new Intent(this, HomeActivity.class));
@@ -47,8 +56,31 @@ public class MainActivity extends Activity {
         }
     }
 
+    // Патч уровня б стартует после создания SchoolGuide
+    // generic потаму что от может включить другие патчи которым мужно знать версии
+    private void patch_b_2021_12_22_v33_generic() {
+        List<Integer> versionHistory = app.getSettingsProvider().getVersionsHistory();
+        if (!versionHistory.contains(SharedConstrains.APPLICATION_VERSION_CODE)) {
+            int latestVersion = -1;
+            for (int ver : versionHistory) {
+                if (latestVersion < ver) latestVersion = ver;
+            }
+
+            patch_ba_2021_12_22_v33();
+        }
+    }
+
+    // ba ответвление от b но в категории b оно a (хз почему может будет bb или bc)
+    // при обновлении удаляет папку кеша
+    private void patch_ba_2021_12_22_v33() {
+        File cache = getExternalCacheDir();
+        try {
+            if (cache.exists()) cache.delete();
+        } catch (Exception ignored) {}
+    }
+
     // Удалить каналы уведомлений старых версий
-    private void patch_2021_11_29_v31() {
+    private void patch_a_2021_11_29_v31() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String[] toDelete = new String[] {"UpdateChecker", "Foreground", "CrashReport", "External"};
 
@@ -64,7 +96,7 @@ public class MainActivity extends Activity {
     //
     // Суть патча отследить в state_cache.json первую версию установки(по названию послеюную использованную, но на деле там версия первого запуска)
     // ИТОГ: Файл manifest.json переезжает в папку с кешем а из папки данных мы его удаляем в этом патче если версия ниже версии написания этого патча x < 25
-    private void patch_2021_11_19_v25() {
+    private void patch_a_2021_11_19_v25() {
         File f = new File(getExternalFilesDir(null), "manifest.json");
         f.delete();
     }
