@@ -1,5 +1,6 @@
 package ru.fazziclay.schoolguide.android.activity.settings;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.settings.NotificationClickAction;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
 import ru.fazziclay.schoolguide.databinding.ActivitySettingsBinding;
+import ru.fazziclay.schoolguide.util.TimeUtil;
 
 public class SettingsActivity extends AppCompatActivity {
     ActivitySettingsBinding binding;
@@ -85,6 +87,12 @@ public class SettingsActivity extends AppCompatActivity {
                 binding.isSyncDeveloperSchedule.setChecked(false);
             }
         });
+
+        binding.notifyBeforeTime.setOnClickListener(ignore -> timePicker(settingsProvider.getNotifyBeforeTime(), getString(R.string.settings_notifyBeforeTime_title), seconds -> {
+            settingsProvider.setNotifyBeforeTime(seconds);
+            initNotifyBeforeTimeText();
+        }));
+        initNotifyBeforeTimeText();
     }
 
     private void initNotificationClickActionSpinner() {
@@ -130,5 +138,24 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override public void onNothingSelected(AdapterView<?> adapterView) {}
             });
         }
+    }
+
+    private void initNotifyBeforeTimeText() {
+        binding.notifyBeforeTime.setText(getString(R.string.settings_notifyBeforeTime, TimeUtil.secondsToHumanTime(settingsProvider.getNotifyBeforeTime(), true)));
+    }
+
+    interface TimePickedInterface {
+        void run(int seconds);
+    }
+
+    private void timePicker(int defaultTime, String dialogTitle, TimePickedInterface pickedInterface) {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (timePicker, hour, minute) -> {
+                    int seconds = (hour*60*60) + minute*60;
+                    pickedInterface.run(seconds);
+                }, TimeUtil.getHoursInSeconds(defaultTime), TimeUtil.getMinutesInSeconds(defaultTime), true);
+
+        timePickerDialog.setMessage(dialogTitle);
+        timePickerDialog.show();
     }
 }

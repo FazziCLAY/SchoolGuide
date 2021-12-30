@@ -79,4 +79,15 @@ public class SettingsProvider extends BaseProvider {
     public NotificationStyle getNotificationStyle() {
         return getSettings().notificationStyle;
     }
+
+
+    public int getNotifyBeforeTime() {
+        return getSettings().notifyBeforeTime;
+    }
+
+    public void setNotifyBeforeTime(int notifyBeforeTime) {
+        getSettings().notifyBeforeTime = notifyBeforeTime;
+        save();
+    }
+
 }

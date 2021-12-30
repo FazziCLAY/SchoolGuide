@@ -13,4 +13,5 @@ public class Settings extends BaseData {
     List<Integer> versionsHistory = new ArrayList<>();
     boolean isSyncDeveloperSchedule = false;
     NotificationStyle notificationStyle = new NotificationStyle();
+    int notifyBeforeTime = 3*60*60;
 }

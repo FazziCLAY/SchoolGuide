@@ -100,4 +100,6 @@
     <string name="settings_selectedLocalSchedule">Selected schedule</string>
     <string name="settings_isVibration">Vibration</string>
     <string name="settings_notificationStyle_clickAction">Notification Click Action</string>
+    <string name="settings_notifyBeforeTime">Начинать уведомлять за %s до</string>
+    <string name="settings_notifyBeforeTime_title">Начинать уведомлять за столько время до...</string>
 </resources>

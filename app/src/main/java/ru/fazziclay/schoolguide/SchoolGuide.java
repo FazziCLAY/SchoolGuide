@@ -141,7 +141,7 @@ public class SchoolGuide {
                 notificationData.sub = getString(R.string.mainNotification_lesson_sub_ending);
             }
 
-        } else if (state.isRest()) {
+        } else if (state.isRest() && selectedLocalSchedule.getTimeBeforeStartLesson() <= settingsProvider.getNotifyBeforeTime()) {
             isNotificationVisible = true;
             notificationData.isProgress = false;
 
