@@ -629,13 +629,13 @@
   "isTechnicalWorks": false,
   "latestVersion": {
     "changelog": {
-      "default": "Версия 0.2.11.2 Beta (v32)\n\n* Исправлены баги"
+      "default": "Версия 0.3 Beta (v33)\n\n* С наступающим(или уже наступившем) Новым Годом!!!\n\n* Исправлены баги (наверное)\n* Добавлено время за которое надо уведомлять польтзователя, что бы ровно в 00:00 телефон вас не уведомлял\n* Добавнена настройка действия при нажатии на уведомление (Ничего/Сегоднешнее расписание/Полное расписание)\n\n* Технически ЧенчЛоги теперь могут быть &1цветными&r(и названия расписаний)\n* Технически стиль уведомления можно менять в файле настроек(но лучьше не надо)"
     },
-    "code": 32,
-    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/v32/schoolguide_v32.apk",
-    "name": "0.2.11.2 - Beta",
+    "code": 33,
+    "downloadUrl": "https://github.com/FazziCLAY/SchoolGuide/releases/download/v33/schoolguide_v33.apk",
+    "name": "0.3 - Beta",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 20,
+  "manifestKey": 21,
   "version": 4
 }
