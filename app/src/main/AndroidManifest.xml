@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="ru.fazziclay.schoolguide">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -10,57 +9,23 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/application_name"
+        android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:allowBackup="false"
         android:theme="@style/Theme.SchoolGuide">
-        <activity
-            android:name=".android.activity.developer.DeveloperActivity"
-            android:exported="false" />
-        <activity
-            android:name=".android.activity.schedule.TodayScheduleActivity"
-            android:exported="false"
-            android:showOnLockScreen="true"
-            android:showWhenLocked="true"
-            tools:targetApi="o_mr1" />
-        <activity
-            android:name=".android.activity.UpdateCheckerActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.schedule.ScheduleLessonEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.schedule.ScheduleEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.developer.DeveloperManifestUtilsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.lesson.LessonEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.lesson.LessonsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.settings.SettingsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.HomeActivity"
-            android:exported="true" />
 
         <service
-            android:name=".android.service.ForegroundService"
+            android:name=".android.TickService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".android.activity.MainActivity"
+            android:name=".android.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -75,5 +40,4 @@
                 android:resource="@xml/providers_paths" />
         </provider>
     </application>
-
 </manifest>

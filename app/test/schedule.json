@@ -1,0 +1,10 @@
+{
+  "events": {
+    "f1d3ff84-4329-3732-862d-f21dc4e57262": {
+      "name": "test null event info2",
+      "type": "PERMANENT_NOTIFY"
+    }
+  },
+  "presets": {},
+  "version": 2
+}

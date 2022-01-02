@@ -74,7 +74,7 @@
             android:text="@string/abc_lessons" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addScheduleButton"
+            android:id="@+id/create_local_schedule_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_input_add"

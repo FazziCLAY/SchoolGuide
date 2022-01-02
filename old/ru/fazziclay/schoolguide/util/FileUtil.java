@@ -9,6 +9,7 @@ public class FileUtil {
     public static void createDirIfNotExists(String path) {
         File file = new File(fixPathSeparator(path));
         if (!file.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             file.mkdirs();
         }
     }
@@ -45,43 +46,52 @@ public class FileUtil {
 
             StringBuilder stringBuilder = new StringBuilder();
             FileReader fileReader = null;
-            fileReader = new FileReader(fixPathSeparator(path));
-
-            char[] buff = new char[1024];
-            int length;
-
-            while ((length = fileReader.read(buff)) > 0) {
-                stringBuilder.append(new String(buff, 0, length));
-            }
 
             try {
-                fileReader.close();
+                fileReader = new FileReader(fixPathSeparator(path));
 
-            } catch (Exception e) {
+                char[] buff = new char[1024];
+                int length;
+
+                while ((length = fileReader.read(buff)) > 0) {
+                    stringBuilder.append(new String(buff, 0, length));
+                }
+
+            } catch (IOException e) {
                 e.printStackTrace();
+
+            } finally {
+                if (fileReader != null) {
+                    try {
+                        fileReader.close();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             return stringBuilder.toString();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    public static void write(String path, String content) {
+    public static boolean write(String path, String content) {
         try {
             createNew(fixPathSeparator(path));
             FileWriter fileWriter = new FileWriter(fixPathSeparator(path), false);
             fileWriter.write(content);
             fileWriter.flush();
             fileWriter.close();
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
     }
 
     public static boolean isExist(String path) {
-        return new File(fixPathSeparator(path)).isFile();
+        return new File(path.replace("/", File.separator)).isFile();
     }
 
     public static String fixPathSeparator(String path) {
@@ -89,8 +99,8 @@ public class FileUtil {
     }
 
     public static File[] getFilesList(String path) {
-        createDirIfNotExists(fixPathSeparator(path));
-        File file = new File(fixPathSeparator(path));
+        createDirIfNotExists(path);
+        File file = new File(path);
         return file.listFiles();
     }
 }

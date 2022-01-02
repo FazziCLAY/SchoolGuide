@@ -1,31 +1,31 @@
 package ru.fazziclay.schoolguide.data.schedule;
 
 public class TimeSegment {
-    int start;    // in seconds
-    int duration; // in seconds
+    private int startTime;
+    private int endTime;
 
-    public TimeSegment(int start, int duration) {
-        this.start = start;
-        this.duration = duration;
-    }
-
-    public int getStart() {
-        return start;
+    public TimeSegment(int startTime, int endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public int getDuration() {
-        return duration;
+        return endTime - startTime;
     }
 
-    public int getEnd() {
-        return start + duration;
+    public int getStartTime() {
+        return startTime;
     }
 
-    public void setStart(int start) {
-        this.start = start;
+    public int getEndTime() {
+        return endTime;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
     }
 }
