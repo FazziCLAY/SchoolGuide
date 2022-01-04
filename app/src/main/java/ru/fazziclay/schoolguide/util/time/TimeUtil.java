@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import ru.fazziclay.schoolguide.SharedConstrains;
-
 /**
  * Utility class, Предназначен для удобной работы со временем
  *
@@ -19,6 +17,11 @@ import ru.fazziclay.schoolguide.SharedConstrains;
  * @author FazziCLAY
  * **/
 public class TimeUtil {
+    public static final int SECONDS_IN_MINUTE = 60;
+    public static final int SECONDS_IN_HOUR = SECONDS_IN_MINUTE * 60;
+    public static final int SECONDS_IN_DAY = SECONDS_IN_HOUR * 24;
+    public static final int SECONDS_IN_WEEK = SECONDS_IN_DAY * 7;
+
     /**
      * Получить человеческое значение из секунд
      * @param seconds секунды которые нужно преобразовать
@@ -33,9 +36,8 @@ public class TimeUtil {
             return (int) ((seconds % 3600) / 60);
         } else if (timeType == HumanTimeType.HOUR) {
             return (int) (seconds / 3600);
-        } else {
-            throw new RuntimeException("Unknown timeType:" + timeType.name());
         }
+        throw new RuntimeException("Unknown timeType:" + timeType.name());
     }
 
     /**
@@ -59,9 +61,8 @@ public class TimeUtil {
             return ((hours > 0 ? toFixed(hours, FIXED) + SEPARATOR : "")) + toFixed(minutes, FIXED) + SEPARATOR + toFixed(seconds, FIXED);
         } else if (convertMode == ConvertMode.HHMM) {
             return toFixed(hours, FIXED) + SEPARATOR + toFixed(minutes, FIXED);
-        } else {
-            throw new RuntimeException("Unknown convertMode: " + convertMode.name());
         }
+        throw new RuntimeException("Unknown convertMode: " + convertMode.name());
     }
 
     /**
@@ -95,7 +96,7 @@ public class TimeUtil {
      * **/
     public static int getWeekSeconds() {
         Calendar current = new GregorianCalendar();
-        int previousWeekDaysSeconds = SharedConstrains.SECONDS_IN_DAY * (current.get(Calendar.DAY_OF_WEEK) - 1);
+        int previousWeekDaysSeconds = SECONDS_IN_DAY * (current.get(Calendar.DAY_OF_WEEK) - 1);
         return previousWeekDaysSeconds + getDaySeconds();
     }
 }

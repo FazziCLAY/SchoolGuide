@@ -47,7 +47,6 @@
     <string name="notification_updatechecker_newVersion_subText" translatable="false">" "</string>
 
 
-
     <string name="notificationChannel_updatechecker_name">UpdateChecker</string>
     <string name="notificationChannel_updatechecker_description">Update checker notifications</string>
 

@@ -9,23 +9,32 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
-        android:label="@string/application_name"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/application_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:allowBackup="false"
         android:theme="@style/Theme.SchoolGuide">
+        <activity
+            android:name="ru.fazziclay.schoolguide.app.multiplicationtrening.MultiplicationTreningHomeActivity"
+            android:exported="false" />
 
         <service
-            android:name=".android.TickService"
+            android:name="ru.fazziclay.schoolguide.app.SchoolGuideService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name="ru.fazziclay.schoolguide.app.scheduleinformator.InformatorService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".android.MainActivity"
+            android:name="ru.fazziclay.schoolguide.LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -40,4 +49,5 @@
                 android:resource="@xml/providers_paths" />
         </provider>
     </application>
+
 </manifest>
