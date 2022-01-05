@@ -17,7 +17,7 @@ public class InformatorService extends Service {
 
     @Override
     public void onCreate() {
-        app = SchoolGuideApp.get();
+        app = SchoolGuideApp.get(this);
         scheduleInformatorApp = app.getScheduleInformatorApp();
         scheduleInformatorApp.registerService(this);
 

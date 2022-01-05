@@ -7,6 +7,7 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.io.File;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
@@ -23,25 +24,21 @@ public class ScheduleInformatorApp {
     public static Notification FOREGROUND_NOTIFICATION;
 
     SchoolGuideApp app;
+    AppSchedule appSchedule;
     InformatorService informatorService = null;
     boolean isForeground = false;
     NotificationManagerCompat managerCompat;
-    AppSchedule appSchedule;
 
     Preset selectedPreset;
 
     public ScheduleInformatorApp(SchoolGuideApp app) {
         this.app = app;
-    }
 
-    public void launch(Context context) {
-        String externalPath = context.getExternalFilesDir(null).getAbsolutePath() + "/";
-        appSchedule = AppSchedule.load(externalPath + AppSchedule.FILE);
+        appSchedule = AppSchedule.load(new File(app.getFilesFir(), AppSchedule.FILE));
         appSchedule.save();
 
-        updateSelected(new UUID(0, 0));
-
-        context.startService(new Intent(context, InformatorService.class));
+        updateSelected(appSchedule.getSelectedPreset());
+        app.getAndroidContext().startService(new Intent(app.getAndroidContext(), InformatorService.class));
     }
 
     public void stop() {
@@ -56,7 +53,7 @@ public class ScheduleInformatorApp {
 
         if (!isNow && !isNext) {
             stopForeground();
-            return 1000;
+            return 3000;
         }
         startForeground();
 
@@ -70,16 +67,16 @@ public class ScheduleInformatorApp {
 
         } else {
             notification.contentTitle = String.format("Откисай! (%s)", TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
+            notification.contentText = String.format("Следующее: %s", nextEvent.getName());
         }
 
         managerCompat.notify(NOTIFICATION_ID, notification.toNotification(informatorService, NOTIFICATION_CHANNEL_ID));
-
 
         return 1000;
     }
 
     public void updateSelected(UUID preset) {
-        selectedPreset = appSchedule.getPreset(preset);
+        if (preset != null) selectedPreset = appSchedule.getPreset(preset);
         if (selectedPreset == null) selectedPreset = new Preset();
     }
 

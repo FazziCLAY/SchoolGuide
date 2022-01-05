@@ -18,14 +18,18 @@ public class WeekTimeSegment {
 
     // Осталось до начала
     public int remainsUntilStart() {
-        return start+1 - TimeUtil.getWeekSeconds();
+        return start + 1 - TimeUtil.getWeekSeconds();
     }
 
     public int remainsUntilEnd() {
-        return end+1 - TimeUtil.getWeekSeconds();
+        return end + 1 - TimeUtil.getWeekSeconds();
     }
 
     public boolean isPassed() {
         return TimeUtil.getWeekSeconds() > end;
+    }
+
+    public boolean isNextWeek() { // Кто понимает как сделать так что бы не было линии разреза между концом и началом недели? Поможете? :) fazziclay.github.io
+        return end > (24 * 60 * 60) * 7;
     }
 }

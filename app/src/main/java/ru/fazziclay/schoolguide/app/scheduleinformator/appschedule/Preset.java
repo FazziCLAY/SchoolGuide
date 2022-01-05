@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class Preset {
+    public String name;
+    public String author;
+
     public HashMap<UUID, EventInfo> eventInfos = new HashMap<>();
     public List<Event> events = new ArrayList<>();
 

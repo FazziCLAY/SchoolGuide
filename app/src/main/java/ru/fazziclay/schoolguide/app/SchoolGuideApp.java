@@ -1,81 +1,78 @@
 package ru.fazziclay.schoolguide.app;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ru.fazziclay.schoolguide.LaunchActivity;
-import ru.fazziclay.schoolguide.app.multiplicationtrening.MultiplicationTreningApp;
+import java.io.File;
+
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
-import ru.fazziclay.schoolguide.util.FileUtil;
 
 public class SchoolGuideApp {
-    public static final String JSON_EMPTY_OBJECT = "{}";
-
     public static SchoolGuideApp instance = null;
 
-    public static SchoolGuideApp get() {
+    public static SchoolGuideApp get(Context context) {
         if (instance == null) {
-            instance = new SchoolGuideApp();
+            instance = new SchoolGuideApp(context);
         }
         return instance;
     }
 
-    private final SchoolGuideAndroidApp androidApp;
+    public static SchoolGuideApp get() {
+        return get(null);
+    }
+
+    // Android
+    private final Context androidContext;
+    private final File filesFir;
+    private final File cacheDir;
+
+    private final Gson GSON;
+    private final Settings settings;
+
+    // Apps
     private final ScheduleInformatorApp scheduleInformatorApp;
-    private final MultiplicationTreningApp multiplicationTreningApp;
 
-    DataFixer dataFixer;
 
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private Settings settings;
+    public SchoolGuideApp(Context context) {
+        androidContext = context.getApplicationContext();
+        filesFir = context.getExternalFilesDir(null);
+        cacheDir = context.getExternalCacheDir();
 
-    public SchoolGuideApp() {
-        androidApp = new SchoolGuideAndroidApp(this);
-        scheduleInformatorApp = new ScheduleInformatorApp(this);
-        multiplicationTreningApp = new MultiplicationTreningApp(this);
-    }
+        GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public void launch(LaunchActivity launchActivity) {
-        dataFixer = new DataFixer(launchActivity);
+        DataFixer dataFixer = new DataFixer(this);
         dataFixer.tryFix();
-        Toast.makeText(launchActivity, "DETECTED_VERSION = "+dataFixer.tryGetVersion(), Toast.LENGTH_LONG).show();
 
-        String externalPath = launchActivity.getExternalFilesDir(null).getAbsolutePath() + "/";
-
-        settings = new Settings();
-        try {
-            settings = gson.fromJson(FileUtil.read(externalPath + Settings.FILE, JSON_EMPTY_OBJECT), Settings.class);
-        } catch (Exception ignored) {}
-        settings.filePath = externalPath + Settings.FILE;
+        settings = Settings.load(new File(filesFir, Settings.FILE));
         settings.save();
+
+        scheduleInformatorApp = new ScheduleInformatorApp(this);
     }
 
-    public void launchAndroidApp(Context context, LaunchActivity launchActivity) {
-        androidApp.setContext(context);
-        androidApp.launch(launchActivity);
+    public Context getAndroidContext() {
+        return androidContext;
     }
 
-    public ScheduleInformatorApp getScheduleInformatorApp() {
-        return this.scheduleInformatorApp;
+    public File getCacheDir() {
+        return cacheDir;
     }
 
-    public SchoolGuideAndroidApp getAndroidApp() {
-        return this.androidApp;
+    public File getFilesFir() {
+        return filesFir;
     }
 
-    public MultiplicationTreningApp getMultiplicationTreningApp() {
-        return this.multiplicationTreningApp;
+    public Gson getGson() {
+        return GSON;
     }
 
     public Settings getSettings() {
         return settings;
     }
 
-    public Gson getGson() {
-        return gson;
+    public ScheduleInformatorApp getScheduleInformatorApp() {
+        return this.scheduleInformatorApp;
     }
 }

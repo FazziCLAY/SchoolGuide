@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
         <activity
-            android:name="ru.fazziclay.schoolguide.app.multiplicationtrening.MultiplicationTreningHomeActivity"
+            android:name="ru.fazziclay.schoolguide.app.multiplicationtrening.MultiplicationGameActivity"
             android:exported="false" />
 
         <service

@@ -4,14 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".app.multiplicationtrening.MultiplicationTreningHomeActivity">
+    android:padding="10sp"
+    tools:context=".app.multiplicationtrening.MultiplicationGameActivity">
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Score: 10"
+        android:textSize="20sp"
+        android:textColor="#F2CC0A"/>
 
     <TextView
         android:id="@+id/taskText"
         android:gravity="center"
         android:textSize="55sp"
+        tools:text="11 * 22"
+        android:textColor="#2FFF00"
         android:layout_width="match_parent"
-        android:layout_height="180sp"/>
+        android:layout_height="150sp"/>
 
     <EditText
         android:id="@+id/resultInput"
@@ -20,7 +31,12 @@
         android:ems="10"
         android:maxLength="8"
         android:hint="Result"
+        android:textColorHint="#5B4A4A"
+        tools:text="10"
+        android:textSize="20sp"
+        android:textColor="#1CD173"
         android:inputType="numberDecimal"
         android:imeOptions="actionSend"
-        android:importantForAutofill="no"/>
+        android:importantForAutofill="no"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

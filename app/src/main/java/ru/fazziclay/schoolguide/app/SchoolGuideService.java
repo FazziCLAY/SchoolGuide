@@ -9,7 +9,7 @@ public class SchoolGuideService extends Service {
 
     @Override
     public void onCreate() {
-        app = SchoolGuideApp.get();
+        app = SchoolGuideApp.get(this);
     }
 
     @Override

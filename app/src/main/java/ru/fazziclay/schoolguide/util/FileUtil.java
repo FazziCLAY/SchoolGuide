@@ -39,6 +39,14 @@ public class FileUtil {
         return content;
     }
 
+    public static String read(File file, String defaultValue) {
+        return read(file.getAbsolutePath(), defaultValue);
+    }
+
+    public static String read(File file) {
+        return read(file.getAbsolutePath());
+    }
+
     public static String read(String path) {
         try {
             createNew(fixPathSeparator(path));

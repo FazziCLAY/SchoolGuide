@@ -1,18 +1,20 @@
 package ru.fazziclay.schoolguide.app;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.File;
 
-import ru.fazziclay.schoolguide.util.FileUtil;
+import ru.fazziclay.schoolguide.util.data.BaseData;
 
-public class Settings {
+public class Settings extends BaseData {
     public static final String FILE = "schoolguide.settings.json";
 
-    public String filePath;
-    public void save() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        FileUtil.write(filePath, gson.toJson(this, this.getClass()));
+    public static Settings load(File file) {
+        return (Settings) load(file, Settings.class);
     }
 
-    public boolean a;
+    public boolean developerFeatures = false;
+
+    @Override
+    public void reset() {
+        developerFeatures = false;
+    }
 }

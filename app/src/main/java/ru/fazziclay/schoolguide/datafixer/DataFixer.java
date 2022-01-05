@@ -6,34 +6,32 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
-import java.util.List;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.datafixer.old.v33.V33Settings;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
+import ru.fazziclay.schoolguide.datafixer.schem.v33to35.Scheme33To35;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
 public class DataFixer {
     public static final AbstractScheme[] SCHEMES = new AbstractScheme[] {
-            new AbstractScheme() {
-                @Override
-                public boolean isCompatible(int version) {
-                    return version <= 33;
-                }
-
-                @Override
-                public int run(int version) {
-                    return 35;
-                }
-            }
+            new Scheme33To35()
     };
+
+    SchoolGuideApp app;
+
+    File FILE_VERSION;
 
     Gson gson;
     Context context;
     int currentVersion;
 
-    public DataFixer(Context context) {
-        this.context = context;
+    public DataFixer(SchoolGuideApp app) {
+        this.app = app;
+        this.context = app.getAndroidContext();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
+        FILE_VERSION = new File(context.getExternalFilesDir(null), "version");
     }
 
     public void tryFix() {
@@ -48,17 +46,20 @@ public class DataFixer {
             for (AbstractScheme scheme : SCHEMES) {
                 if (scheme.isCompatible(currentVersion)) {
                     try {
-                        currentVersion = scheme.run(currentVersion);
-                    } catch (Exception ignored) {}
+                        currentVersion = scheme.run(context, currentVersion);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             i++;
         }
+
+        FileUtil.write(FILE_VERSION.getAbsolutePath(), String.valueOf(currentVersion));
     }
 
     public int tryGetVersion() {
         File externalFilesDir = context.getExternalFilesDir(null);
-        File FILE_VERSION = new File(externalFilesDir, "version");
         File FILE_SETTINGS_V33 = new File(externalFilesDir, "settings.json");
 
         String[] filesList = externalFilesDir.list();
@@ -80,9 +81,9 @@ public class DataFixer {
         }
 
         if (FILE_SETTINGS_V33.exists()) {
-            SettingsV33 settingsV33;
+            V33Settings settingsV33;
             try {
-                settingsV33 = gson.fromJson(FileUtil.read(FILE_SETTINGS_V33.getAbsolutePath(), "{}"), SettingsV33.class);
+                settingsV33 = gson.fromJson(FileUtil.read(FILE_SETTINGS_V33.getAbsolutePath(), "{}"), V33Settings.class);
                 if (settingsV33 != null) {
                     if (settingsV33.versionsHistory != null && !settingsV33.versionsHistory.isEmpty()) {
                         int max = 0;
@@ -96,10 +97,5 @@ public class DataFixer {
         }
 
         return -1;
-    }
-
-    public static class SettingsV33 {
-        int version = -1;
-        List<Integer> versionsHistory;
     }
 }
