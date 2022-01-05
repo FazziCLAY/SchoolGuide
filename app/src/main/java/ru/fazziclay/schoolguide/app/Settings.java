@@ -12,6 +12,7 @@ public class Settings extends BaseData {
     }
 
     public boolean developerFeatures = false;
+    public int scheduleNotifyBeforeTime = 2*60*60;
 
     @Override
     public void reset() {

@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.AppSchedule;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
@@ -28,6 +29,7 @@ public class ScheduleInformatorApp {
     InformatorService informatorService = null;
     boolean isForeground = false;
     NotificationManagerCompat managerCompat;
+    Settings settings;
 
     Preset selectedPreset;
 
@@ -36,6 +38,8 @@ public class ScheduleInformatorApp {
 
         appSchedule = AppSchedule.load(new File(app.getFilesFir(), AppSchedule.FILE));
         appSchedule.save();
+
+        settings = app.getSettings();
 
         updateSelected(appSchedule.getSelectedPreset());
         app.getAndroidContext().startService(new Intent(app.getAndroidContext(), InformatorService.class));
@@ -54,6 +58,11 @@ public class ScheduleInformatorApp {
         if (!isNow && !isNext) {
             stopForeground();
             return 3000;
+        }
+
+        if (!isNow && nextEvent.remainsUntilStart() > settings.scheduleNotifyBeforeTime) {
+            stopForeground();
+            return 2000;
         }
         startForeground();
 
