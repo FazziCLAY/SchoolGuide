@@ -118,6 +118,7 @@ public class ScheduleInformatorApp {
                     .setContentTitle(contentTitle)
                     .setContentText(contentText)
                     .setSubText(sub)
+                    .setOnlyAlertOnce(true)
                     .build();
         }
     }
