@@ -3,6 +3,9 @@ package ru.fazziclay.schoolguide.app.scheduleinformator.appschedule;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
 public class WeekTimeSegment {
+    private static final int SECONDS_IN_DAY = 24 * 60 * 60;
+    private static final int SECONDS_IN_WEEK = SECONDS_IN_DAY * 7;
+
     int start;
     int end;
 
@@ -13,7 +16,11 @@ public class WeekTimeSegment {
 
     public boolean isNow() {
         int x = TimeUtil.getWeekSeconds();
-        return ((start <= x) && (x <= end));
+        if (isNextWeek()) {
+            return !((start < x) && (x < end));
+        } else {
+            return ((start <= x) && (x <= end));
+        }
     }
 
     // Осталось до начала
@@ -22,14 +29,14 @@ public class WeekTimeSegment {
     }
 
     public int remainsUntilEnd() {
-        return end + 1 - TimeUtil.getWeekSeconds();
-    }
-
-    public boolean isPassed() {
-        return TimeUtil.getWeekSeconds() > end;
+        return (isNextWeek() ? toNextWeek(end) : end) + 1 - TimeUtil.getWeekSeconds();
     }
 
     public boolean isNextWeek() { // Кто понимает как сделать так что бы не было линии разреза между концом и началом недели? Поможете? :) fazziclay.github.io
-        return end > (24 * 60 * 60) * 7;
+        return start > end;
+    }
+
+    public int toNextWeek(int i) {
+        return i + SECONDS_IN_WEEK;
     }
 }

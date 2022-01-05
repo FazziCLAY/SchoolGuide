@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.util.time.TimeUtil;
+
 public class Preset {
     public String name;
     public String author;
@@ -29,7 +31,7 @@ public class Preset {
         int i = 0;
         while (i < events.size()) {
             Event event1 = events.get(i);
-            if (!event1.isNow() && !event1.isPassed() && event1.start < m) {
+            if (TimeUtil.getWeekSeconds() < event1.start && event1.start < m) {
                 event = event1;
                 m = event1.start;
             }
