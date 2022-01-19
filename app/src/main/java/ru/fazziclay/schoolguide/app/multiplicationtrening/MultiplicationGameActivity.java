@@ -22,11 +22,11 @@ public class MultiplicationGameActivity extends AppCompatActivity {
         if (closeCurrent) activity.finish();
     }
 
+    File gameDataFile;
     MultiplicationGameData gameData;
 
     ActivityMultiplicationTreningBinding binding;
     Random random = new Random();
-
 
     int n1;
     int n2;
@@ -73,8 +73,15 @@ public class MultiplicationGameActivity extends AppCompatActivity {
             }
         });
 
-        gameData = MultiplicationGameData.load(new File(getExternalFilesDir(null), "multiplication_game_statistics.json"));
-        gameData.save();
+        gameDataFile = new File(getExternalFilesDir(null), "multiplication_game.json");
+
+        File old = new File(getExternalFilesDir(null), "multiplication_game_statistics.json");
+        if (old.exists()) {
+            old.renameTo(gameDataFile);
+        }
+
+        gameData = MultiplicationGameData.load(gameDataFile);
+        saveAll();
 
         clearInput();
         updateScore();
@@ -84,8 +91,7 @@ public class MultiplicationGameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        gameData.save();
+        saveAll();
     }
 
     @Override
@@ -121,19 +127,19 @@ public class MultiplicationGameActivity extends AppCompatActivity {
             gameData.score--;
         }
         updateScore();
-        gameData.save();
+        saveAll();
     }
 
     private void regenerate() {
         int on1 = n1, on2 = n2;
 
-        n1 = random();
-        n2 = random();
+        n1 = random(1);
+        n2 = random(2);
 
         if ((on1 == n1 && on2 == n2)) {
             random = new Random();
-            n1 = random();
-            n2 = random();
+            n1 = random(1);
+            n2 = random(2);
         }
 
         if ("*".equals(gameData.action)) {
@@ -157,7 +163,19 @@ public class MultiplicationGameActivity extends AppCompatActivity {
         binding.score.setText(String.format("Score: %s", gameData.score));
     }
 
-    private int random() {
-        return random.nextInt(gameData.rangeMax - gameData.rangeMin) + gameData.rangeMin;
+    private int random(int i) {
+        int rangeMax = 0, rangeMin = 0;
+        if (i == 1) {
+            rangeMax = gameData.n1RangeMax;
+            rangeMin = gameData.n1RangeMin;
+        } else {
+            rangeMax = gameData.n2RangeMax;
+            rangeMin = gameData.n2RangeMin;
+        }
+        return random.nextInt(rangeMax + 1 - rangeMin) + rangeMin;
+    }
+
+    private void saveAll() {
+        gameData.save(gameDataFile);
     }
 }

@@ -35,8 +35,8 @@
     <string name="lessonName_hint">Lesson name</string>
     <string name="scheduleName_hint">Schedule name</string>
 
-    <string name="schedule_lesson_startTime">Start time - %s</string>
-    <string name="schedule_lesson_duration">Duration - %s</string>
+    <string name="schedule_lesson_startTime">Start time - %stringer</string>
+    <string name="schedule_lesson_duration">Duration - %stringer</string>
     <string name="schedule_lesson_duration_title">Duration</string>
     <string name="schedule_lesson_startTime_title">Start time</string>
 
@@ -53,8 +53,8 @@
     <string name="notification_updatechecker_newVersion_title">New version available</string>
     <string name="notification_updatechecker_newVersion_text">Click to download and install</string>
 
-    <string name="activityTitle_scheduleLessonEdit_edit">Editing lesson for %s</string>
-    <string name="activityTitle_scheduleLessonEdit_create">Creating lesson for %s</string>
+    <string name="activityTitle_scheduleLessonEdit_edit">Editing lesson for %stringer</string>
+    <string name="activityTitle_scheduleLessonEdit_create">Creating lesson for %stringer</string>
 
     <string name="lessonEdit_delete_title">Are you sure?</string>
     <string name="scheduleEdit_delete_title">Are you sure?</string>
@@ -68,7 +68,7 @@
     <string name="activityTitle_updateChecker">Update Center</string>
     <string name="schedules_createNew_title">Creating new schedule</string>
     <string name="schedules_createNew_empty">Create empty</string>
-    <string name="schedules_createNew_copyOf">Copy of \'%s\'</string>
+    <string name="schedules_createNew_copyOf">Copy of \'%stringer\'</string>
     <string name="schedules_createNew_newEmptyName">New empty schedule</string>
     <string name="schedule_lesson_lessonsNotFound">Lessons not found. Create!</string>
     <string name="schedules_empty_title">Schedules not found!</string>
@@ -79,7 +79,7 @@
     <string name="updateCenter_downloading_title">Downloading</string>
     <string name="updateCenter_download">Download and Install</string>
     <string name="updateCenter_title_error">Error</string>
-    <string name="updateCenter_text_error_generic">Unknown error! Code: %s</string>
+    <string name="updateCenter_text_error_generic">Unknown error! Code: %stringer</string>
     <string name="updateCenter_text_error_noNetworkConnection">No network connection!</string>
     <string name="updateCenter_title_updateAvailable">Update available</string>
     <string name="updateCenter_downloading_title_error">Downloading failed!</string>
@@ -99,6 +99,8 @@
     <string name="settings_selectedLocalSchedule">Selected schedule</string>
     <string name="settings_isVibration">Vibration</string>
     <string name="settings_notificationStyle_clickAction">Notification Click Action</string>
-    <string name="settings_notifyBeforeTime">Начинать уведомлять за %s до</string>
+    <string name="settings_notifyBeforeTime">Начинать уведомлять за %stringer до</string>
     <string name="settings_notifyBeforeTime_title">Начинать уведомлять за столько время до...</string>
+    <string name="abc_add">Add</string>
+    <string name="abc_edit">Edit</string>
 </resources>

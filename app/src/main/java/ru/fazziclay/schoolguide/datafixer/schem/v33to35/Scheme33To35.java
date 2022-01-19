@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.util.UUID;
 
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.AppSchedule;
+import ru.fazziclay.schoolguide.app.scheduleinformator.AppSchedule;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Event;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.datafixer.old.v33.V33Lesson;
@@ -16,11 +16,14 @@ import ru.fazziclay.schoolguide.datafixer.old.v33.V33LocalSchedule;
 import ru.fazziclay.schoolguide.datafixer.old.v33.V33Schedule;
 import ru.fazziclay.schoolguide.datafixer.old.v33.V33Settings;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
+import ru.fazziclay.schoolguide.util.DataUtil;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
 public class Scheme33To35 extends AbstractScheme {
     private static final String OLD_SCHEDULE_FILE = "schedule.json";
     private static final String OLD_SETTINGS_FILE = "settings.json";
+
+    private static final String NEW_SCHEDULE_FILE = "scheduleinformator.app_schedule.json";
 
     Gson gson;
     String externalFilesPath;
@@ -48,24 +51,27 @@ public class Scheme33To35 extends AbstractScheme {
         gson = new Gson();
         externalFilesPath = context.getExternalFilesDir(null).getAbsolutePath() + "/";
         externalCachePath = context.getExternalCacheDir().getAbsolutePath() + "/";
-        newSchedule = new AppSchedule(gson, externalFilesPath + AppSchedule.FILE);
+        newSchedule = new AppSchedule();
 
         try {
-            oldSettingsFile = new File(externalFilesPath + OLD_SETTINGS_FILE);
-            if (oldSettingsFile.exists()) {
-                oldSettings = gson.fromJson(FileUtil.read(oldSettingsFile.getAbsolutePath(), "json crash"), V33Settings.class);
-                newSchedule.setSelectedPreset(oldSettings.selectedLocalSchedule);
-                oldSettingsFile.delete();
-            }
-
-
             oldScheduleFile = new File(externalFilesPath + OLD_SCHEDULE_FILE);
             if (oldScheduleFile.exists()) {
                 oldSchedule = gson.fromJson(FileUtil.read(oldScheduleFile.getAbsolutePath(), "json crash"), V33Schedule.class);
                 fixSchedule();
-                newSchedule.save();
+
                 oldScheduleFile.delete();
             }
+
+            oldSettingsFile = new File(externalFilesPath + OLD_SETTINGS_FILE);
+            if (oldSettingsFile.exists()) {
+                oldSettings = gson.fromJson(FileUtil.read(oldSettingsFile.getAbsolutePath(), "json crash"), V33Settings.class);
+
+                newSchedule.setSelectedPreset(newSchedule.getPreset(oldSettings.selectedLocalSchedule));
+
+                oldSettingsFile.delete();
+            }
+
+            DataUtil.save(new File(context.getExternalCacheDir().getAbsolutePath(), NEW_SCHEDULE_FILE), newSchedule);
 
         } catch (Exception e) {
             e.printStackTrace();

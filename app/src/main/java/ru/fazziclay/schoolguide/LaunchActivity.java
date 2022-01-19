@@ -14,9 +14,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.SchoolGuideService;
-import ru.fazziclay.schoolguide.app.multiplicationtrening.MultiplicationGameActivity;
-import ru.fazziclay.schoolguide.app.scheduleinformator.InformatorService;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetListActivity;
 
 public class LaunchActivity extends Activity {
     SchoolGuideApp app;
@@ -45,7 +44,8 @@ public class LaunchActivity extends Activity {
         startService(new Intent(this, SchoolGuideService.class));
 
         app = SchoolGuideApp.get(this);
-        MultiplicationGameActivity.open(this, false);
+        //MultiplicationGameActivity.open(this, false);
+        startActivity(new Intent(this, PresetListActivity.class));
 
         finish();
     }

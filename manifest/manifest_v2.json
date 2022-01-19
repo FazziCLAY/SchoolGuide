@@ -1,0 +1,15 @@
+{
+  "latest": {
+    "release": {
+      "code": 36,
+      "name": "0.5 rewritten",
+      "changelog": {
+        "default": ""
+      },
+      "download": {
+        "release": "",
+        "debug": ""
+      }
+    }
+  }
+}

@@ -8,14 +8,15 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.AppSchedule;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
+import ru.fazziclay.schoolguide.util.DataUtil;
 import ru.fazziclay.schoolguide.util.time.ConvertMode;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
@@ -25,23 +26,36 @@ public class ScheduleInformatorApp {
     public static Notification FOREGROUND_NOTIFICATION;
 
     SchoolGuideApp app;
+
+    File appScheduleFile;
+
     AppSchedule appSchedule;
     InformatorService informatorService = null;
     boolean isForeground = false;
     NotificationManagerCompat managerCompat;
     Settings settings;
 
-    Preset selectedPreset;
+    /**
+     * Встроенное расписание (от сюда можно импортировать расписания в своё расписание,
+     * и настроить автоматические авто-импортирование(синхронизацию). Ссылки на пресеты которые нужео
+     * автоматически синхронизировать находятся в {@link ScheduleInformatorApp#builtinScheduleAutoSyncPresets})
+     * **/
+    BuiltinSchedule builtinSchedule = new BuiltinSchedule();
+    /**
+     * @see ScheduleInformatorApp#builtinSchedule
+     * **/
+    List<UUID> builtinScheduleAutoSyncPresets = new ArrayList<>();
+    long builtinScheduleLatestUpdateTime = 0;
 
     public ScheduleInformatorApp(SchoolGuideApp app) {
         this.app = app;
 
-        appSchedule = AppSchedule.load(new File(app.getFilesFir(), AppSchedule.FILE));
-        appSchedule.save();
+        appScheduleFile = new File(app.getFilesDir(), "scheduleinformator.app_schedule.json");
+        appSchedule = (AppSchedule) DataUtil.load(appScheduleFile, AppSchedule.class);
+        saveAppSchedule();
 
         settings = app.getSettings();
 
-        updateSelected(appSchedule.getSelectedPreset());
         app.getAndroidContext().startService(new Intent(app.getAndroidContext(), InformatorService.class));
     }
 
@@ -49,9 +63,21 @@ public class ScheduleInformatorApp {
        if (informatorService != null) informatorService.stopSelf();
     }
 
+    public void saveAll() {
+        saveAppSchedule();
+    }
+
+    public void saveAppSchedule() {
+        DataUtil.save(appScheduleFile, appSchedule);
+    }
+
     public int tick() {
-        CompressedEvent nowEvent = selectedPreset.getNowCompressedEvent();
-        CompressedEvent nextEvent = selectedPreset.getNextCompressedEvent();
+        if (!settings.isScheduleInformatorEnabled) {
+            stopForeground();
+            return 3000;
+        }
+        CompressedEvent nowEvent = appSchedule.getSelectedPreset().getNowCompressedEvent();
+        CompressedEvent nextEvent = appSchedule.getSelectedPreset().getNextCompressedEvent();
         boolean isNow = nowEvent != null;
         boolean isNext = nextEvent != null;
 
@@ -84,11 +110,6 @@ public class ScheduleInformatorApp {
         return 1000;
     }
 
-    public void updateSelected(UUID preset) {
-        if (preset != null) selectedPreset = appSchedule.getPreset(preset);
-        if (selectedPreset == null) selectedPreset = new Preset();
-    }
-
     public void onServiceDestroy() {
 
     }
@@ -115,6 +136,10 @@ public class ScheduleInformatorApp {
         isForeground = false;
     }
 
+    public File getAppScheduleFile() {
+        return appScheduleFile;
+    }
+
     public static class ScheduleInformatorNotification {
         public int smallIcon;
         public String contentTitle;
@@ -130,5 +155,9 @@ public class ScheduleInformatorApp {
                     .setOnlyAlertOnce(true)
                     .build();
         }
+    }
+
+    public AppSchedule getAppSchedule() {
+        return appSchedule;
     }
 }

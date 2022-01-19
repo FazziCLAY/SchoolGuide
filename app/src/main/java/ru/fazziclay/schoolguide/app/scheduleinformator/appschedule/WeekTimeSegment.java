@@ -39,4 +39,12 @@ public class WeekTimeSegment {
     public int toNextWeek(int i) {
         return i + SECONDS_IN_WEEK;
     }
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
 }

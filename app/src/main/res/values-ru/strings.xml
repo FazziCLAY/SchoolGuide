@@ -11,8 +11,8 @@
     <string name="settings_isVibration">Вибрация</string>
     <string name="lessonName_hint">Имя урока</string>
     <string name="scheduleName_hint">Имя расписания</string>
-    <string name="schedule_lesson_startTime">Время начала - %s</string>
-    <string name="schedule_lesson_duration">Длительность - %s</string>
+    <string name="schedule_lesson_startTime">Время начала - %stringer</string>
+    <string name="schedule_lesson_duration">Длительность - %stringer</string>
     <string name="schedule_lesson_duration_title">Длительность</string>
     <string name="schedule_lesson_startTime_title">Время начала</string>
     <string name="notificationChannel_main_name">Главное</string>
@@ -30,8 +30,8 @@
     <string name="scheduleEdit_delete_message">Вы действительно хотите удалить это расписание?</string>
     <string name="scheduleLessonEdit_delete_title">Вы уверены?</string>
     <string name="scheduleLessonEdit_delete_message">Вы действительно хотите удалить этот урок?</string>
-    <string name="activityTitle_scheduleLessonEdit_edit">Редактирование урока на %s</string>
-    <string name="activityTitle_scheduleLessonEdit_create">Создание урока на %s</string>
+    <string name="activityTitle_scheduleLessonEdit_edit">Редактирование урока на %stringer</string>
+    <string name="activityTitle_scheduleLessonEdit_create">Создание урока на %stringer</string>
     <string name="activityTitle_about">О приложении</string>
     <string name="abc_loading">Загрузка</string>
     <string name="updateCenter_downloading_title">Скачивание</string>
@@ -43,11 +43,11 @@
     <string name="updateCenter_downloading_title_error">Ошибка скачивания!</string>
     <string name="updateCenter_title_updateAvailable">Доступно обновление</string>
     <string name="updateCenter_text_error_noNetworkConnection">Нету соеденения с интернетом</string>
-    <string name="updateCenter_text_error_generic">Неизвестная ошибка! Код: %s</string>
+    <string name="updateCenter_text_error_generic">Неизвестная ошибка! Код: %stringer</string>
     <string name="updateCenter_title_error">Ошибка</string>
     <string name="updateCenter_title_latest">Обновлено!</string>
     <string name="updateCenter_text_latest">Ваша версия последняя, обновления не требуется!</string>
-    <string name="schedules_createNew_copyOf">Копия \'%s\'</string>
+    <string name="schedules_createNew_copyOf">Копия \'%stringer\'</string>
     <string name="schedules_createNew_title">Создание нового расписания</string>
     <string name="abc_create">Создать</string>
     <string name="schedules_createNew_empty">Создать пустой</string>

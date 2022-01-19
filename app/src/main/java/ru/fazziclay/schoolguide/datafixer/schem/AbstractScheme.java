@@ -1,9 +1,10 @@
 package ru.fazziclay.schoolguide.datafixer.schem;
 
-import android.content.Context;
+import ru.fazziclay.schoolguide.datafixer.DataFixer;
+import ru.fazziclay.schoolguide.datafixer.Version;
 
 public abstract class AbstractScheme {
-    public abstract boolean isCompatible(int version);
+    public abstract boolean isCompatible(Version version);
 
-    public abstract int run(Context context, int version);
+    public abstract Version run(DataFixer dataFixer, Version version);
 }

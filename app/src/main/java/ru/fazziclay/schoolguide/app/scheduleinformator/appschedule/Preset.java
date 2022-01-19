@@ -48,7 +48,7 @@ public class Preset {
         return eventCompress(getNextEvent());
     }
 
-    private CompressedEvent eventCompress(Event event) {
+    public CompressedEvent eventCompress(Event event) {
         if (event == null) return null;
         EventInfo eventInfo = getEventInfo(event.externalEvent);
         String name = "UNKNOWN";

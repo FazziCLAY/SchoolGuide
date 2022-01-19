@@ -16,21 +16,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
         <activity
-            android:name="ru.fazziclay.schoolguide.app.multiplicationtrening.MultiplicationGameActivity"
+            android:name=".app.scheduleinformator.android.PresetEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".app.scheduleinformator.android.PresetListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".app.multiplicationtrening.MultiplicationGameActivity"
             android:exported="false" />
 
         <service
-            android:name="ru.fazziclay.schoolguide.app.SchoolGuideService"
+            android:name=".app.SchoolGuideService"
             android:enabled="true"
             android:exported="false" />
-
         <service
-            android:name="ru.fazziclay.schoolguide.app.scheduleinformator.InformatorService"
+            android:name=".app.scheduleinformator.InformatorService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name="ru.fazziclay.schoolguide.LaunchActivity"
+            android:name=".LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

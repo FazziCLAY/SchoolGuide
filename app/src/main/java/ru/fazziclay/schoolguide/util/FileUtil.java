@@ -76,6 +76,10 @@ public class FileUtil {
         }
     }
 
+    public static void write(File file, String content) {
+        write(file.getAbsolutePath(), content);
+    }
+
     public static void write(String path, String content) {
         try {
             createNew(fixPathSeparator(path));

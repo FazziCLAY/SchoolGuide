@@ -9,6 +9,7 @@ import java.io.File;
 
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
+import ru.fazziclay.schoolguide.util.DataUtil;
 
 public class SchoolGuideApp {
     public static SchoolGuideApp instance = null;
@@ -26,8 +27,10 @@ public class SchoolGuideApp {
 
     // Android
     private final Context androidContext;
-    private final File filesFir;
+    private final File filesDir;
     private final File cacheDir;
+
+    private final File settingsFile;
 
     private final Gson GSON;
     private final Settings settings;
@@ -38,18 +41,23 @@ public class SchoolGuideApp {
 
     public SchoolGuideApp(Context context) {
         androidContext = context.getApplicationContext();
-        filesFir = context.getExternalFilesDir(null);
-        cacheDir = context.getExternalCacheDir();
-
         GSON = new GsonBuilder().setPrettyPrinting().create();
 
-        DataFixer dataFixer = new DataFixer(this);
+        DataFixer dataFixer = new DataFixer(androidContext, GSON);
         dataFixer.tryFix();
 
-        settings = Settings.load(new File(filesFir, Settings.FILE));
-        settings.save();
+        filesDir = context.getExternalFilesDir(null);
+        cacheDir = context.getExternalCacheDir();
+
+        settingsFile = new File(filesDir, "schoolguide.settings.json");
+        settings = (Settings) DataUtil.load(settingsFile, Settings.class);
+        saveSettings();
 
         scheduleInformatorApp = new ScheduleInformatorApp(this);
+    }
+
+    public void saveSettings() {
+        DataUtil.save(settingsFile, settings);
     }
 
     public Context getAndroidContext() {
@@ -60,12 +68,16 @@ public class SchoolGuideApp {
         return cacheDir;
     }
 
-    public File getFilesFir() {
-        return filesFir;
+    public File getFilesDir() {
+        return filesDir;
     }
 
     public Gson getGson() {
         return GSON;
+    }
+
+    public File getSettingsFile() {
+        return settingsFile;
     }
 
     public Settings getSettings() {
