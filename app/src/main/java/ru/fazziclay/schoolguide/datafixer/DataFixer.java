@@ -1,6 +1,7 @@
 package ru.fazziclay.schoolguide.datafixer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +22,7 @@ public class DataFixer {
     Version version;
 
     public DataFixer(Context context, int currentAppVersion, AbstractScheme[] fixSchemes) {
+        Log.d("DataFixer", "<init>");
         this.context = context;
         this.currentAppVersion = currentAppVersion;
         this.fixSchemes = fixSchemes;
@@ -31,8 +33,8 @@ public class DataFixer {
                 FileUtil.read(versionFile, "{}"),
                 Version.class
         );
-        if (version.firstVersion == 0) version.firstVersion = (isPre36 ? PRE36_VERSION : currentAppVersion);
-        if (version.latestVersion == 0) version.latestVersion = currentAppVersion;
+        if (version.getFirstVersion() == 0) version.setFirstVersion(isPre36 ? PRE36_VERSION : currentAppVersion);
+        if (version.getLatestVersion() == 0) version.setLatestVersion(isPre36 ? PRE36_VERSION : currentAppVersion);
         if (isPre36) {
             version.addToVersionHistory(PRE36_VERSION);
         }
@@ -45,13 +47,15 @@ public class DataFixer {
     }
 
     public void fixIfAvailable() {
-        if (version.latestVersion >= currentAppVersion) {
+        Log.d("DataFixer", "fixIfAvailable();");
+        if (version.getLatestVersion() >= currentAppVersion) {
             return;
         }
 
         int i = 0;
         int o = fixSchemes.length;
         while (i < o) {
+            Log.d("DataFixer", "fixIfAvailable(); while i="+i+" o="+o);
             AbstractScheme fixScheme = fixSchemes[i];
 
             try {
@@ -65,5 +69,11 @@ public class DataFixer {
 
             i++;
         }
+
+        saveVersion();
+    }
+
+    public Context getAndroidContext() {
+        return context;
     }
 }
