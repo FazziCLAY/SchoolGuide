@@ -4,7 +4,8 @@
       "code": 36,
       "name": "0.5 rewritten",
       "changelog": {
-        "default": ""
+        "ru": "Ура! Я переписал(ещё нет) приложение!",
+        "default": "Hello from RUSSIA!"
       },
       "download": {
         "release": "",
