@@ -1,15 +1,15 @@
 {
   "latest": {
     "release": {
-      "code": 36,
+      "code": 37,
       "name": "0.5 rewritten",
       "changelog": {
         "ru": "Ура! Я переписал(ещё нет) приложение!",
         "default": "Hello from RUSSIA!"
       },
       "download": {
-        "release": "",
-        "debug": ""
+        "release": "https://google.com",
+        "debug": "https://yandex.com"
       }
     }
   }
