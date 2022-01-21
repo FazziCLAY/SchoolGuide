@@ -10,6 +10,7 @@ public class UUIDUtil {
      * **/
     public static UUID generateUUID(UUID[] exclusions) {
         UUID uuid = UUID.randomUUID();
+        int i = 0;
         while (true) {
             boolean contains = false;
             for (UUID exclusion : exclusions) {
@@ -18,12 +19,23 @@ public class UUIDUtil {
                     break;
                 }
             }
-            if (!contains) {
+            if (contains) {
                 uuid = UUID.randomUUID();
             } else {
                 break;
             }
+            i++;
+            if (i > 1000) {
+                throw new RuntimeException("Error generating");
+            }
         }
         return uuid;
+    }
+
+    /**
+     * @see UUIDUtil#generateUUID(UUID[])
+     * **/
+    public static UUID generateUUID() {
+        return generateUUID(new UUID[0]);
     }
 }
