@@ -16,13 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
         <activity
+            android:name=".DebugActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateCenterActivity"
+            android:exported="false" />
+        <activity
             android:name=".app.scheduleinformator.android.PresetEditActivity"
             android:exported="false" />
         <activity
             android:name=".app.scheduleinformator.android.PresetListActivity"
             android:exported="false" />
         <activity
-            android:name=".app.multiplicationtrening.MultiplicationGameActivity"
+            android:name=".app.multiplicationtrening.MathTreningGameActivity"
             android:exported="false" />
 
         <service

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/openUpdateCenterItem" android:title="@string/mainOptionMenu_openUpdateCenter"/>
+    <item android:id="@+id/openMathTreningGameItem" android:title="@string/mainOptionMenu_openMathTreningGame" />
+</menu>

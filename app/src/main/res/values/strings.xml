@@ -76,8 +76,8 @@
     <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
     <string name="todaySchedule_todayLessons_title">Today lessons:</string>
 
-    <string name="updateCenter_downloading_title">Downloading</string>
-    <string name="updateCenter_download">Download and Install</string>
+    <string name="updatecenter_downloading_title">Downloading</string>
+    <string name="updatecenter_download">Download and Install</string>
     <string name="updateCenter_title_error">Error</string>
     <string name="updateCenter_text_error_generic">Unknown error! Code: %stringer</string>
     <string name="updateCenter_text_error_noNetworkConnection">No network connection!</string>
@@ -103,4 +103,7 @@
     <string name="settings_notifyBeforeTime_title">Начинать уведомлять за столько время до...</string>
     <string name="abc_add">Add</string>
     <string name="abc_edit">Edit</string>
+    <string name="updatecenter_loading">_Загрузка</string>
+    <string name="mainOptionMenu_openUpdateCenter">Open Settings</string>
+    <string name="mainOptionMenu_openMathTreningGame">Open MathTreningGame</string>
 </resources>

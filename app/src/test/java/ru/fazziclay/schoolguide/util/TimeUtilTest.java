@@ -21,25 +21,29 @@ public class TimeUtilTest {
 
     @Test
     public void humanValues() {
-        int a = TimeUtil.getHumanValue(24*60*60-1, HumanTimeType.HOUR);
+        final int DAY = 24 * 60 * 60 - 1;
+
+        int a = TimeUtil.getHumanValue(DAY, HumanTimeType.HOUR);
         assertEquals(23, a);
 
-        a = TimeUtil.getHumanValue(24*60*60-1, HumanTimeType.MINUTE_OF_HOUR);
+        a = TimeUtil.getHumanValue(DAY, HumanTimeType.MINUTE_OF_HOUR);
         assertEquals(59, a);
 
-        a = TimeUtil.getHumanValue(24*60*60-1, HumanTimeType.SECONDS_OF_MINUTE);
+        a = TimeUtil.getHumanValue(DAY, HumanTimeType.SECONDS_OF_MINUTE);
         assertEquals(59, a);
     }
 
     @Test
     public void convertToHuman() {
-        String a = TimeUtil.convertToHumanTime(24*60*60-1, ConvertMode.HHMMSS);
+        final int DAY = 24 * 60 * 60 - 1;
+
+        String a = TimeUtil.convertToHumanTime(DAY, ConvertMode.HHMMSS);
         assertEquals("23:59:59", a);
 
-        a = TimeUtil.convertToHumanTime(24*60*60-1, ConvertMode.HHMM);
+        a = TimeUtil.convertToHumanTime(DAY, ConvertMode.HHMM);
         assertEquals("23:59", a);
 
-        a = TimeUtil.convertToHumanTime(24*60*60-1, ConvertMode.hhMMSS);
+        a = TimeUtil.convertToHumanTime(DAY, ConvertMode.hhMMSS);
         assertEquals("23:59:59", a);
 
         a = TimeUtil.convertToHumanTime(60*60, ConvertMode.hhMMSS);

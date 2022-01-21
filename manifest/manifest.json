@@ -1,15 +1,18 @@
 {
-  "developerSchedule": null,
+  "developerSchedule": {
+    "lessons": [],
+    "schedules": []
+  },
   "isTechnicalWorks": false,
   "latestVersion": {
     "changelog": {
-      "default": "!ВАЖНОЕ ОБЪЯВЛЕНИЕ!\nПриложение изменено и теперь не может быть обновлено поверх старого. По этому вам придётся самостоятельно удалить текущую версию и скачать+установить последнюю версии.\n\nhttps://fazziclay.github.io/schoolguide/\n\nВы так же можете разработчику за помощью!\nTelegram / VK: @fazziclay"
+      "default": "Приложение переделано!\nНововведения узнаете после установки!"
     },
-    "code": 35,
-    "downloadUrl": null,
-    "name": "Incompatible",
+    "code": 36,
+    "downloadUrl": "TODO", // TODO fix
+    "name": "ReWriTTen",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 21,
+  "manifestKey": 30,
   "version": 4
 }

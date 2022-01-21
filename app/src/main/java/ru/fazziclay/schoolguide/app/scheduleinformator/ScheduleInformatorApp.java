@@ -8,88 +8,120 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
+import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
+import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 import ru.fazziclay.schoolguide.util.DataUtil;
 import ru.fazziclay.schoolguide.util.time.ConvertMode;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
 public class ScheduleInformatorApp {
-    public static final String NOTIFICATION_CHANNEL_ID = "schedule_informator_channel";
+    public static final String NOTIFICATION_CHANNEL_ID_NONE = "scheduleinformator_none";
+    public static final String NOTIFICATION_CHANNEL_ID_NEXT = "scheduleinformator_next";
+    public static final String NOTIFICATION_CHANNEL_ID_NOW = "scheduleinformator_now";
     public static final int NOTIFICATION_ID = 1000;
-    public static Notification FOREGROUND_NOTIFICATION;
 
-    SchoolGuideApp app;
+    public final Notification noneNotification;
 
-    File appScheduleFile;
+    private final SchoolGuideApp app;
+    private final Context context;
+    private final Settings settings;
 
-    AppSchedule appSchedule;
-    InformatorService informatorService = null;
-    boolean isForeground = false;
-    NotificationManagerCompat managerCompat;
-    Settings settings;
+    private final NotificationManagerCompat notificationManagerCompat;
 
-    /**
-     * Встроенное расписание (от сюда можно импортировать расписания в своё расписание,
-     * и настроить автоматические авто-импортирование(синхронизацию). Ссылки на пресеты которые нужео
-     * автоматически синхронизировать находятся в {@link ScheduleInformatorApp#builtinScheduleAutoSyncPresets})
-     * **/
-    BuiltinSchedule builtinSchedule = new BuiltinSchedule();
-    /**
-     * @see ScheduleInformatorApp#builtinSchedule
-     * **/
-    List<UUID> builtinScheduleAutoSyncPresets = new ArrayList<>();
-    long builtinScheduleLatestUpdateTime = 0;
+    private final File scheduleFile;
+    private final AppSchedule schedule;
+
+    private UUID currentSchedulePreset = null;
+
+    private InformatorService informatorService = null;
+    boolean isServiceForeground = false;
 
     public ScheduleInformatorApp(SchoolGuideApp app) {
         this.app = app;
+        this.context = app.getAndroidContext();
+        this.settings = app.getSettings();
 
-        appScheduleFile = new File(app.getFilesDir(), "scheduleinformator.app_schedule.json");
-        appSchedule = (AppSchedule) DataUtil.load(appScheduleFile, AppSchedule.class);
+        this.notificationManagerCompat = NotificationManagerCompat.from(context);
+
+        this.noneNotification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NONE)
+                .setSmallIcon(R.drawable.planner_s)
+                .setAutoCancel(true)
+                .setContentTitle("Откисай!")
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setOnlyAlertOnce(true)
+                .setSound(null)
+                .build();
+
+        scheduleFile = new File(app.getFilesDir(), "scheduleinformator.schedule.json");
+        schedule = (AppSchedule) DataUtil.load(scheduleFile, AppSchedule.class);
         saveAppSchedule();
 
-        settings = app.getSettings();
+        setCurrentPreset(schedule.currentPresetUUID);
 
-        app.getAndroidContext().startService(new Intent(app.getAndroidContext(), InformatorService.class));
-    }
-
-    public void stop() {
-       if (informatorService != null) informatorService.stopSelf();
-    }
-
-    public void saveAll() {
-        saveAppSchedule();
+        serviceStart();
     }
 
     public void saveAppSchedule() {
-        DataUtil.save(appScheduleFile, appSchedule);
+        DataUtil.save(scheduleFile, schedule);
+    }
+
+    public void serviceStop() {
+       if (informatorService != null) informatorService.stopSelf();
+    }
+
+    public void serviceStart() {
+        context.startService(new Intent(context, InformatorService.class));
+    }
+
+    public Preset getCurrentPreset() {
+        Preset p = schedule.getPreset(currentSchedulePreset);
+        if (p == null) {
+            if (schedule.getPresetsUUIDs().length > 0) {
+                currentSchedulePreset = schedule.getPresetsUUIDs()[0];
+                return getCurrentPreset();
+            }
+            p = new Preset();
+            p.setName("(PRESET_NULL)"); // TODO: 2022-01-20 fix?
+        }
+        return p;
+    }
+
+    public void setCurrentPreset(UUID preset) {
+        currentSchedulePreset = preset;
+        schedule.currentPresetUUID = preset;
+        saveAppSchedule();
     }
 
     public int tick() {
-        if (!settings.isScheduleInformatorEnabled) {
-            stopForeground();
-            return 3000;
-        }
-        CompressedEvent nowEvent = appSchedule.getSelectedPreset().getNowCompressedEvent();
-        CompressedEvent nextEvent = appSchedule.getSelectedPreset().getNextCompressedEvent();
+        CompressedEvent nowEvent = getCurrentPreset().getNowCompressedEvent();
+        CompressedEvent nextEvent = getCurrentPreset().getNextCompressedEvent();
         boolean isNow = nowEvent != null;
         boolean isNext = nextEvent != null;
 
         if (!isNow && !isNext) {
-            stopForeground();
+            if (settings.stopServiceIsNone) {
+                stopForeground();
+            } else {
+                sendNotify(NOTIFICATION_ID, noneNotification);
+            }
             return 3000;
         }
 
         if (!isNow && nextEvent.remainsUntilStart() > settings.scheduleNotifyBeforeTime) {
-            stopForeground();
+            if (settings.stopServiceIsNone) {
+                stopForeground();
+            } else {
+                sendNotify(NOTIFICATION_ID, noneNotification);
+            }
             return 2000;
         }
+
         startForeground();
 
         ScheduleInformatorNotification notification = new ScheduleInformatorNotification();
@@ -105,8 +137,7 @@ public class ScheduleInformatorApp {
             notification.contentText = String.format("Следующее: %s", nextEvent.getName());
         }
 
-        managerCompat.notify(NOTIFICATION_ID, notification.toNotification(informatorService, NOTIFICATION_CHANNEL_ID));
-
+        sendNotify(NOTIFICATION_ID, notification.toNotification(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT)));
         return 1000;
     }
 
@@ -116,28 +147,21 @@ public class ScheduleInformatorApp {
 
     public void registerService(InformatorService informatorService) {
         this.informatorService = informatorService;
-        this.managerCompat = NotificationManagerCompat.from(informatorService);
-
-        FOREGROUND_NOTIFICATION = new NotificationCompat.Builder(informatorService, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.planner_s)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .build();
         startForeground();
     }
 
     public void startForeground() {
-        if (!isForeground) informatorService.startForeground(NOTIFICATION_ID, FOREGROUND_NOTIFICATION);
-        isForeground = true;
+        if (!isServiceForeground) informatorService.startForeground(NOTIFICATION_ID, noneNotification);
+        isServiceForeground = true;
     }
 
     public void stopForeground() {
         informatorService.stopForeground(true);
-        isForeground = false;
+        isServiceForeground = false;
     }
 
-    public File getAppScheduleFile() {
-        return appScheduleFile;
+    public void sendNotify(int id, Notification notification) {
+        notificationManagerCompat.notify(id, notification);
     }
 
     public static class ScheduleInformatorNotification {
@@ -152,12 +176,17 @@ public class ScheduleInformatorApp {
                     .setContentTitle(contentTitle)
                     .setContentText(contentText)
                     .setSubText(sub)
+                    .setSound(null)
                     .setOnlyAlertOnce(true)
                     .build();
         }
     }
 
-    public AppSchedule getAppSchedule() {
-        return appSchedule;
+    public File getScheduleFile() {
+        return scheduleFile;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
     }
 }

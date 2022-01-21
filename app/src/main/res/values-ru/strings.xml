@@ -34,8 +34,8 @@
     <string name="activityTitle_scheduleLessonEdit_create">Создание урока на %stringer</string>
     <string name="activityTitle_about">О приложении</string>
     <string name="abc_loading">Загрузка</string>
-    <string name="updateCenter_downloading_title">Скачивание</string>
-    <string name="updateCenter_download">Скачать и Установить</string>
+    <string name="updatecenter_downloading_title">Скачивание</string>
+    <string name="updatecenter_download">Скачать и Установить</string>
     <string name="abc_install">Установить</string>
     <string name="abc_error">Ошибка</string>
     <string name="activityTitle_updateChecker">Центр обновлений</string>

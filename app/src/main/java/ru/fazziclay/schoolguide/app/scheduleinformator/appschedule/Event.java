@@ -3,10 +3,10 @@ package ru.fazziclay.schoolguide.app.scheduleinformator.appschedule;
 import java.util.UUID;
 
 public class Event extends WeekTimeSegment {
-    UUID externalEvent;
+    UUID eventInfo;
 
-    public Event(UUID externalEvent, int start, int end) {
+    public Event(UUID eventInfo, int start, int end) {
         super(start, end);
-        this.externalEvent = externalEvent;
+        this.eventInfo = eventInfo;
     }
 }

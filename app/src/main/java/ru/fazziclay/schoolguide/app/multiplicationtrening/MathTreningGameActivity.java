@@ -6,27 +6,39 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Random;
 
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.databinding.ActivityMultiplicationTreningBinding;
 
 
-public class MultiplicationGameActivity extends AppCompatActivity {
-    public static void open(Activity activity, boolean closeCurrent) {
-        activity.startActivity(new Intent(activity, MultiplicationGameActivity.class));
-        if (closeCurrent) activity.finish();
+public class MathTreningGameActivity extends AppCompatActivity {
+    public static void open(Activity activity) {
+        activity.startActivity(new Intent(activity, MathTreningGameActivity.class));
     }
 
     File gameDataFile;
-    MultiplicationGameData gameData;
+    MathTreningGameData gameData;
 
     ActivityMultiplicationTreningBinding binding;
     Random random = new Random();
+
+
+    private static final int M = 15;
+    double speed = 0;
+
+    int speedI = 0;
+    long[] starts = new long[M];
+    long[] durations = new long[M];
 
     int n1;
     int n2;
@@ -37,7 +49,7 @@ public class MultiplicationGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMultiplicationTreningBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setTitle("SchoolGuide - Multiplication");
+        setTitle("SchoolGuide - Math trening"); // TODO: 2022-01-21 make translatable
 
         binding.resultInput.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -73,14 +85,21 @@ public class MultiplicationGameActivity extends AppCompatActivity {
             }
         });
 
-        gameDataFile = new File(getExternalFilesDir(null), "multiplication_game.json");
+        gameDataFile = new File(getExternalFilesDir(null), "math_trening_game.json");
 
         File old = new File(getExternalFilesDir(null), "multiplication_game_statistics.json");
         if (old.exists()) {
             old.renameTo(gameDataFile);
         }
 
-        gameData = MultiplicationGameData.load(gameDataFile);
+        // TODO: 2022-01-21 delete non used data fixer
+
+        old = new File(getExternalFilesDir(null), "multiplication_game.json");
+        if (old.exists()) {
+            old.renameTo(gameDataFile);
+        }
+
+        gameData = MathTreningGameData.load(gameDataFile);
         saveAll();
 
         clearInput();
@@ -103,6 +122,26 @@ public class MultiplicationGameActivity extends AppCompatActivity {
         regenerate();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_math_trening_game, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.resetAllProgressItem) {
+            gameData.score = 0;
+            saveAll();
+
+            open(this);
+            finish();
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
     private void clearInput() {
         binding.resultInput.setText("");
     }
@@ -121,6 +160,17 @@ public class MultiplicationGameActivity extends AppCompatActivity {
         int userResult = toInt(userInput);
         clearInput();
         if (userResult == result) {
+            durations[speedI] = System.currentTimeMillis() - starts[speedI];
+
+            long sum = 0;
+            int len = 0;
+            for (long dur : durations) {
+                if (dur == 0) continue;
+                sum += dur;
+                len++;
+            }
+            speed = 1000 / (((double) sum) / ((double)len));
+
             gameData.score++;
             regenerate();
         } else if (userResult != Integer.MAX_VALUE) {
@@ -152,15 +202,27 @@ public class MultiplicationGameActivity extends AppCompatActivity {
             result = n1 + n2;
         } else {
             Toast.makeText(this, "Unknown action: " + gameData.action, Toast.LENGTH_SHORT).show();
+            // TODO: 2022-01-21 make translatable
             gameData.action = "*";
             regenerate();
         }
 
         binding.taskText.setText(String.format("%s %s %s", n1, gameData.action, n2));
+        speedI++;
+        if (speedI >= M) speedI = 0;
+
+        starts[speedI] = System.currentTimeMillis();
     }
 
     private void updateScore() {
-        binding.score.setText(String.format("Score: %s", gameData.score));
+        binding.score.setText(String.format("Score: %s; Speed: %s", gameData.score, round(speed, 2)));
+        // TODO: 2022-01-21 make translatable
+    }
+
+    public double round(double d, int numbers) {
+        double f = Math.pow(10, numbers);
+        double i = d * f;
+        return Math.round(i) / f;
     }
 
     private int random(int i) {

@@ -3,11 +3,11 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
-        <entry key="*.jsonld">
+        <entry key="JSON Schema version 4">
           <value>
             <SchemaInfo>
-              <option name="name" value="*.jsonld" />
-              <option name="relativePathToSchema" value="https://json.schemastore.org/jsonld.json" />
+              <option name="name" value="JSON Schema version 4" />
+              <option name="relativePathToSchema" value="http://json-schema.org/draft-04/schema" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>

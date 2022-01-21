@@ -17,7 +17,7 @@
             android:textSize="30sp"
             android:padding="20sp"/>
 
-        <ListView
+        <ExpandableListView
             android:id="@+id/event_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

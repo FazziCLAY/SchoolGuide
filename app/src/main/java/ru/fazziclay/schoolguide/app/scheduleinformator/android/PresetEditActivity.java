@@ -5,22 +5,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.DateFormatSymbols;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
+import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Event;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetEditBinding;
 import ru.fazziclay.schoolguide.util.time.ConvertMode;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
 public class PresetEditActivity extends AppCompatActivity {
+    private static final int SECONDS_IN_DAY = 24 * 60 * 60;
     private static final String EXTRA_PRESET_UUID = "uuid";
 
     public static Intent getLaunchIntent(Context context, UUID uuid) {
@@ -35,9 +42,11 @@ public class PresetEditActivity extends AppCompatActivity {
     SchoolGuideApp app;
     ScheduleInformatorApp informatorApp;
     ActivityPresetEditBinding binding;
+    DateFormatSymbols dateFormatSymbols;
 
     UUID presetUUID;
     Preset preset;
+    boolean isFirstMonday = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +56,12 @@ public class PresetEditActivity extends AppCompatActivity {
         binding = ActivityPresetEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        presetUUID = UUID.fromString(getIntent().getExtras().getString(EXTRA_PRESET_UUID));
-        preset = informatorApp.getAppSchedule().getPreset(presetUUID);
+        dateFormatSymbols = new DateFormatSymbols();
 
-        binding.presetName.setText(preset.name);
+        presetUUID = UUID.fromString(getIntent().getExtras().getString(EXTRA_PRESET_UUID));
+        preset = informatorApp.getSchedule().getPreset(presetUUID);
+
+        binding.presetName.setText(preset.getName());
 
         updateEventList();
     }
@@ -61,43 +72,93 @@ public class PresetEditActivity extends AppCompatActivity {
         updateEventList();
     }
 
+    // В формате Calendar.MONDAY
+    private Event[] getEventsInWeek(int week) {
+        List<Event> e = new ArrayList<>();
+        week--;
+
+        for (Event event : preset.eventsPositions) {
+            int w = (int) Math.floor(event.getStart() / (double) (24 * 60 * 60));
+            if (week == w) e.add(event);
+        }
+        return e.toArray(new Event[0]);
+    }
+
     private void updateEventList() {
         binding.eventList.deferNotifyDataSetChanged();
-        binding.eventList.setAdapter(new BaseAdapter() {
+        binding.eventList.setAdapter(new BaseExpandableListAdapter() {
             @Override
-            public int getCount() {
-                return preset.events.size();
+            public int getGroupCount() {
+                return 7;
             }
 
             @Override
-            public Object getItem(int position) {
+            public int getChildrenCount(int groupPosition) {
+                return getEventsInWeek(posToWeek(isFirstMonday, groupPosition)).length;
+            }
+
+            @Override
+            public Object getGroup(int groupPosition) {
                 return null;
             }
 
             @Override
-            public long getItemId(int position) {
-                return position;
+            public Object getChild(int groupPosition, int childPosition) {
+                return null;
             }
 
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                position = getWeekByPosition(position);
-                CompressedEvent event = preset.eventCompress(preset.events.get(position));
+            public long getGroupId(int groupPosition) {
+                return groupPosition;
+            }
 
+            @Override
+            public long getChildId(int groupPosition, int childPosition) {
+                return childPosition;
+            }
+
+            @Override
+            public boolean hasStableIds() {
+                return true;
+            }
+
+            @Override
+            public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+                binding.eventList.expandGroup(groupPosition, false);
+                TextView textView = new TextView(PresetEditActivity.this);
+                textView.setTextSize(30);
+                textView.setText(dateFormatSymbols.getWeekdays()[posToWeek(isFirstMonday, groupPosition)]);
+                return textView;
+            }
+
+            @Override
+            public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+                int timeDeleteCoff = SECONDS_IN_DAY * (groupPosition + 1);
+                Event e = getEventsInWeek(posToWeek(isFirstMonday, groupPosition))[childPosition];
+                if (e == null) return new CheckBox(PresetEditActivity.this);
+                CompressedEvent event = preset.compressEvent(e);
 
                 TextView textView = new TextView(PresetEditActivity.this);
                 textView.setTextSize(20);
-                String start = TimeUtil.convertToHumanTime(event.getStart(), ConvertMode.hhMMSS);
-                String end = TimeUtil.convertToHumanTime(event.getEnd(), ConvertMode.hhMMSS);
-                textView.setText(String.format("%s [%s-%s] %s", position+1, start, end, event.getName()));
+                String start = TimeUtil.convertToHumanTime(event.getStart() - timeDeleteCoff, ConvertMode.HHMM);
+                String end = TimeUtil.convertToHumanTime(event.getEnd() - timeDeleteCoff, ConvertMode.HHMM);
+                textView.setText(String.format("%s %s-%s %s", childPosition+1, start, end, event.getName()));
                 return textView;
             }
+
+            @Override
+            public boolean isChildSelectable(int groupPosition, int childPosition) {
+                return true;
+            }
         });
+        binding.eventList.setGroupIndicator(null);
     }
 
-    private int getWeekByPosition(int pos) {
+    public static int posToWeek(boolean firstMonday, int pos) {
+        pos++;
         if (firstMonday) {
-            return pos;
+            pos++;
+            if (pos > 7) pos = Calendar.SUNDAY;
         }
         return pos;
     }

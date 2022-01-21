@@ -8,16 +8,22 @@ import java.util.UUID;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
 public class Preset {
-    public String name;
-    public String author;
+    String name;
+    String author;
 
-    public HashMap<UUID, EventInfo> eventInfos = new HashMap<>();
-    public List<Event> events = new ArrayList<>();
+    public HashMap<UUID, EventInfo> eventsInfos = new HashMap<>();
+    public List<Event> eventsPositions = new ArrayList<>();
+
+    public Preset() {}
+
+    public Preset(String name) {
+        this.name = name;
+    }
 
     public Event getNowEvent() {
         int i = 0;
-        while (i < events.size()) {
-            Event event = events.get(i);
+        while (i < eventsPositions.size()) {
+            Event event = eventsPositions.get(i);
             if (event.isNow()) return event;
             i++;
         }
@@ -29,8 +35,8 @@ public class Preset {
         int m = Integer.MAX_VALUE;
 
         int i = 0;
-        while (i < events.size()) {
-            Event event1 = events.get(i);
+        while (i < eventsPositions.size()) {
+            Event event1 = eventsPositions.get(i);
             if (TimeUtil.getWeekSeconds() < event1.start && event1.start < m) {
                 event = event1;
                 m = event1.start;
@@ -41,24 +47,35 @@ public class Preset {
     }
 
     public CompressedEvent getNowCompressedEvent() {
-        return eventCompress(getNowEvent());
+        return compressEvent(getNowEvent());
     }
 
     public CompressedEvent getNextCompressedEvent() {
-        return eventCompress(getNextEvent());
+        return compressEvent(getNextEvent());
     }
 
-    public CompressedEvent eventCompress(Event event) {
+    public CompressedEvent compressEvent(Event event) {
         if (event == null) return null;
-        EventInfo eventInfo = getEventInfo(event.externalEvent);
-        String name = "UNKNOWN";
-        if (eventInfo != null) {
-            name = eventInfo.name;
-        }
-        return new CompressedEvent(name, event.start, event.end);
+        return CompressedEvent.create(event, getEventInfo(event.eventInfo));
     }
 
     public EventInfo getEventInfo(UUID uuid) {
-        return eventInfos.get(uuid);
+        return eventsInfos.get(uuid);
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 }
