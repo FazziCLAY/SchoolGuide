@@ -6,4 +6,8 @@ public class EventInfo {
     public EventInfo(String name) {
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
 }

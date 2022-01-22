@@ -9,4 +9,8 @@ public class Event extends WeekTimeSegment {
         super(start, end);
         this.eventInfo = eventInfo;
     }
+
+    public UUID getEventInfo() {
+        return eventInfo;
+    }
 }

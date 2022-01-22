@@ -3,6 +3,7 @@ package ru.fazziclay.schoolguide.app.scheduleinformator.android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
@@ -37,12 +39,10 @@ public class PresetEditActivity extends AppCompatActivity {
         return intent;
     }
 
-    boolean firstMonday = true;
-
     SchoolGuideApp app;
     ScheduleInformatorApp informatorApp;
-    ActivityPresetEditBinding binding;
     DateFormatSymbols dateFormatSymbols;
+    ActivityPresetEditBinding binding;
 
     UUID presetUUID;
     Preset preset;
@@ -53,15 +53,14 @@ public class PresetEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         app = SchoolGuideApp.get(this);
         informatorApp = app.getScheduleInformatorApp();
-        binding = ActivityPresetEditBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         dateFormatSymbols = new DateFormatSymbols();
 
         presetUUID = UUID.fromString(getIntent().getExtras().getString(EXTRA_PRESET_UUID));
         preset = informatorApp.getSchedule().getPreset(presetUUID);
 
-        binding.presetName.setText(preset.getName());
+        binding = ActivityPresetEditBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setTitle(getString(R.string.presetEdit_activityTitle, preset.getName()));
 
         updateEventList();
     }
@@ -72,13 +71,16 @@ public class PresetEditActivity extends AppCompatActivity {
         updateEventList();
     }
 
-    // В формате Calendar.MONDAY
+    /**
+     * @param week неделя в формате {@link Calendar#SUNDAY}
+     * **/
     private Event[] getEventsInWeek(int week) {
         List<Event> e = new ArrayList<>();
         week--;
 
         for (Event event : preset.eventsPositions) {
             int w = (int) Math.floor(event.getStart() / (double) (24 * 60 * 60));
+            Log.d("getEventsInWeek", "eventName="+preset.eventsInfos.get(event.getEventInfo()).getName()+"; w="+w);
             if (week == w) e.add(event);
         }
         return e.toArray(new Event[0]);
