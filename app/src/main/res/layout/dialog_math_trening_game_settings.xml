@@ -68,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/mathTreningGame_settings_generation_min"
+                android:maxLength="10"
                 android:inputType="numberDecimal"
                 android:importantForAutofill="no" />
 
@@ -77,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/mathTreningGame_settings_generation_max"
+                android:maxLength="10"
                 android:inputType="numberDecimal"
                 android:importantForAutofill="no" />
         </LinearLayout>
@@ -100,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/mathTreningGame_settings_generation_min"
+                android:maxLength="10"
                 android:inputType="numberDecimal"
                 android:importantForAutofill="no" />
 
@@ -109,6 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/mathTreningGame_settings_generation_max"
+                android:maxLength="10"
                 android:inputType="numberDecimal"
                 android:importantForAutofill="no" />
         </LinearLayout>

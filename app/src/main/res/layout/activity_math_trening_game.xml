@@ -29,13 +29,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:maxLength="8"
+        android:maxLength="10"
         android:hint="@string/mathTreningGame_resultInput_hint"
         android:textColorHint="#5B4A4A"
         tools:text="242"
         android:textSize="25sp"
         android:textColor="#1CD173"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned"
         android:imeOptions="actionSend"
         android:importantForAutofill="no"/>
 </LinearLayout>

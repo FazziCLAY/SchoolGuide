@@ -81,14 +81,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
                 if (cursor < 0) return;
                 String text = binding.resultInput.getText().toString();
                 int number = toInt(text);
-                if (text.contains(".") || text.contains("-")) {
-                    text = text
-                            .replace(".", "")
-                            .replace("-", "");
-                    binding.resultInput.setText(text);
-                    binding.resultInput.setSelection(Math.max(cursor - 1, 0));
-                }
-                if (!text.equals(String.valueOf(number)) && number != Integer.MAX_VALUE) {
+                if (!text.equals("-") && !text.equals(String.valueOf(number)) && number != Integer.MAX_VALUE) {
                     binding.resultInput.setText(String.valueOf(number));
                     binding.resultInput.setSelection(cursor - 1);
                 }
