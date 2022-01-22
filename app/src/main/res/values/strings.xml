@@ -32,4 +32,11 @@
     <string name="presetList_add">Add</string>
 
     <string name="presetEdit_activityTitle">Preset \'%s\'</string>
+
+    <string name="notificationChannel_scheduleInformator_scheduleNow_name">Schedule (NOW)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNow_description">Now there is something planned</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNext_name">Schedule (NEXT)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNext_description">Next there is something planned</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_name">Schedule (NONE)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_description">Now there is nothing planned and soon there is nothing planned</string>
 </resources>

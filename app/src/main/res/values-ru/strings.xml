@@ -23,11 +23,17 @@
     <string name="mathTreningGame_optionMenu_resetScore">Сбросить счёт</string>
     <string name="mathTreningGame_optionMenu_skip">Пропустить</string>
     <string name="mathTreningGame_optionMenu_gameSettings">Настройки игры</string>
-
     <string name="mathTreningGame_statistic">Счёт: %s Скорость: %s</string>
     <string name="mathTreningGame_resultInput_hint">Результат</string>
 
     <string name="presetList_add">Добавить</string>
 
     <string name="presetEdit_activityTitle">Пре-сет \'%s\'</string>
+
+    <string name="notificationChannel_scheduleInformator_scheduleNow_name">Расписание (СЕЙЧАС)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNow_description">Уведомляет когда сейчас есть что то запланированное</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNext_name">Расписание (СЛЕД.)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNext_description">Уведомляет когда сейчас нету ничего запланированного, но скоро оно появится</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_name">Расписание (ПУСТО)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_description">Уведомляет когда сейчас нету ничего, и в ближайшее настроенное время ничего и не будет</string>
 </resources>

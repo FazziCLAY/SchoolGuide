@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -17,10 +16,6 @@ import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.SchoolGuideService;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetListActivity;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
-import ru.fazziclay.schoolguide.datafixer.DataFixer;
-import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
-import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To36;
 
 public class LaunchActivity extends Activity {
     SchoolGuideApp app;
@@ -43,16 +38,16 @@ public class LaunchActivity extends Activity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
-            NotificationChannel scheduleInformatorNone = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE, "Schedule (None)", NotificationManager.IMPORTANCE_DEFAULT);
-            scheduleInformatorNone.setDescription("Информирует о том что сейчас можно отдыхать");
+            NotificationChannel scheduleInformatorNone = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE, getString(R.string.notificationChannel_scheduleInformator_scheduleNone_name), NotificationManager.IMPORTANCE_DEFAULT);
+            scheduleInformatorNone.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNone_description));
 
-            NotificationChannel scheduleInformatorNext = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NEXT, "Schedule (Next)", NotificationManager.IMPORTANCE_DEFAULT);
-            scheduleInformatorNone.setDescription("Информирует о том что скоро будет урок");
+            NotificationChannel scheduleInformatorNext = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NEXT, getString(R.string.notificationChannel_scheduleInformator_scheduleNext_name), NotificationManager.IMPORTANCE_DEFAULT);
+            scheduleInformatorNext.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNext_description));
 
-            NotificationChannel scheduleInformatorNow = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NOW, "Schedule (Now)", NotificationManager.IMPORTANCE_DEFAULT);
-            scheduleInformatorNone.setDescription("Информирует о том что сейчас идёт урок");
+            NotificationChannel scheduleInformatorNow = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NOW, getString(R.string.notificationChannel_scheduleInformator_scheduleNow_name), NotificationManager.IMPORTANCE_DEFAULT);
+            scheduleInformatorNow.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNow_description));
 
-            notificationManager.createNotificationChannel(scheduleInformatorNone); // TODO: 2022-01-19 make translatable
+            notificationManager.createNotificationChannel(scheduleInformatorNone);
             notificationManager.createNotificationChannel(scheduleInformatorNext);
             notificationManager.createNotificationChannel(scheduleInformatorNow);
         }
