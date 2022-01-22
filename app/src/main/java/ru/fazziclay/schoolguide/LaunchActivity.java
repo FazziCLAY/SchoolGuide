@@ -1,6 +1,5 @@
 package ru.fazziclay.schoolguide;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,7 +19,6 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetListActivit
 public class LaunchActivity extends Activity {
     SchoolGuideApp app;
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +30,7 @@ public class LaunchActivity extends Activity {
         TextView loading = new TextView(this);
         loading.setTextSize(40);
         loading.setGravity(Gravity.CENTER);
-        loading.setText("SchoolGuide");
+        loading.setText(R.string.application_name);
         setContentView(loading);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
