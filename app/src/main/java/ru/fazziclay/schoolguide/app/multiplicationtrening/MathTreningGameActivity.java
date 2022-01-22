@@ -11,14 +11,15 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Random;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.databinding.ActivityMultiplicationTreningBinding;
+import ru.fazziclay.schoolguide.util.DataUtil;
 
 
 public class MathTreningGameActivity extends AppCompatActivity {
@@ -26,30 +27,30 @@ public class MathTreningGameActivity extends AppCompatActivity {
         activity.startActivity(new Intent(activity, MathTreningGameActivity.class));
     }
 
-    File gameDataFile;
-    MathTreningGameData gameData;
+    private File gameDataFile;
+    private MathTreningGameData gameData;
 
     ActivityMultiplicationTreningBinding binding;
     Random random = new Random();
 
+    private static final int SPEED_ITEMS = 15;
 
-    private static final int M = 15;
-    double speed = 0;
+    private double speed = 0;
 
-    int speedI = 0;
-    long[] starts = new long[M];
-    long[] durations = new long[M];
+    private int speedI = 0;
+    private long[] starts = new long[SPEED_ITEMS];
+    private long[] durations = new long[SPEED_ITEMS];
 
-    int n1;
-    int n2;
-    int result;
+    private float n1;
+    private float n2;
+    private float result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMultiplicationTreningBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setTitle("SchoolGuide - Math trening"); // TODO: 2022-01-21 make translatable
+        setTitle(R.string.mathTreningGame_activityTitle);
 
         binding.resultInput.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -86,24 +87,11 @@ public class MathTreningGameActivity extends AppCompatActivity {
         });
 
         gameDataFile = new File(getExternalFilesDir(null), "math_trening_game.json");
-
-        File old = new File(getExternalFilesDir(null), "multiplication_game_statistics.json");
-        if (old.exists()) {
-            old.renameTo(gameDataFile);
-        }
-
-        // TODO: 2022-01-21 delete non used data fixer
-
-        old = new File(getExternalFilesDir(null), "multiplication_game.json");
-        if (old.exists()) {
-            old.renameTo(gameDataFile);
-        }
-
-        gameData = MathTreningGameData.load(gameDataFile);
+        gameData = (MathTreningGameData) DataUtil.load(gameDataFile, MathTreningGameData.class);
         saveAll();
 
         clearInput();
-        updateScore();
+        updateStatisticText();
         regenerate();
     }
 
@@ -118,8 +106,8 @@ public class MathTreningGameActivity extends AppCompatActivity {
         super.onResume();
 
         clearInput();
-        updateScore();
         regenerate();
+        updateStatisticText();
     }
 
     @Override
@@ -130,12 +118,24 @@ public class MathTreningGameActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.resetAllProgressItem) {
+        if (item.getItemId() == R.id.resetScoreItem) {
             gameData.score = 0;
             saveAll();
 
             open(this);
             finish();
+        } else if (item.getItemId() == R.id.resetSpeedItem) {
+            starts = new long[SPEED_ITEMS];
+            durations = new long[SPEED_ITEMS];
+            speed = 0;
+            speedI = 0;
+            updateStatisticText();
+        } else if (item.getItemId() == R.id.skip) {
+            regenerate();
+        } else if (item.getItemId() == R.id.gameSettings) {
+            new AlertDialog.Builder(this)
+                    .setTitle("g")
+                    .create().show();
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -176,61 +176,60 @@ public class MathTreningGameActivity extends AppCompatActivity {
         } else if (userResult != Integer.MAX_VALUE) {
             gameData.score--;
         }
-        updateScore();
+        updateStatisticText();
         saveAll();
     }
 
     private void regenerate() {
-        int on1 = n1, on2 = n2;
+        float oldN1 = n1, oldN2 = n2;
 
         n1 = random(1);
         n2 = random(2);
 
-        if ((on1 == n1 && on2 == n2)) {
+        if ((oldN1 == n1 && oldN2 == n2)) {
             random = new Random();
             n1 = random(1);
             n2 = random(2);
         }
 
-        if ("*".equals(gameData.action)) {
-            result = n1 * n2;
-        } else if ("-".equals(gameData.action)) {
-            result = n1 - n2;
-        } else if ("/".equals(gameData.action)) {
-            result = n1 / n2;
-        } else if ("+".equals(gameData.action)) {
-            result = n1 + n2;
-        } else {
-            Toast.makeText(this, "Unknown action: " + gameData.action, Toast.LENGTH_SHORT).show();
-            // TODO: 2022-01-21 make translatable
-            gameData.action = "*";
-            regenerate();
-        }
+        result = calculate(gameData.action, n1, n2);
 
         binding.taskText.setText(String.format("%s %s %s", n1, gameData.action, n2));
         speedI++;
-        if (speedI >= M) speedI = 0;
+        if (speedI >= SPEED_ITEMS) speedI = 0;
 
         starts[speedI] = System.currentTimeMillis();
     }
 
-    private void updateScore() {
-        binding.score.setText(String.format("Score: %s; Speed: %s", gameData.score, round(speed, 2)));
-        // TODO: 2022-01-21 make translatable
-    }
-
-    public double round(double d, int numbers) {
-        double f = Math.pow(10, numbers);
-        double i = d * f;
-        return Math.round(i) / f;
-    }
-
-    private int random(int i) {
-        int rangeMax = 0, rangeMin = 0;
-        if (i == 1) {
-            rangeMax = gameData.n1RangeMax;
-            rangeMin = gameData.n1RangeMin;
+    private float calculate(String action, float n1, float n2) {
+        if ("*".equals(action)) {
+            return n1 * n2;
+        } else if ("-".equals(action)) {
+            return n1 - n2;
+        } else if ("/".equals(action)) {
+            return n1 / n2;
+        } else if ("+".equals(action)) {
+            return n1 + n2;
+        } else if ("pow".equals(action)) {
+            return (float) Math.pow(n1, n2);
         } else {
+            Toast.makeText(this, "Unknown action: " + action, Toast.LENGTH_SHORT).show();
+            return Float.MAX_VALUE;
+        }
+    }
+
+    private void updateStatisticText() {
+        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score), String.valueOf(round(speed, 2))));
+    }
+
+    public static double round(double d, int numbers) {
+        double f = Math.pow(10, numbers);
+        return Math.round(d * f) / f;
+    }
+
+    private int random(int position) {
+        int rangeMax = gameData.n1RangeMax, rangeMin = gameData.n1RangeMin;
+        if (position == 2)  {
             rangeMax = gameData.n2RangeMax;
             rangeMin = gameData.n2RangeMin;
         }
@@ -238,6 +237,6 @@ public class MathTreningGameActivity extends AppCompatActivity {
     }
 
     private void saveAll() {
-        gameData.save(gameDataFile);
+        DataUtil.save(gameDataFile, gameData);
     }
 }
