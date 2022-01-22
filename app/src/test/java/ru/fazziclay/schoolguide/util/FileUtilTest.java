@@ -6,14 +6,14 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
-public class FileUtilUnitTest {
+public class FileUtilTest {
     UUID uuid = UUID.randomUUID();
-    String fileName = "unitTests/testFile.txt";
+    String fileName = "unit_test/fileUtil.txt";
 
     @Test
     public void test() {
         FileUtil.write(fileName, uuid.toString());
-        String read = FileUtil.read(fileName, "default111111");
+        String read = FileUtil.read(fileName, "default");
 
         assertEquals(uuid.toString(), read);
     }
