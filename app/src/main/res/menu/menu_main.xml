@@ -2,4 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/openUpdateCenterItem" android:title="@string/mainOptionMenu_openUpdateCenter"/>
     <item android:id="@+id/openMathTreningGameItem" android:title="@string/mainOptionMenu_openMathTreningGame" />
+    <item android:visible="false" android:id="@+id/openDebugItem" android:title="@string/mainOptionMenu_openDebug" />
 </menu>

@@ -17,6 +17,7 @@
 
     <string name="mainOptionMenu_openUpdateCenter">Открыть центр обновлений</string>
     <string name="mainOptionMenu_openMathTreningGame">Открыть MathTreningGame</string>
+    <string name="mainOptionMenu_openDebug">Открыть отладку</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_resetSpeed">Сбросить скорость</string>

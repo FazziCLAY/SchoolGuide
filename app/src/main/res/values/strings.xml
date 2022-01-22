@@ -20,6 +20,7 @@
 
     <string name="mainOptionMenu_openUpdateCenter">Open update center</string>
     <string name="mainOptionMenu_openMathTreningGame">Open MathTreningGame</string>
+    <string name="mainOptionMenu_openDebug">Open Debug</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_resetSpeed">Reset speed</string>
