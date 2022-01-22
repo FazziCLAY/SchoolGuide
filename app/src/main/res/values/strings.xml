@@ -1,109 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="application_name" translatable="false">SchoolGuide</string>
-    <string name="application_description" translatable="false">Help shoolboys and schoolgirls!</string>
+    <string name="application_description" translatable="false">Help schoolboys and schoolgirls!</string>
 
-    <string name="abc_loading">Loading</string>
-    <string name="abc_error">Error</string>
-    <string name="abc_unknown">Unknown</string>
-    <string name="abc_cancel">Cancel</string>
-    <string name="abc_lessons">Lessons</string>
-    <string name="abc_schedules">Schedules</string>
-    <string name="abc_settings">Settings</string>
-    <string name="abc_create">Create</string>
-    <string name="abc_delete">Delete</string>
-    <string name="abc_save">Save</string>
-    <string name="abc_install">Install</string>
-    <string name="abc_actionBefore">Warning</string>
-    <string name="abc_fillAllFields">Fill in all the fields!</string>
-    <string name="abc_set">Set</string>
-    <string name="abc_empty">Empty</string>
+    <!-- Rewritten v36 -->
+    <string name="updatecenter_loading">Loading</string>
 
-    <string name="mainNotification_lesson_title">%NOW_LESSON%! Left: %TIME_BEFORE_START_REST%</string>
-    <string name="mainNotification_lesson_title_ending">%NOW_LESSON%! Left: %TIME_BEFORE_START_REST%</string>
-    <string name="mainNotification_lesson_content" translatable="false">-1</string>
-    <string name="mainNotification_lesson_content_ending">Next: %NEXT_LESSON%</string>
-    <string name="mainNotification_rest_title">Rest! Left: %TIME_BEFORE_START_LESSON%</string>
-    <string name="mainNotification_rest_title_ending">Rest! Left: %TIME_BEFORE_START_LESSON% (HURRY UP)</string>
-    <string name="mainNotification_rest_content">Next: %NEXT_LESSON%</string>
-    <string name="mainNotification_rest_content_ending">Next: %NEXT_LESSON%</string>
-    <string name="mainNotification_lesson_sub" translatable="false">-1</string>
-    <string name="mainNotification_lesson_sub_ending" translatable="false">-1</string>
-
-    <string name="fab_content_lessons">Add lesson</string>
-    <string name="fab_content_schedules">Add schedule</string>
-
-    <string name="lessonName_hint">Lesson name</string>
-    <string name="scheduleName_hint">Schedule name</string>
-
-    <string name="schedule_lesson_startTime">Start time - %stringer</string>
-    <string name="schedule_lesson_duration">Duration - %stringer</string>
-    <string name="schedule_lesson_duration_title">Duration</string>
-    <string name="schedule_lesson_startTime_title">Start time</string>
-
-    <string name="notificationChannel_main_name">Main</string>
-    <string name="notificationChannel_main_description">The main notification that notified you</string>
-    <string name="notification_foreground_defaultTitle">The application is active</string>
-    <string name="notification_foreground_defaultText">This is necessary to keep the application open</string>
-    <string name="notification_updatechecker_newVersion_subText" translatable="false">" "</string>
-
-
-    <string name="notificationChannel_updatechecker_name">UpdateChecker</string>
-    <string name="notificationChannel_updatechecker_description">Update checker notifications</string>
-
-    <string name="notification_updatechecker_newVersion_title">New version available</string>
-    <string name="notification_updatechecker_newVersion_text">Click to download and install</string>
-
-    <string name="activityTitle_scheduleLessonEdit_edit">Editing lesson for %stringer</string>
-    <string name="activityTitle_scheduleLessonEdit_create">Creating lesson for %stringer</string>
-
-    <string name="lessonEdit_delete_title">Are you sure?</string>
-    <string name="scheduleEdit_delete_title">Are you sure?</string>
-    <string name="scheduleLessonEdit_delete_title">Are you sure?</string>
-
-    <string name="lessonEdit_delete_message">Do you really want to delete this lesson?</string>
-    <string name="scheduleLessonEdit_delete_message">Do you really want to delete this lesson?</string>
-    <string name="scheduleEdit_delete_message">Do you really want to delete this schedule?</string>
-
-    <string name="activityTitle_about">About</string>
-    <string name="activityTitle_updateChecker">Update Center</string>
-    <string name="schedules_createNew_title">Creating new schedule</string>
-    <string name="schedules_createNew_empty">Create empty</string>
-    <string name="schedules_createNew_copyOf">Copy of \'%stringer\'</string>
-    <string name="schedules_createNew_newEmptyName">New empty schedule</string>
-    <string name="schedule_lesson_lessonsNotFound">Lessons not found. Create!</string>
-    <string name="schedules_empty_title">Schedules not found!</string>
-    <string name="schedules_empty_content">Create your schedule + button</string>
-    <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
-    <string name="todaySchedule_todayLessons_title">Today lessons:</string>
-
-    <string name="updatecenter_downloading_title">Downloading</string>
-    <string name="updatecenter_download">Download and Install</string>
-    <string name="updateCenter_title_error">Error</string>
-    <string name="updateCenter_text_error_generic">Unknown error! Code: %stringer</string>
-    <string name="updateCenter_text_error_noNetworkConnection">No network connection!</string>
-    <string name="updateCenter_title_updateAvailable">Update available</string>
-    <string name="updateCenter_downloading_title_error">Downloading failed!</string>
-    <string name="updateCenter_downloading_title_success">Downloaded!</string>
-    <string name="updateCenter_title_latest">Updated!</string>
-    <string name="updateCenter_text_latest">Client updated!</string>
-    <string name="updateCenter_title_technicalWorks">Technical Works</string>
-    <string name="updateCenter_text_technicalWorks">Technical Works</string>
-
-    <string name="settings_notification_clickAction_fullSchedule">Full Schedule</string>
-    <string name="settings_notification_clickAction_todaySchedule">Today lessons</string>
-    <string name="settings_isSyncDeveloperSchedule" translatable="false">Синхронизизация с расписанием разработчика</string>
-    <string name="settings_notification_clickAction_none">None</string>
-    <string name="settings_selectedLocalSchedule_empty"><![CDATA[<Not schedules>]]></string>
-    <string name="settings_checkUpdate">Check Update</string>
-    <string name="settings_userNotificationSinner">User notification</string>
-    <string name="settings_selectedLocalSchedule">Selected schedule</string>
-    <string name="settings_isVibration">Vibration</string>
-    <string name="settings_notificationStyle_clickAction">Notification Click Action</string>
-    <string name="settings_notifyBeforeTime">Начинать уведомлять за %stringer до</string>
-    <string name="settings_notifyBeforeTime_title">Начинать уведомлять за столько время до...</string>
-    <string name="abc_add">Add</string>
-    <string name="abc_edit">Edit</string>
-    <string name="updatecenter_loading">_Загрузка</string>
-    <string name="mainOptionMenu_openUpdateCenter">Open Settings</string>
+    <string name="mainOptionMenu_openUpdateCenter">Open update center</string>
     <string name="mainOptionMenu_openMathTreningGame">Open MathTreningGame</string>
+
+
+    <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
+    <string name="mathTreningGame_optionMenu_resetSpeed">Reset speed</string>
+    <string name="mathTreningGame_optionMenu_resetScore">Reset score</string>
+    <string name="mathTreningGame_optionMenu_skip">Skip</string>
+    <string name="mathTreningGame_optionMenu_gameSettings">Game settings</string>
+
+    <string name="mathTreningGame_statistic">Score: %s Speed: %s</string>
+    <string name="mathTreningGame_resultInput_hint">Result</string>
+
+    <string name="presetList_add">Add</string>
 </resources>

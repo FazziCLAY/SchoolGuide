@@ -1,81 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="abc_settings">Настройки</string>
-    <string name="abc_lessons">Уроки</string>
-    <string name="abc_schedules">Расписания</string>
-    <string name="abc_delete">Удалить</string>
-    <string name="abc_save">Сохранить</string>
-    <string name="abc_fillAllFields">Заполните все поля!</string>
-    <string name="fab_content_lessons">Добавить урок</string>
-    <string name="fab_content_schedules">Добавить расписание</string>
-    <string name="settings_isVibration">Вибрация</string>
-    <string name="lessonName_hint">Имя урока</string>
-    <string name="scheduleName_hint">Имя расписания</string>
-    <string name="schedule_lesson_startTime">Время начала - %stringer</string>
-    <string name="schedule_lesson_duration">Длительность - %stringer</string>
-    <string name="schedule_lesson_duration_title">Длительность</string>
-    <string name="schedule_lesson_startTime_title">Время начала</string>
-    <string name="notificationChannel_main_name">Главное</string>
-    <string name="notificationChannel_main_description">Главное уведомление которое уведомляет вас</string>
-    <string name="notification_foreground_defaultTitle">Приложение активно</string>
-    <string name="notification_foreground_defaultText">Это необходимо, чтобы приложение оставалось открытым</string>
-    <string name="notificationChannel_updatechecker_name">Проверка новых версий</string>
-    <string name="notificationChannel_updatechecker_description">Уведомит вас о выходе новой версии</string>
-    <string name="notification_updatechecker_newVersion_title">Новая версия SchoolGuide доступна!</string>
-    <string name="notification_updatechecker_newVersion_text">Нажмите что бы скачать и установить</string>
-    <string name="abc_cancel">Отмена</string>
-    <string name="lessonEdit_delete_title">Вы уверены?</string>
-    <string name="lessonEdit_delete_message">Вы действительно хотите удалить этот урок?</string>
-    <string name="scheduleEdit_delete_title">Вы уверены?</string>
-    <string name="scheduleEdit_delete_message">Вы действительно хотите удалить это расписание?</string>
-    <string name="scheduleLessonEdit_delete_title">Вы уверены?</string>
-    <string name="scheduleLessonEdit_delete_message">Вы действительно хотите удалить этот урок?</string>
-    <string name="activityTitle_scheduleLessonEdit_edit">Редактирование урока на %stringer</string>
-    <string name="activityTitle_scheduleLessonEdit_create">Создание урока на %stringer</string>
-    <string name="activityTitle_about">О приложении</string>
-    <string name="abc_loading">Загрузка</string>
-    <string name="updatecenter_downloading_title">Скачивание</string>
-    <string name="updatecenter_download">Скачать и Установить</string>
-    <string name="abc_install">Установить</string>
-    <string name="abc_error">Ошибка</string>
-    <string name="activityTitle_updateChecker">Центр обновлений</string>
-    <string name="updateCenter_downloading_title_success">Скачано!</string>
-    <string name="updateCenter_downloading_title_error">Ошибка скачивания!</string>
-    <string name="updateCenter_title_updateAvailable">Доступно обновление</string>
-    <string name="updateCenter_text_error_noNetworkConnection">Нету соеденения с интернетом</string>
-    <string name="updateCenter_text_error_generic">Неизвестная ошибка! Код: %stringer</string>
-    <string name="updateCenter_title_error">Ошибка</string>
-    <string name="updateCenter_title_latest">Обновлено!</string>
-    <string name="updateCenter_text_latest">Ваша версия последняя, обновления не требуется!</string>
-    <string name="schedules_createNew_copyOf">Копия \'%stringer\'</string>
-    <string name="schedules_createNew_title">Создание нового расписания</string>
-    <string name="abc_create">Создать</string>
-    <string name="schedules_createNew_empty">Создать пустой</string>
-    <string name="schedules_createNew_newEmptyName">Новое пустое расписание</string>
-    <string name="abc_actionBefore">Внимание</string>
-    <string name="schedule_lesson_lessonsNotFound">Уроков не найдено. Создайте!</string>
-    <string name="updateCenter_title_technicalWorks">Технические работы</string>
-    <string name="updateCenter_text_technicalWorks">Извените. На сервере технические работы!</string>
-    <string name="settings_selectedLocalSchedule">Выбранное расписание</string>
-    <string name="settings_userNotificationSinner">Уведомление польхователя</string>
-    <string name="abc_unknown">Неизвестный</string>
-    <string name="settings_checkUpdate">Проверить обновления</string>
-    <string name="settings_selectedLocalSchedule_empty"><![CDATA[<Расписаний нету>]]></string>
-    <string name="abc_set">Установить</string>
-    <string name="scheduleEdit_emptyDay"><![CDATA[<Пусто>]]></string>
-    <string name="mainNotification_lesson_title">%NOW_LESSON%! Осталось: %TIME_BEFORE_START_REST%</string>
-    <string name="mainNotification_lesson_content_ending">Слудующий: %NEXT_LESSON%</string>
-    <string name="mainNotification_rest_title">Перемена! Осталось: %TIME_BEFORE_START_LESSON%</string>
-    <string name="mainNotification_rest_title_ending">Перемена! Осталось: %TIME_BEFORE_START_LESSON% (ОЧЕНЬ СКОРО)</string>
-    <string name="mainNotification_rest_content">След. урок: %NEXT_LESSON%</string>
-    <string name="mainNotification_rest_content_ending">След. урок: %NEXT_LESSON%</string>
-    <string name="abc_empty">Пусто</string>
-    <string name="mainNotification_lesson_title_ending">%NOW_LESSON%! Осталось: %TIME_BEFORE_START_REST%</string>
-    <string name="schedules_empty_title">Расписаний не найдено!</string>
-    <string name="schedules_empty_content">Создайте своё расписание кнопкой + в низу!</string>
-    <string name="todaySchedule_todayLessons_title">Уроки сегодня:</string>
-    <string name="settings_notification_clickAction_fullSchedule">Полное расписание</string>
-    <string name="settings_notification_clickAction_todaySchedule">Уроки на сегодня</string>
-    <string name="settings_notification_clickAction_none">Ничего</string>
-    <string name="settings_notificationStyle_clickAction">Действие при нажатии на уведомление</string>
+    <!-- Rewtitten v36 -->
+    <string name="updatecenter_loading">Загрузка</string>
+
+    <string name="mainOptionMenu_openUpdateCenter">Открыть центр обновлений</string>
+    <string name="mainOptionMenu_openMathTreningGame">Открыть MathTreningGame</string>
+
+    <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
+    <string name="mathTreningGame_optionMenu_resetSpeed">Сбросить скорость</string>
+    <string name="mathTreningGame_optionMenu_resetScore">Сбросить счёт</string>
+    <string name="mathTreningGame_optionMenu_skip">Пропустить</string>
+    <string name="mathTreningGame_optionMenu_gameSettings">Настройки игры</string>
+
+    <string name="mathTreningGame_statistic">Счёт: %s Скорость: %s</string>
+    <string name="mathTreningGame_resultInput_hint">Результат</string>
+
+    <string name="presetList_add">Добавить</string>
 </resources>
