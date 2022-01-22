@@ -52,11 +52,7 @@ public class PresetListActivity extends AppCompatActivity {
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.game.setOnClickListener(ignore -> {
-            //MultiplicationGameActivity.open(this, false);
-            startActivity(new Intent(this, UpdateCenterActivity.class));
-        });
-        binding.createPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
+        binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
 
         updateList();
     }

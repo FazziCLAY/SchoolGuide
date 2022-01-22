@@ -39,14 +39,16 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_edit"
             android:layout_marginBottom="16sp"
-            android:contentDescription="@string/abc_edit" />
+            android:contentDescription="edit" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_input_add"
-            android:contentDescription="@string/abc_add" />
+            android:contentDescription="" />
+
+        <!-- TODO: make translatable -->
 
     </LinearLayout>
 </RelativeLayout>
