@@ -31,5 +31,5 @@
 
     <string name="presetList_add">Add</string>
 
-    <string name="presetEdit_activityTitle" translatable="false">Preset %s</string>
+    <string name="presetEdit_activityTitle">Preset \'%s\'</string>
 </resources>
