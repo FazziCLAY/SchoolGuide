@@ -8,13 +8,18 @@ import java.util.UUID;
 
 public class UUIDUtilTest {
     @Test
-    public void test() {
+    public void exclusions() {
         UUID exclusion = new UUID(0, 0);
         UUID[] exclusions = {
                 exclusion
         };
 
-        UUID uuid = UUIDUtil.generateUUID(exclusions);
-        assertNotEquals(exclusion, uuid);
+        int i = 0;
+        final int MAX = 100000;
+        while (i < MAX) {
+            UUID uuid = UUIDUtil.generateUUID(exclusions);
+            assertNotEquals(exclusion, uuid);
+            i++;
+        }
     }
 }
