@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.Random;
 
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.databinding.ActivityMultiplicationTreningBinding;
+import ru.fazziclay.schoolguide.databinding.ActivityMathTreningGameBinding;
 import ru.fazziclay.schoolguide.util.DataUtil;
 
 
@@ -30,7 +30,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
     private File gameDataFile;
     private MathTreningGameData gameData;
 
-    ActivityMultiplicationTreningBinding binding;
+    ActivityMathTreningGameBinding binding;
     Random random = new Random();
 
     private static final int SPEED_ITEMS = 15;
@@ -48,7 +48,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMultiplicationTreningBinding.inflate(getLayoutInflater());
+        binding = ActivityMathTreningGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setTitle(R.string.mathTreningGame_activityTitle);
 
