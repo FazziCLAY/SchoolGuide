@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Rewtitten v36 -->
+    <string name="updatecenter_activityTitle">SchoolGuide - Центр обновлений</string>
     <string name="updatecenter_loading">Загрузка</string>
+    <string name="updatecenter_error_title">Ошибка :(</string>
+    <string name="updatecenter_error_unknownHost_text">$[-#ff2222]Отсутствует подключение к $[@bold]интернету$[@reset]!</string>
+    <string name="updatecenter_error_unknownHost_reload">Перезагрузить</string>
+    <string name="updatecenter_error_fileNotFound_text">"$[@bold;-#ff0000]Сервис закрыт :($[@reset;-reset]\nПриложение не смогло найти последнюю версию, $[@bold;-#dddddd]очень рекомендуем зайти на страницу проекта:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
+    <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Неизвестная ошибка.$[@reset;-reset]\nПриложение не смогло распознать ошибку, скорее всего сейчас технические неполадки\nОшибка: $[=#080607;-#cc0000;=#000000]%s</string>
+    <string name="updatecenter_updated_title">Обновлено</string>
+    <string name="updatecenter_updated_text">$[-#a0a0ff]Сейчас у вас установлена $[@bold;-#7070ff]самая последняя$[@reset;-#a0a0ff] версия, так держать!</string>
+    <string name="updatecenter_outdated_title">Доступно обновление\n%s</string>
+    <string name="updatecenter_outdated_changelogEmpty_text">Список изменений пуст.</string>
+    <string name="updatecenter_outdated_openDownloadLink">Загрузить</string>
+    <string name="updatecenter_outdated_downloadError_activityNotFound">Пожалуйста установите web-браузер (например FireFox)</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Открыть центр обновлений</string>
     <string name="mainOptionMenu_openMathTreningGame">Открыть MathTreningGame</string>

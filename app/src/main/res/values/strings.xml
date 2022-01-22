@@ -4,20 +4,32 @@
     <string name="application_description" translatable="false">Help schoolboys and schoolgirls!</string>
 
     <!-- Rewritten v36 -->
+    <string name="updatecenter_activityTitle">SchoolGuide - Update Center</string>
     <string name="updatecenter_loading">Loading</string>
+    <string name="updatecenter_error_title">Error :(</string>
+    <string name="updatecenter_error_unknownHost_text">$[-#ff2222]No $[@bold]network$[@reset] connection!</string>
+    <string name="updatecenter_error_unknownHost_reload">Reload</string>
+    <string name="updatecenter_error_fileNotFound_text">"$[@bold;-#ff0000]The service is closed :($[@reset;-reset]\nThe app couldn't find the latest version, $[@bold;-#dddddd]we recommend going to the project page:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
+    <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Unknown error.$[@reset;-reset]\nThe application could not recognize the error, most likely there are technical problems now\nError:$[=#080607;-#cc0000;=#000000] %s</string>
+    <string name="updatecenter_updated_title">Updated</string>
+    <string name="updatecenter_updated_text">$[-#a0a0ff]The $[@bold;-#7070ff]latest version$[@reset;-#a0a0ff] is currently installed</string>
+    <string name="updatecenter_outdated_title">Update available\n%s</string>
+    <string name="updatecenter_outdated_changelogEmpty_text">Change log is null.</string>
+    <string name="updatecenter_outdated_openDownloadLink">Download</string>
+    <string name="updatecenter_outdated_downloadError_activityNotFound">Please install web browser (for example FireFox)</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Open update center</string>
     <string name="mainOptionMenu_openMathTreningGame">Open MathTreningGame</string>
-
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_resetSpeed">Reset speed</string>
     <string name="mathTreningGame_optionMenu_resetScore">Reset score</string>
     <string name="mathTreningGame_optionMenu_skip">Skip</string>
     <string name="mathTreningGame_optionMenu_gameSettings">Game settings</string>
-
     <string name="mathTreningGame_statistic">Score: %s Speed: %s</string>
     <string name="mathTreningGame_resultInput_hint">Result</string>
 
     <string name="presetList_add">Add</string>
+
+    <string name="presetEdit_activityTitle" translatable="false">Preset %s</string>
 </resources>
