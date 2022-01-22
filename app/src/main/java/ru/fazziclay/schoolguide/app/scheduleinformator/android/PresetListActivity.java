@@ -2,6 +2,7 @@ package ru.fazziclay.schoolguide.app.scheduleinformator.android;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -166,6 +167,7 @@ public class PresetListActivity extends AppCompatActivity {
                 TextView textView = new TextView(PresetListActivity.this);
                 textView.setText(preset == null ? "(null)" : preset.getName());
                 textView.setTextSize(30);
+                textView.setTextColor(Color.WHITE);
                 textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 textView.setOnClickListener(view -> startActivity(PresetEditActivity.getLaunchIntent(PresetListActivity.this, presetUUID)));
 
