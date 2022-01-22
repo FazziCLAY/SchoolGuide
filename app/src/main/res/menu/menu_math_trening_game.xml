@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/resetScoreItem" android:title="@string/mathTreningGame_optionMenu_resetScore" />
-    <item android:id="@+id/resetSpeedItem" android:title="@string/mathTreningGame_optionMenu_resetSpeed" />
-    <item android:id="@+id/skip" android:title="@string/mathTreningGame_optionMenu_skip" />
     <item android:id="@+id/gameSettings" android:title="@string/mathTreningGame_optionMenu_gameSettings" />
+    <item android:id="@+id/skip" android:title="@string/mathTreningGame_optionMenu_skip" />
 </menu>

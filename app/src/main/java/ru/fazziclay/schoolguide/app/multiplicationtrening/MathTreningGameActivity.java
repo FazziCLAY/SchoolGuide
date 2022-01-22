@@ -1,17 +1,22 @@
 package ru.fazziclay.schoolguide.app.multiplicationtrening;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
@@ -38,12 +43,15 @@ public class MathTreningGameActivity extends AppCompatActivity {
     private double speed = 0;
 
     private int speedI = 0;
-    private long[] starts = new long[SPEED_ITEMS];
-    private long[] durations = new long[SPEED_ITEMS];
+    private final long[] starts = new long[SPEED_ITEMS];
+    private final long[] durations = new long[SPEED_ITEMS];
 
     private float n1;
     private float n2;
     private float result;
+
+    Handler timeUpdateHandler;
+    Runnable timeUpdateRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 int cursor = binding.resultInput.getSelectionStart();
+                if (cursor < 0) return;
                 String text = binding.resultInput.getText().toString();
                 int number = toInt(text);
                 if (text.contains(".") || text.contains("-")) {
@@ -77,7 +86,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
                             .replace(".", "")
                             .replace("-", "");
                     binding.resultInput.setText(text);
-                    binding.resultInput.setSelection(cursor-1);
+                    binding.resultInput.setSelection(Math.max(cursor - 1, 0));
                 }
                 if (!text.equals(String.valueOf(number)) && number != Integer.MAX_VALUE) {
                     binding.resultInput.setText(String.valueOf(number));
@@ -93,6 +102,13 @@ public class MathTreningGameActivity extends AppCompatActivity {
         clearInput();
         updateStatisticText();
         regenerate();
+
+        timeUpdateHandler = new Handler(getMainLooper());
+        timeUpdateRunnable = () -> {
+            updateStatisticText();
+            timeUpdateHandler.postDelayed(timeUpdateRunnable, 20);
+        };
+        timeUpdateHandler.post(timeUpdateRunnable);
     }
 
     @Override
@@ -118,28 +134,73 @@ public class MathTreningGameActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.resetScoreItem) {
-            gameData.score = 0;
-            saveAll();
-
-            open(this);
-            finish();
-        } else if (item.getItemId() == R.id.resetSpeedItem) {
-            starts = new long[SPEED_ITEMS];
-            durations = new long[SPEED_ITEMS];
-            speed = 0;
-            speedI = 0;
-            updateStatisticText();
-        } else if (item.getItemId() == R.id.skip) {
+        if (item.getItemId() == R.id.skip) {
             regenerate();
+
         } else if (item.getItemId() == R.id.gameSettings) {
-            new AlertDialog.Builder(this)
-                    .setTitle("g")
-                    .create().show();
+            showSetting();
+
         } else {
             return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void showSetting() {
+        String[] actions = new String[]{"+", "-", "*", "/", "^"};
+        int selected = 0;
+        for (String s : actions) {
+            if (gameData.action.equals(s)) break;
+            selected++;
+        }
+
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_math_trening_game_settings);
+
+        Spinner spinner = dialog.findViewById(R.id.action);
+        spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, actions));
+        spinner.setSelection(selected);
+
+        EditText n1min = dialog.findViewById(R.id.n1min);
+        n1min.setText(String.valueOf(gameData.n1RangeMin));
+        EditText n1max = dialog.findViewById(R.id.n1max);
+        n1max.setText(String.valueOf(gameData.n1RangeMax));
+        EditText n2min = dialog.findViewById(R.id.n2min);
+        n2min.setText(String.valueOf(gameData.n2RangeMin));
+        EditText n2max = dialog.findViewById(R.id.n2max);
+        n2max.setText(String.valueOf(gameData.n2RangeMax));
+
+        Button cancel = dialog.findViewById(R.id.cancel);
+        Button save = dialog.findViewById(R.id.save);
+
+        cancel.setOnClickListener(ignore -> {
+            starts[speedI] = System.currentTimeMillis();
+            dialog.cancel();
+        });
+
+        save.setOnClickListener(ignore -> {
+            String newAction = actions[spinner.getSelectedItemPosition()];
+            int newN1min = toInt(n1min.getText().toString());
+            int newN1max = toInt(n1max.getText().toString());
+            int newN2min = toInt(n2min.getText().toString());
+            int newN2max = toInt(n2max.getText().toString());
+            if (newN1max == Integer.MAX_VALUE || newN2max == Integer.MAX_VALUE || newN1min == Integer.MAX_VALUE || newN2min == Integer.MAX_VALUE) {
+                Toast.makeText(this, "Number error!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            gameData.action = newAction;
+            gameData.n1RangeMin = newN1min;
+            gameData.n1RangeMax = newN1max;
+            gameData.n2RangeMin = newN2min;
+            gameData.n2RangeMax = newN2max;
+            saveAll();
+
+            regenerate();
+            dialog.cancel();
+        });
+
+        dialog.show();
     }
 
     private void clearInput() {
@@ -210,7 +271,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
             return n1 / n2;
         } else if ("+".equals(action)) {
             return n1 + n2;
-        } else if ("pow".equals(action)) {
+        } else if ("^".equals(action)) {
             return (float) Math.pow(n1, n2);
         } else {
             Toast.makeText(this, "Unknown action: " + action, Toast.LENGTH_SHORT).show();
@@ -219,14 +280,14 @@ public class MathTreningGameActivity extends AppCompatActivity {
     }
 
     private String createTaskText() {
-        if ("pow".equals(gameData.action)) {
-            return String.format("%s^(%s)", n1, n2);
+        if ("^".equals(gameData.action)) {
+            return String.format("%s^(%s)", Math.round(n1), Math.round(n2));
         }
-        return String.format("%s %s %s", n1, gameData.action, n2);
+        return String.format("%s %s %s", Math.round(n1), gameData.action, Math.round(n2));
     }
 
     private void updateStatisticText() {
-        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score), String.valueOf(round(speed, 2))));
+        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score), String.valueOf(round(speed, 2)), String.valueOf(System.currentTimeMillis() - starts[speedI])));
     }
 
     public static double round(double d, int numbers) {
