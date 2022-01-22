@@ -8,8 +8,6 @@ import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -148,25 +146,19 @@ public class ColorUtil {
             if (appendNew) ni++;
         }
 
-
-        //spanTextList.add(new SpanText("m1", Color.RED, Color.BLUE, Typeface.BOLD, 0));
-        //spanTextList.add(new SpanText("m2", Color.GREEN, Color.WHITE, Typeface.ITALIC, 2));
-
         StringBuilder fullText = new StringBuilder();
         for (SpanText spanText : spanTextList) {
             fullText.append(spanText.text);
         }
 
         SpannableString spannableText = new SpannableString(fullText.toString());
-        Log.d("f", spannableText.toString());
-        Log.d("f", Arrays.toString(spanTextList.toArray()));
+        Log.d("SpannableText", spannableText.toString());
+        Log.d("SpanTextList", Arrays.toString(spanTextList.toArray()));
         int i = 0;
         while (i < spanTextList.size()) {
             SpanText spanText = spanTextList.get(i);
             int start = Math.min(spanText.start, spannableText.length());
             int end = Math.min(spanText.end, spannableText.length());
-            //int start = 1;
-            //int end = 2;
 
             spannableText.setSpan(new ForegroundColorSpan(spanText.fgColor), start, end, Spannable.SPAN_COMPOSING);
             spannableText.setSpan(new BackgroundColorSpan(spanText.bgColor), start, end, Spanned.SPAN_COMPOSING);
@@ -213,7 +205,7 @@ public class ColorUtil {
                     ", style=" + style +
                     ", start=" + start +
                     ", end=" + end +
-                    '}'; // TODO: 2022-01-21 remove
+                    '}';
         }
     }
 }

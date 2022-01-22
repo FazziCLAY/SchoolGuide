@@ -194,7 +194,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
 
         result = calculate(gameData.action, n1, n2);
 
-        binding.taskText.setText(String.format("%s %s %s", n1, gameData.action, n2));
+        binding.taskText.setText(createTaskText());
         speedI++;
         if (speedI >= SPEED_ITEMS) speedI = 0;
 
@@ -216,6 +216,13 @@ public class MathTreningGameActivity extends AppCompatActivity {
             Toast.makeText(this, "Unknown action: " + action, Toast.LENGTH_SHORT).show();
             return Float.MAX_VALUE;
         }
+    }
+
+    private String createTaskText() {
+        if ("pow".equals(gameData.action)) {
+            return String.format("%s^(%s)", n1, n2);
+        }
+        return String.format("%s %s %s", n1, gameData.action, n2);
     }
 
     private void updateStatisticText() {

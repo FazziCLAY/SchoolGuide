@@ -3,6 +3,7 @@ package ru.fazziclay.schoolguide.app.scheduleinformator;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -87,7 +88,8 @@ public class ScheduleInformatorApp {
                 return getCurrentPreset();
             }
             p = new Preset();
-            p.setName("(PRESET_NULL)"); // TODO: 2022-01-20 fix?
+            p.setName("(PRESET_NULL)");
+            Log.e("ERROR", "getCurrentPreset: null");
         }
         return p;
     }

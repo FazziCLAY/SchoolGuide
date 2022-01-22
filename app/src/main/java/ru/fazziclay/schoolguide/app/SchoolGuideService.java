@@ -1,12 +1,10 @@
 package ru.fazziclay.schoolguide.app;
 
-import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -38,12 +36,10 @@ public class SchoolGuideService extends Service {
                     try {
                         remoteManifest = NetworkUtil.parseTextPage(SharedConstrains.VERSION_MANIFEST_V2);
                         Manifest manifest = app.getGson().fromJson(remoteManifest, Manifest.class);
-                        runOnUiThread(() -> {
-                            app.getScheduleInformatorApp().sendNotify(10, new NotificationCompat.Builder(SchoolGuideService.this, ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE)
-                                    .setSmallIcon(R.mipmap.ic_launcher)
-                                    .setContentTitle(manifest.latest.release.getChangelog())
-                                    .build());
-                        });
+                        runOnUiThread(() -> app.getScheduleInformatorApp().sendNotify(10, new NotificationCompat.Builder(SchoolGuideService.this, ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle(manifest.latest.release.getChangelog())
+                                .build()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
