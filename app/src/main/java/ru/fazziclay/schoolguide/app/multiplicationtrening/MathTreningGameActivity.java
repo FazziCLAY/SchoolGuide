@@ -41,6 +41,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
     private static final int SPEED_ITEMS = 15;
 
     private double speed = 0;
+    private double stableSpeed = 0;
 
     private int speedI = 0;
     private final long[] starts = new long[SPEED_ITEMS];
@@ -98,6 +99,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
 
         timeUpdateHandler = new Handler(getMainLooper());
         timeUpdateRunnable = () -> {
+            updateSpeed();
             updateStatisticText();
             timeUpdateHandler.postDelayed(timeUpdateRunnable, 20);
         };
@@ -214,16 +216,8 @@ public class MathTreningGameActivity extends AppCompatActivity {
         int userResult = toInt(userInput);
         clearInput();
         if (userResult == result) {
-            durations[speedI] = System.currentTimeMillis() - starts[speedI];
-
-            long sum = 0;
-            int len = 0;
-            for (long dur : durations) {
-                if (dur == 0) continue;
-                sum += dur;
-                len++;
-            }
-            speed = 1000 / (((double) sum) / ((double)len));
+            updateSpeed();
+            stableSpeed = speed;
 
             gameData.score++;
             regenerate();
@@ -232,6 +226,19 @@ public class MathTreningGameActivity extends AppCompatActivity {
         }
         updateStatisticText();
         saveAll();
+    }
+
+    private void updateSpeed() {
+        durations[speedI] = System.currentTimeMillis() - starts[speedI];
+
+        long sum = 0;
+        int len = 0;
+        for (long dur : durations) {
+            if (dur == 0) continue;
+            sum += dur;
+            len++;
+        }
+        speed = 1000 / (((double) sum) / ((double)len));
     }
 
     private void regenerate() {
@@ -280,7 +287,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
     }
 
     private void updateStatisticText() {
-        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score), String.valueOf(round(speed, 2)), String.valueOf(System.currentTimeMillis() - starts[speedI])));
+        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score), String.valueOf(round(stableSpeed, 2)), String.valueOf(round(speed, 2)), String.valueOf(System.currentTimeMillis() - starts[speedI])));
     }
 
     public static double round(double d, int numbers) {

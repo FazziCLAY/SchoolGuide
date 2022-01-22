@@ -27,7 +27,7 @@
     <string name="mathTreningGame_optionMenu_resetScore">Reset score</string>
     <string name="mathTreningGame_optionMenu_skip">Skip</string>
     <string name="mathTreningGame_optionMenu_gameSettings">Game settings</string>
-    <string name="mathTreningGame_statistic">Score: %s Speed: %s Time: %s</string>
+    <string name="mathTreningGame_statistic">Score: %s Speed: %s(%s) Time: %s</string>
     <string name="mathTreningGame_resultInput_hint">Result</string>
     <string name="mathTreningGame_settings_title">Game Settings</string>
     <string name="mathTreningGame_settings_action">Action:</string>

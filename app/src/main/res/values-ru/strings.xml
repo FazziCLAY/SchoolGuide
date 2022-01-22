@@ -24,7 +24,7 @@
     <string name="mathTreningGame_optionMenu_resetScore">Сбросить счёт</string>
     <string name="mathTreningGame_optionMenu_skip">Пропустить</string>
     <string name="mathTreningGame_optionMenu_gameSettings">Настройки игры</string>
-    <string name="mathTreningGame_statistic">Счёт: %s Скорость: %s Время: %s</string>
+    <string name="mathTreningGame_statistic">Счёт: %s Скорость: %s(%s) Время: %s</string>
     <string name="mathTreningGame_resultInput_hint">Результат</string>
     <string name="mathTreningGame_settings_title">Настройки игры</string>
     <string name="mathTreningGame_settings_action">Действие:</string>
