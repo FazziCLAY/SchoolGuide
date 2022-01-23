@@ -17,6 +17,8 @@
     <string name="updatecenter_outdated_changelogEmpty_text">Change log is null.</string>
     <string name="updatecenter_outdated_openDownloadLink">Download</string>
     <string name="updatecenter_outdated_downloadError_activityNotFound">Please install web browser (for example FireFox)</string>
+    <string name="updatecenter_notification_title">Update Available</string>
+    <string name="updatecenter_notification_text">Please download app update</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Open update center</string>
     <string name="mainOptionMenu_openMathTreningGame">Open MathTreningGame</string>
@@ -51,6 +53,7 @@
     <string name="presetEdit_colorScheme_apply">Apply</string>
     <string name="presetEdit_colorScheme_title">Color Scheme</string>
     <string name="presetEdit_colorScheme_cancel">Cancel</string>
+    <string name="presetEdit_addEvent_contentDescription">Add event</string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Schedule (NOW)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Now there is something planned</string>
@@ -58,5 +61,6 @@
     <string name="notificationChannel_scheduleInformator_scheduleNext_description">Next there is something planned</string>
     <string name="notificationChannel_scheduleInformator_scheduleNone_name">Schedule (NONE)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNone_description">Now there is nothing planned and soon there is nothing planned</string>
-    <string name="presetEdit_addEvent_contentDescription">Add event</string>
+    <string name="notificationChannel_updateCenter_name">Update Center</string>
+    <string name="notificationChannel_updateCenter_description">New update notification</string>
 </resources>

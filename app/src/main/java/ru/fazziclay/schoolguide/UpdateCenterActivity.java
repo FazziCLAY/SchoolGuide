@@ -2,12 +2,8 @@ package ru.fazziclay.schoolguide;
 
 import static android.view.View.GONE;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,6 +12,10 @@ import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.gson.Gson;
 
@@ -30,19 +30,20 @@ import ru.fazziclay.schoolguide.util.ColorUtil;
 import ru.fazziclay.schoolguide.util.NetworkUtil;
 
 public class UpdateCenterActivity extends AppCompatActivity {
-    ActivityUpdateCenterBinding binding;
-    SchoolGuideApp app;
-    Gson gson;
-    Manifest manifest;
+    public static final int NOTIFICATION_ID = 2000;
+    public static final String NOTIFICATION_CHANNEL_ID = "updatecenter";
 
-    public static void open(@NonNull Activity activity) {
-        activity.startActivity(new Intent(activity, UpdateCenterActivity.class));
+    private ActivityUpdateCenterBinding binding;
+    private Gson gson;
+
+    public static Intent getLaunchIntent(@NonNull Context context) {
+        return new Intent(context, UpdateCenterActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        app = SchoolGuideApp.get(this);
+        SchoolGuideApp.get(this);
         gson = new Gson();
 
         try {
@@ -151,7 +152,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
         }
         try {
             String fileContent = NetworkUtil.parseTextPage(SharedConstrains.VERSION_MANIFEST_V2);
-            manifest = gson.fromJson(fileContent, Manifest.class);
+            Manifest manifest = gson.fromJson(fileContent, Manifest.class);
 
             if (manifest.latest.release.getCode() > SharedConstrains.APPLICATION_VERSION_CODE) {
                 return Status.OUTDATED

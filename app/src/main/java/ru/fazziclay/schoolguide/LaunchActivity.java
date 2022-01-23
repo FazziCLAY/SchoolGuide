@@ -17,7 +17,6 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetListActivity;
 
 public class LaunchActivity extends Activity {
-    SchoolGuideApp app;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,15 +44,19 @@ public class LaunchActivity extends Activity {
             NotificationChannel scheduleInformatorNow = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NOW, getString(R.string.notificationChannel_scheduleInformator_scheduleNow_name), NotificationManager.IMPORTANCE_DEFAULT);
             scheduleInformatorNow.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNow_description));
 
+            NotificationChannel updateCenter = new NotificationChannel(UpdateCenterActivity.NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updateCenter_name), NotificationManager.IMPORTANCE_DEFAULT);
+            updateCenter.setDescription(getString(R.string.notificationChannel_updateCenter_description));
+
             notificationManager.createNotificationChannel(scheduleInformatorNone);
             notificationManager.createNotificationChannel(scheduleInformatorNext);
             notificationManager.createNotificationChannel(scheduleInformatorNow);
+            notificationManager.createNotificationChannel(updateCenter);
         }
 
         startService(new Intent(this, SchoolGuideService.class));
 
-        app = SchoolGuideApp.get(this);
-        startActivity(new Intent(this, PresetListActivity.class)); // TODO: 2022-01-21 change
+        SchoolGuideApp.get(this);
+        startActivity(new Intent(this, PresetListActivity.class));
 
         finish();
     }

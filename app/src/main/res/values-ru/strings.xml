@@ -14,6 +14,8 @@
     <string name="updatecenter_outdated_changelogEmpty_text">Список изменений пуст.</string>
     <string name="updatecenter_outdated_openDownloadLink">Загрузить</string>
     <string name="updatecenter_outdated_downloadError_activityNotFound">Пожалуйста установите web-браузер (например FireFox)</string>
+    <string name="updatecenter_notification_title">Доступно обновление</string>
+    <string name="updatecenter_notification_text">Пожалуйста скачайте новое обновление приложения</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Открыть центр обновлений</string>
     <string name="mainOptionMenu_openMathTreningGame">Открыть MathTreningGame</string>
@@ -48,6 +50,7 @@
     <string name="presetEdit_colorScheme_apply">Применить</string>
     <string name="presetEdit_colorScheme_title">Цветовая схема</string>
     <string name="presetEdit_colorScheme_cancel">Отмена</string>
+    <string name="presetEdit_addEvent_contentDescription">Добавить событие</string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Расписание (СЕЙЧАС)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Уведомляет когда сейчас есть что то запланированное</string>
@@ -55,4 +58,6 @@
     <string name="notificationChannel_scheduleInformator_scheduleNext_description">Уведомляет когда сейчас нету ничего запланированного, но скоро оно появится</string>
     <string name="notificationChannel_scheduleInformator_scheduleNone_name">Расписание (ПУСТО)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNone_description">Уведомляет когда сейчас нету ничего, и в ближайшее настроенное время ничего и не будет</string>
+    <string name="notificationChannel_updateCenter_name">Центр обновлений</string>
+    <string name="notificationChannel_updateCenter_description">Уведомит о новом обновлении приложения</string>
 </resources>

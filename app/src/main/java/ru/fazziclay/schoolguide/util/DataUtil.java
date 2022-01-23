@@ -6,9 +6,9 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 
 public class DataUtil {
-    public static Object load(File file, Class<?> clazz) {
+    public static <T> T load(File file, Class<T> clazz) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Object data = gson.fromJson("{}", clazz);
+        T data = gson.fromJson("{}", clazz);
 
         if (file.exists()) {
             String fileContent = FileUtil.read(file);

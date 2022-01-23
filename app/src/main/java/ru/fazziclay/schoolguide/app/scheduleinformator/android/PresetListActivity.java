@@ -97,7 +97,7 @@ public class PresetListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.openUpdateCenterItem) {
-            UpdateCenterActivity.open(this);
+            startActivity(UpdateCenterActivity.getLaunchIntent(this));
 
         } else if (item.getItemId() == R.id.openMathTreningGameItem) {
             MathTreningGameActivity.open(this);

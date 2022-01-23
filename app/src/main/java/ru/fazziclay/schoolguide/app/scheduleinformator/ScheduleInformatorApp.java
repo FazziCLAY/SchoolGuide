@@ -107,7 +107,7 @@ public class ScheduleInformatorApp {
         boolean isNext = nextEvent != null;
 
         if (!isNow && !isNext) {
-            if (settings.stopServiceIsNone) {
+            if (settings.stopForegroundIsNone) {
                 stopForeground();
             } else {
                 sendNotify(NOTIFICATION_ID, noneNotification);
@@ -116,7 +116,7 @@ public class ScheduleInformatorApp {
         }
 
         if (!isNow && nextEvent.remainsUntilStart() > settings.scheduleNotifyBeforeTime) {
-            if (settings.stopServiceIsNone) {
+            if (settings.stopForegroundIsNone) {
                 stopForeground();
             } else {
                 sendNotify(NOTIFICATION_ID, noneNotification);
@@ -179,6 +179,7 @@ public class ScheduleInformatorApp {
                     .setContentText(contentText)
                     .setSubText(sub)
                     .setSound(null)
+                    .setSilent(true)
                     .setOnlyAlertOnce(true)
                     .build();
         }
