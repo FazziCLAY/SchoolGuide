@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10sp"
-    tools:context=".app.multiplicationtrening.MathTreningGameActivity">
+    android:background="?attr/activityBackground">
 
     <TextView
         android:id="@+id/statistic"

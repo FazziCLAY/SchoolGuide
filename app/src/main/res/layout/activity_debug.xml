@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10sp"
-    tools:context=".DebugActivity">
+    android:background="?attr/activityBackground">
 
     <LinearLayout
         android:id="@+id/textColorizeGroup"

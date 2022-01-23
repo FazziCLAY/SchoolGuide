@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="7sp"
     android:background="?attr/activityBackground">
 
     <LinearLayout
@@ -69,9 +70,7 @@
                 <Button
                     android:id="@+id/actionButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Download And Install"/>
-                <!-- TODO: make translatable -->
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
