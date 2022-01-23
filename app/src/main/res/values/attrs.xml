@@ -6,5 +6,6 @@
         <attr name="textViewButtonBackgroundColor" format="color" />
         <attr name="textViewButtonTextColor" format="color"/>
         <attr name="headTextColor" format="color" />
+        <attr name="dialogBackground" format="color"/>
     </declare-styleable>
 </resources>
