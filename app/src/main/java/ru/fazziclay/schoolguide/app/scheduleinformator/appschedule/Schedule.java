@@ -30,4 +30,8 @@ public class Schedule {
         SortUtil.sort(presets, o -> ((Preset) o).name);
         return presets;
     }
+
+    public void removePreset(UUID uuid) {
+        presets.remove(uuid);
+    }
 }

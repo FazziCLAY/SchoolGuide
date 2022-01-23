@@ -10,13 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/preset_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:padding="20sp"/>
-
         <ExpandableListView
             android:id="@+id/event_list"
             android:layout_width="match_parent"
@@ -34,21 +27,10 @@
         android:orientation="vertical">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_preset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_edit"
-            android:layout_marginBottom="16sp"
-            android:contentDescription="edit" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_input_add"
-            android:contentDescription="" />
-
-        <!-- TODO: make translatable -->
-
+            android:contentDescription="@string/presetEdit_addEvent_contentDescription" />
     </LinearLayout>
 </RelativeLayout>

@@ -16,11 +16,14 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
 
 import java.util.UUID;
 
@@ -35,13 +38,13 @@ import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
 import ru.fazziclay.schoolguide.util.UUIDUtil;
 
 public class PresetListActivity extends AppCompatActivity {
-    SchoolGuideApp app;
-    ScheduleInformatorApp informatorApp;
-    ActivityPresetListBinding binding;
+    private SchoolGuideApp app;
+    private ScheduleInformatorApp informatorApp;
+    private ActivityPresetListBinding binding;
 
-    Schedule appSchedule;
+    private Schedule appSchedule;
 
-    UUID[] presets;
+    private UUID[] listPresetsUUIDs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class PresetListActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
+
+        registerForContextMenu(binding.presetList);
 
         updateList();
     }
@@ -126,12 +131,12 @@ public class PresetListActivity extends AppCompatActivity {
     }
 
     private void updateList() {
-        presets = appSchedule.getPresetsUUIDs();
+        listPresetsUUIDs = appSchedule.getPresetsUUIDs();
         binding.presetList.deferNotifyDataSetChanged();
         binding.presetList.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return presets.length;
+                return listPresetsUUIDs.length;
             }
 
             @Override
@@ -144,9 +149,10 @@ public class PresetListActivity extends AppCompatActivity {
                 return position;
             }
 
+            @SuppressLint("ViewHolder")
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                UUID presetUUID = presets[position];
+                UUID presetUUID = listPresetsUUIDs[position];
                 Preset preset = appSchedule.getPreset(presetUUID);
 
                 LinearLayout layout = new LinearLayout(PresetListActivity.this);
@@ -165,12 +171,32 @@ public class PresetListActivity extends AppCompatActivity {
                     updateList();
                 });
 
+
                 TextView textView = new TextView(PresetListActivity.this);
+                PopupMenu popupMenu = new PopupMenu(PresetListActivity.this, textView);
+                popupMenu.inflate(R.menu.menu_preset);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.copy) {
+                        Gson gson = new Gson();
+                        Preset g = gson.fromJson(gson.toJson(preset, Preset.class), Preset.class);
+                        appSchedule.putPreset(UUIDUtil.generateUUID(appSchedule.getPresetsUUIDs()), g);
+                        updateList();
+                    } else if (item.getItemId() == R.id.delete) {
+                        appSchedule.removePreset(presetUUID);
+                        updateList();
+                    }
+                    informatorApp.saveAppSchedule();
+                    return true;
+                });
                 textView.setText(preset == null ? "(null)" : preset.getName());
                 textView.setTextSize(30);
                 textView.setTextColor(Color.WHITE);
                 textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 textView.setOnClickListener(view -> startActivity(PresetEditActivity.getLaunchIntent(PresetListActivity.this, presetUUID)));
+                textView.setOnLongClickListener(v -> {
+                    popupMenu.show();
+                    return true;
+                });
 
                 layout.addView(checkBox);
                 layout.addView(textView);
