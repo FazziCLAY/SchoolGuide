@@ -38,7 +38,11 @@
     <string name="mathTreningGame_settings_cancel">Отмена</string>
     <string name="mathTreningGame_settings_apply">Применить</string>
 
-    <string name="presetList_add">Добавить</string>
+    <string name="presetList_addPreset_contentDescription">Добавить</string>
+    <string name="presetList_createNew_nameHint">Введите название</string>
+    <string name="presetList_createNew_title">Создать новый пре-сет</string>
+    <string name="presetList_createNew_create">Создать</string>
+    <string name="presetList_createNew_cancel">Отмена</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>

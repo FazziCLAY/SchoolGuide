@@ -25,6 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="8sp"
             android:src="@android:drawable/ic_input_add"
-            android:contentDescription="@string/presetList_add" />
+            android:contentDescription="@string/presetList_addPreset_contentDescription" />
     </LinearLayout>
 </RelativeLayout>

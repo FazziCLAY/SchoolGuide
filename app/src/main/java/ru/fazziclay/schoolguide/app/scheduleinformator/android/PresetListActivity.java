@@ -112,20 +112,21 @@ public class PresetListActivity extends AppCompatActivity {
         layout.setOrientation(LinearLayout.VERTICAL);
 
         EditText name = new EditText(this);
-        name.setHint("Введите название");
+        name.setHint(R.string.presetList_createNew_nameHint);
         name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         layout.addView(name);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Создание нового пресета")
+                .setTitle(R.string.presetList_createNew_title)
                 .setView(layout)
-                .setPositiveButton("Создать", (e, e1) -> {
+                .setPositiveButton(R.string.presetList_createNew_create, (e, e1) -> {
                     appSchedule.putPreset(UUIDUtil.generateUUID(appSchedule.getPresetsUUIDs()), new Preset(name.getText().toString()));
                     informatorApp.saveAppSchedule();
                     updateList();
                 })
-                .create(); // TODO: 2022-01-20 make translatable
+                .setNegativeButton(R.string.presetList_createNew_cancel, null)
+                .create();
 
         dialog.show();
     }

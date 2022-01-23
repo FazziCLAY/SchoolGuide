@@ -41,7 +41,11 @@
     <string name="mathTreningGame_settings_cancel">Cancel</string>
     <string name="mathTreningGame_settings_apply">Apply</string>
 
-    <string name="presetList_add">Add</string>
+    <string name="presetList_addPreset_contentDescription">Add</string>
+    <string name="presetList_createNew_nameHint">Enter name</string>
+    <string name="presetList_createNew_title">Create new preset</string>
+    <string name="presetList_createNew_create">Create</string>
+    <string name="presetList_createNew_cancel">Cancel</string>
 
     <string name="presetMenu_copy">Copy</string>
     <string name="presetMenu_delete">Delete</string>
