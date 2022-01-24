@@ -81,17 +81,7 @@ public class ScheduleInformatorApp {
     }
 
     public Preset getCurrentPreset() {
-        Preset p = schedule.getPreset(currentSchedulePreset);
-        if (p == null) {
-            if (schedule.getPresetsUUIDs().length > 0) {
-                currentSchedulePreset = schedule.getPresetsUUIDs()[0];
-                return getCurrentPreset();
-            }
-            p = new Preset();
-            p.setName("(PRESET_NULL)");
-            Log.e("ERROR", "getCurrentPreset: null");
-        }
-        return p;
+        return schedule.getCurrentPreset();
     }
 
     public void setCurrentPreset(UUID preset) {
@@ -189,7 +179,7 @@ public class ScheduleInformatorApp {
         return scheduleFile;
     }
 
-    public Schedule getSchedule() {
+    public AppSchedule getSchedule() {
         return schedule;
     }
 }

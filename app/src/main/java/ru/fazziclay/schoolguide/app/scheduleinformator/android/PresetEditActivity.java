@@ -92,7 +92,7 @@ public class PresetEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_preset, menu);
+        getMenuInflater().inflate(R.menu.menu_preset_edit, menu);
         return true;
     }
 

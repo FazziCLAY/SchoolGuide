@@ -1,5 +1,7 @@
 package ru.fazziclay.schoolguide.app.scheduleinformator.appschedule;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
-public class Preset {
+public class Preset implements Cloneable {
     String name;
     String author;
 
@@ -77,5 +79,10 @@ public class Preset {
 
     public String getAuthor() {
         return author;
+    }
+
+    @NonNull
+    public Preset clone() throws CloneNotSupportedException {
+        return (Preset) super.clone();
     }
 }

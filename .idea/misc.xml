@@ -3,12 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/activity_debug.xml" value="0.19384057971014493" />
         <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/activity_math_trening_game.xml" value="0.2826086956521739" />
         <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/activity_preset_edit.xml" value="0.21014492753623187" />
+        <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/activity_preset_list.xml" value="0.2758152173913043" />
+        <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/activity_update_center.xml" value="0.19384057971014493" />
         <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/dialog_math_trening_game_settings.xml" value="0.2826086956521739" />
+        <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/layout/dialog_time_picker.xml" value="0.2758152173913043" />
         <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/menu/menu_main.xml" value="0.3333333333333333" />
         <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/menu/menu_math_trening_game.xml" value="0.3333333333333333" />
         <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/menu/menu_preset.xml" value="0.3333333333333333" />
+        <entry key="..\:/_MOE_/programming/java/SchoolGuide/app/src/main/res/menu/menu_preset_list_popup.xml" value="0.3333333333333333" />
       </map>
     </option>
   </component>
