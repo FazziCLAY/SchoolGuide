@@ -47,7 +47,7 @@
     <string name="presetList_createNew_create">Create</string>
     <string name="presetList_createNew_cancel">Cancel</string>
     <string name="presetList_delete_title">Delete preset \'%s\'</string>
-    <string name="presetList_delete_message">Do you really want to delete preset \'%s\'\nYou can restore it only if it is a preset from the built-in schedule!</string>
+    <string name="presetList_delete_message">Do you really want to delete preset?\nYou can restore it only if it is a preset from the built-in schedule!</string>
     <string name="presetList_delete">Delete</string>
     <string name="presetList_delete_cancel">Cancel</string>
 
