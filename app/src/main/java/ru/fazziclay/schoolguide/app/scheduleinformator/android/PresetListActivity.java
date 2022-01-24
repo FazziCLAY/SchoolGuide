@@ -139,6 +139,23 @@ public class PresetListActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private void showDeletePresetDialog(UUID uuid) {
+        Preset preset = schedule.getPreset(uuid);
+        if (preset == null) return;
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.presetList_delete_title, preset.getName()))
+                .setMessage(getString(R.string.presetList_delete_message, preset.getName()))
+                .setPositiveButton(R.string.presetList_delete, (e, e1) -> {
+                    schedule.removePreset(uuid);
+                    schedule.selectFirst();
+                    updateList();
+                })
+                .setNegativeButton(R.string.presetList_delete_cancel, null)
+                .create();
+
+        dialog.show();
+    }
+
     private void updateList() {
         listPresetsUUIDs = schedule.getPresetsUUIDs();
         binding.presetList.deferNotifyDataSetChanged();
@@ -201,9 +218,7 @@ public class PresetListActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             } else if (item.getItemId() == R.id.delete) {
-                schedule.removePreset(presetUUID);
-                schedule.selectFirst();
-                updateList();
+                showDeletePresetDialog(presetUUID);
             }
             informatorApp.saveAppSchedule();
             return true;

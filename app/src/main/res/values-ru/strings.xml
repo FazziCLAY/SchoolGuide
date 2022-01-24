@@ -43,6 +43,10 @@
     <string name="presetList_createNew_title">Создать новый пресет</string>
     <string name="presetList_createNew_create">Создать</string>
     <string name="presetList_createNew_cancel">Отмена</string>
+    <string name="presetList_delete_title">Удалить пресет \'%s\'</string>
+    <string name="presetList_delete_message">Вы действительно хотите удалить пресет \'%s\'\nВы сможете востановить его только если это пресет из встроенного расписания!</string>
+    <string name="presetList_delete">Удалить</string>
+    <string name="presetList_delete_cancel">Отмена</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>
