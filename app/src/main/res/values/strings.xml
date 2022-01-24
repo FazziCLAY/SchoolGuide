@@ -31,7 +31,7 @@
     <string name="mathTreningGame_optionMenu_gameSettings">Game settings</string>
     <string name="mathTreningGame_statistic">Score: %s Speed: %s(%s) Time: %s</string>
     <string name="mathTreningGame_resultInput_hint">Result</string>
-    <string name="mathTreningGame_settings_title">Game Settings</string>
+    <string name="mathTreningGame_settings_title">Game settings</string>
     <string name="mathTreningGame_settings_action">Action:</string>
     <string name="mathTreningGame_settings_generation">Generation:</string>
     <string name="mathTreningGame_settings_generation_number1">Number 1:</string>
