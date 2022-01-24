@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Event;
@@ -49,6 +50,7 @@ public class PresetEditActivity extends AppCompatActivity {
     }
 
     private SchoolGuideApp app;
+    private Settings settings;
     private ScheduleInformatorApp informatorApp;
     private DateFormatSymbols dateFormatSymbols;
     private ActivityPresetEditBinding binding;
@@ -57,12 +59,12 @@ public class PresetEditActivity extends AppCompatActivity {
     private Preset preset;
 
     private boolean isFirstMonday = true;
-    private ColorScheme colorScheme = ColorScheme.NONE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = SchoolGuideApp.get(this);
+        settings = app.getSettings();
         informatorApp = app.getScheduleInformatorApp();
         dateFormatSymbols = new DateFormatSymbols();
 
@@ -75,6 +77,11 @@ public class PresetEditActivity extends AppCompatActivity {
             Toast.makeText(this, "Error: Preset not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
+        }
+
+        if (settings.presetEditColorScheme == null) {
+            settings.presetEditColorScheme = ColorScheme.DEFAULT;
+            app.saveSettings();
         }
 
         binding = ActivityPresetEditBinding.inflate(getLayoutInflater());
@@ -116,12 +123,12 @@ public class PresetEditActivity extends AppCompatActivity {
                 getString(R.string.presetEdit_colorScheme_previous)
         };
         ColorScheme[] schemes = new ColorScheme[]{
-                ColorScheme.NONE,
-                ColorScheme.PREVIOUS
+                ColorScheme.DEFAULT,
+                ColorScheme.YESTERDAY
         };
         int selected = 0;
         for (ColorScheme s : schemes) {
-            if (s == colorScheme) break;
+            if (s == settings.presetEditColorScheme) break;
             selected++;
         }
         Spinner spinner = new Spinner(this);
@@ -133,7 +140,8 @@ public class PresetEditActivity extends AppCompatActivity {
                 .setView(spinner)
                 .setPositiveButton(R.string.presetEdit_colorScheme_apply, (dialogInterface, which) -> {
                     int position = spinner.getSelectedItemPosition();
-                    colorScheme = schemes[position];
+                    settings.presetEditColorScheme = schemes[position];
+                    app.saveSettings();
                     updateEventList();
                     dialogInterface.cancel();
                 })
@@ -250,7 +258,7 @@ public class PresetEditActivity extends AppCompatActivity {
 
         // text color
         {
-            if (colorScheme == ColorScheme.PREVIOUS) {
+            if (settings.presetEditColorScheme == ColorScheme.YESTERDAY) {
                 textColor = Color.GREEN;
                 CompressedEvent[] previousEvents = getEventsInWeek(week-1 <= 0 ? Calendar.SATURDAY : week-1);
 
@@ -264,7 +272,7 @@ public class PresetEditActivity extends AppCompatActivity {
                         break;
                     }
                 }
-            } else if (colorScheme == ColorScheme.NONE) {
+            } else if (settings.presetEditColorScheme == ColorScheme.DEFAULT) {
                 textColor = Color.GREEN;
             }
         }
@@ -315,7 +323,7 @@ public class PresetEditActivity extends AppCompatActivity {
      * Цветовая схема страницы
      * **/
     public enum ColorScheme {
-        PREVIOUS,
-        NONE
+        DEFAULT,
+        YESTERDAY
     }
 }
