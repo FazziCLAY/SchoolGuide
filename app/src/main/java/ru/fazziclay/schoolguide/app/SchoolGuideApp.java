@@ -22,8 +22,12 @@ import ru.fazziclay.schoolguide.util.DataUtil;
 public class SchoolGuideApp {
     public static SchoolGuideApp instance = null;
 
+    public static boolean isInstanceAvailable() {
+        return instance != null;
+    }
+
     public static SchoolGuideApp get(Context context) {
-        if (instance == null) {
+        if (!isInstanceAvailable()) {
             instance = new SchoolGuideApp(context);
         }
         return instance;
@@ -40,7 +44,7 @@ public class SchoolGuideApp {
 
     private final File settingsFile;
 
-    private final Gson gson;
+    private Gson gson;
     private final Settings settings;
 
     private long latestAutoManifestUpdate = 0;
@@ -52,7 +56,7 @@ public class SchoolGuideApp {
 
     public SchoolGuideApp(Context context) {
         androidContext = context.getApplicationContext();
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new Gson();
 
         DataFixer dataFixer = new DataFixer(androidContext, SharedConstrains.APPLICATION_VERSION_CODE, new AbstractScheme[]{
             new SchemePre36To36()
@@ -64,6 +68,11 @@ public class SchoolGuideApp {
 
         settingsFile = new File(filesDir, "settings.json");
         settings = (Settings) DataUtil.load(settingsFile, Settings.class);
+
+        if (!settings.storageSpaceSaving) {
+            gson = new GsonBuilder().setPrettyPrinting().create();
+        }
+
         saveSettings();
 
         if (System.currentTimeMillis() - latestAutoManifestUpdate > 60*60*1000) {

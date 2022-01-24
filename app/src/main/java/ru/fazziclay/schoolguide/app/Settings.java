@@ -8,4 +8,5 @@ public class Settings {
     public final boolean stopForegroundIsNone = false;
     public boolean isFirstMonday = true;
     public PresetEditActivity.ColorScheme presetEditColorScheme = PresetEditActivity.ColorScheme.DEFAULT;
+    public boolean storageSpaceSaving = false;
 }

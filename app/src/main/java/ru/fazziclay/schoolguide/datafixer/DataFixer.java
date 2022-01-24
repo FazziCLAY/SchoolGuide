@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 
@@ -26,7 +25,7 @@ public class DataFixer {
         this.context = context;
         this.currentAppVersion = currentAppVersion;
         this.fixSchemes = fixSchemes;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.gson = new Gson();
         this.versionFile = new File(context.getFilesDir(), "version.json");
         boolean isPre36 = (context.getExternalFilesDir("").list().length > 0 && !versionFile.exists());
         this.version = gson.fromJson(
