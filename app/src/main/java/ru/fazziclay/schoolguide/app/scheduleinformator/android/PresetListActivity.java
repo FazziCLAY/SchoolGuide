@@ -144,13 +144,53 @@ public class PresetListActivity extends AppCompatActivity {
         if (preset == null) return;
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.presetList_delete_title, preset.getName()))
-                .setMessage(getString(R.string.presetList_delete_message, preset.getName()))
+                .setMessage(getString(R.string.presetList_delete_message))
                 .setPositiveButton(R.string.presetList_delete, (e, e1) -> {
                     schedule.removePreset(uuid);
                     schedule.selectFirst();
                     updateList();
                 })
                 .setNegativeButton(R.string.presetList_delete_cancel, null)
+                .create();
+
+        dialog.show();
+    }
+
+    private void showCopyPresetDialog(UUID uuid) {
+        Preset preset = schedule.getPreset(uuid);
+        if (preset == null) return;
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final int NAME_MAX_LENGTH = 25;
+        final int NAME_MAX_LINES = 1;
+
+        EditText name = new EditText(this);
+        name.setHint(R.string.presetList_copy_nameHint);
+        name.setText(getString(R.string.presetList_copy_copyName, preset.getName()));
+        name.setMaxLines(NAME_MAX_LINES);
+        name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(NAME_MAX_LENGTH)});
+        name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        layout.addView(name);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.presetList_copy_title, preset.getName()))
+                .setMessage(getString(R.string.presetList_copy_message))
+                .setView(layout)
+                .setPositiveButton(R.string.presetList_copy, (e, e1) -> {
+                    try {
+                        Preset newPreset = preset.clone();
+                        newPreset.setName(name.getText().toString());
+                        schedule.putPreset(UUIDUtil.generateUUID(schedule.getPresetsUUIDs()), newPreset);
+                        updateList();
+                    } catch (CloneNotSupportedException exception) {
+                        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+                        exception.printStackTrace();
+                    }
+                    updateList();
+                })
+                .setNegativeButton(R.string.presetList_copy_cancel, null)
                 .create();
 
         dialog.show();
@@ -210,13 +250,8 @@ public class PresetListActivity extends AppCompatActivity {
         popupMenu.inflate(R.menu.menu_preset_list_popup);
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.copy) {
-                try {
-                    schedule.putPreset(UUIDUtil.generateUUID(schedule.getPresetsUUIDs()), preset.clone());
-                    updateList();
-                } catch (CloneNotSupportedException e) {
-                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
+                showCopyPresetDialog(presetUUID);
+
             } else if (item.getItemId() == R.id.delete) {
                 showDeletePresetDialog(presetUUID);
             }

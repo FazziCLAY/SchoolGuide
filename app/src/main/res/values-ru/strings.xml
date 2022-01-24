@@ -47,6 +47,12 @@
     <string name="presetList_delete_message">Вы действительно хотите удалить пресет?\nВы сможете востановить его только если это пресет из встроенного расписания!</string>
     <string name="presetList_delete">Удалить</string>
     <string name="presetList_delete_cancel">Отмена</string>
+    <string name="presetList_copy_nameHint">Введите новое название</string>
+    <string name="presetList_copy_title">Копия пресета \'%s\'</string>
+    <string name="presetList_copy_message">Вы хотите сделать копию пресета?\nВы можете ввести название для нового пресета</string>
+    <string name="presetList_copy">Копировать</string>
+    <string name="presetList_copy_cancel">Отмена</string>
+    <string name="presetList_copy_copyName">Копия \'%s\'</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>

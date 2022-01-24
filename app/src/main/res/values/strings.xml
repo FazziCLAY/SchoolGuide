@@ -50,6 +50,12 @@
     <string name="presetList_delete_message">Do you really want to delete preset?\nYou can restore it only if it is a preset from the built-in schedule!</string>
     <string name="presetList_delete">Delete</string>
     <string name="presetList_delete_cancel">Cancel</string>
+    <string name="presetList_copy_nameHint">Enter new name</string>
+    <string name="presetList_copy_title">Copy preset \'%s\'</string>
+    <string name="presetList_copy_message">Do you want to make a copy of the preset?\nYou can enter a name for the new preset</string>
+    <string name="presetList_copy">Copy</string>
+    <string name="presetList_copy_cancel">Cancel</string>
+    <string name="presetList_copy_copyName">Copy of \'%s\'</string>
 
     <string name="presetMenu_copy">Copy</string>
     <string name="presetMenu_delete">Delete</string>
