@@ -3,7 +3,6 @@ package ru.fazziclay.schoolguide.app.scheduleinformator;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -16,7 +15,6 @@ import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 import ru.fazziclay.schoolguide.util.DataUtil;
 import ru.fazziclay.schoolguide.util.time.ConvertMode;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
@@ -37,8 +35,6 @@ public class ScheduleInformatorApp {
 
     private final File scheduleFile;
     private final AppSchedule schedule;
-
-    private UUID currentSchedulePreset = null;
 
     private InformatorService informatorService = null;
     boolean isServiceForeground = false;
@@ -85,7 +81,6 @@ public class ScheduleInformatorApp {
     }
 
     public void setCurrentPreset(UUID preset) {
-        currentSchedulePreset = preset;
         schedule.currentPresetUUID = preset;
         saveAppSchedule();
     }
