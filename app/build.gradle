@@ -10,8 +10,8 @@ android {
         applicationId "ru.fazziclay.schoolguide"
         minSdkVersion 16
         targetSdkVersion 31
-        versionCode 33
-        versionName "0.3 - Beta"
+        versionCode 34
+        versionName "0.3.1 - Beta"
     }
 
     buildTypes {
