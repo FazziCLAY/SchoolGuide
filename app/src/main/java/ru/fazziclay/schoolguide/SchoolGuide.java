@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -26,7 +25,6 @@ import ru.fazziclay.schoolguide.data.schedule.ScheduleProvider;
 import ru.fazziclay.schoolguide.data.schedule.State;
 import ru.fazziclay.schoolguide.data.settings.NotificationStyle;
 import ru.fazziclay.schoolguide.data.settings.SettingsProvider;
-import ru.fazziclay.schoolguide.util.ColorUtils;
 import ru.fazziclay.schoolguide.util.TimeUtil;
 
 /**
@@ -218,17 +216,25 @@ public class SchoolGuide {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), SharedConstrains.MAIN_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(ColorUtils.colorizeText(notificationData.title, Color.WHITE))
-                .setContentText(ColorUtils.colorizeText(notificationData.content, Color.WHITE))
-                .setSubText(ColorUtils.colorizeText(notificationData.sub, Color.WHITE))
+                // FIX WHILE TEXT IN WHITE BACKGROUND BUG #2
+                //.setContentTitle(ColorUtils.colorizeText(notificationData.title, Color.WHITE))
+                //.setContentText(ColorUtils.colorizeText(notificationData.content, Color.WHITE))
+                //.setSubText(ColorUtils.colorizeText(notificationData.sub, Color.WHITE))
+                .setContentTitle(notificationData.title)
+                .setContentText(notificationData.content)
+                .setSubText(notificationData.sub)
+                // FIX WHILE TEXT IN WHITE BACKGROUND BUG #2
                 .setStyle(inboxStyle)
                 .setSilent(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(notificationData.pendingIntent)
                 .setSound(null)
-                .setColorized(notificationStyle.isColorized())
-                .setColor(notificationStyle.getCachedColor())
+                // FIX WHILE TEXT IN WHITE BACKGROUND BUG #2
+                //.setColorized(notificationStyle.isColorized())
+                //.setColor(notificationStyle.getCachedColor())
+                .setDefaults(Notification.DEFAULT_LIGHTS)
+                // FIX WHILE TEXT IN WHITE BACKGROUND BUG #2
                 .setAutoCancel(true);
 
         if (notificationData.isProgress) builder.setProgress(notificationData.progressMax, notificationData.progress, notificationData.isProgressIndeterminate);
