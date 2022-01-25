@@ -40,11 +40,10 @@ public class MathTreningGameActivity extends AppCompatActivity {
 
     private static final int SPEED_ITEMS = 15;
 
-    private double speed = 0;
-    private double stableSpeed = 0;
-
-    private int speedI = 0;
-    private final long[] starts = new long[SPEED_ITEMS];
+    private double maxSpeed = 0;
+    private double averageDuration = 0;
+    private int i = 0;
+    private long start;
     private final long[] durations = new long[SPEED_ITEMS];
 
     private float n1;
@@ -93,17 +92,32 @@ public class MathTreningGameActivity extends AppCompatActivity {
         gameData = (MathTreningGameData) DataUtil.load(gameDataFile, MathTreningGameData.class);
         saveAll();
 
+        start = System.currentTimeMillis();
+
         clearInput();
         updateStatisticText();
         regenerate();
 
         timeUpdateHandler = new Handler(getMainLooper());
         timeUpdateRunnable = () -> {
-            updateSpeed();
             updateStatisticText();
             timeUpdateHandler.postDelayed(timeUpdateRunnable, 20);
         };
         timeUpdateHandler.post(timeUpdateRunnable);
+    }
+
+    private void nextDuration() {
+        i++;
+        if (i > SPEED_ITEMS-1) {
+            i = 0;
+        }
+        start = System.currentTimeMillis();
+    }
+
+    private void updateDurations() {
+        if (start > 0) {
+            durations[i] = System.currentTimeMillis() - start;
+        }
     }
 
     @Override
@@ -133,7 +147,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
             regenerate();
 
         } else if (item.getItemId() == R.id.gameSettings) {
-            showSetting();
+            showSettingsDialog();
 
         } else {
             return super.onOptionsItemSelected(item);
@@ -141,7 +155,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showSetting() {
+    private void showSettingsDialog() {
         String[] actions = new String[]{"+", "-", "*", "/", "^"};
         int selected = 0;
         for (String s : actions) {
@@ -169,7 +183,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
         Button save = dialog.findViewById(R.id.save);
 
         cancel.setOnClickListener(ignore -> {
-            starts[speedI] = System.currentTimeMillis();
+            start = System.currentTimeMillis();
             dialog.cancel();
         });
 
@@ -216,29 +230,15 @@ public class MathTreningGameActivity extends AppCompatActivity {
         int userResult = toInt(userInput);
         clearInput();
         if (userResult == result) {
-            updateSpeed();
-            stableSpeed = speed;
-
-            gameData.score++;
             regenerate();
+            gameData.score++;
+            nextDuration();
+
         } else if (userResult != Integer.MAX_VALUE) {
             gameData.score--;
         }
         updateStatisticText();
         saveAll();
-    }
-
-    private void updateSpeed() {
-        durations[speedI] = System.currentTimeMillis() - starts[speedI];
-
-        long sum = 0;
-        int len = 0;
-        for (long dur : durations) {
-            if (dur == 0) continue;
-            sum += dur;
-            len++;
-        }
-        speed = 1000 / (((double) sum) / ((double)len));
     }
 
     private void regenerate() {
@@ -254,12 +254,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
         }
 
         result = calculate(gameData.action, n1, n2);
-
         binding.taskText.setText(createTaskText());
-        speedI++;
-        if (speedI >= SPEED_ITEMS) speedI = 0;
-
-        starts[speedI] = System.currentTimeMillis();
     }
 
     private float calculate(String action, float n1, float n2) {
@@ -273,10 +268,8 @@ public class MathTreningGameActivity extends AppCompatActivity {
             return n1 + n2;
         } else if ("^".equals(action)) {
             return (float) Math.pow(n1, n2);
-        } else {
-            Toast.makeText(this, "Unknown action: " + action, Toast.LENGTH_SHORT).show();
-            return Float.MAX_VALUE;
         }
+        return 0.0f;
     }
 
     private String createTaskText() {
@@ -286,8 +279,28 @@ public class MathTreningGameActivity extends AppCompatActivity {
         return String.format("%s %s %s", Math.round(n1), gameData.action, Math.round(n2));
     }
 
+    private double average(long[] d) {
+        long sum = 0;
+        int len = 0;
+        for (long dd : d) {
+            if (dd == 0) continue;
+            sum += dd;
+            len++;
+        }
+
+        double a = ((double) sum) / ((double)len);
+        return sum == 0 ? 0 : a;
+    }
+
     private void updateStatisticText() {
-        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score), String.valueOf(round(stableSpeed, 2)), String.valueOf(round(speed, 2)), String.valueOf(System.currentTimeMillis() - starts[speedI])));
+        updateDurations();
+        averageDuration = average(durations);
+        double speed = 1000 / averageDuration;
+        if (speed > maxSpeed) {
+            maxSpeed = 1000 / averageDuration;
+        }
+
+        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score)));
     }
 
     public static double round(double d, int numbers) {
