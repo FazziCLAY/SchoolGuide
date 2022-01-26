@@ -1,16 +1,15 @@
 {
-  "latest": {
-    "release": {
-      "code": 37,
-      "name": "0.5 rewritten",
-      "changelog": {
-        "ru": "Ура! Я переписал(ещё нет) приложение!",
-        "default": "Hello from RUSSIA!"
-      },
-      "download": {
-        "release": "https://google.com",
-        "debug": "https://yandex.com"
-      }
+  "key": 1,
+  "latestVersion": {
+    "code": 37,
+    "name": "0.4 - Rewritten",
+    "download": {
+      "release": "https://google.com/release",
+      "debug": "https://google.com/debug"
+    },
+    "changelog": {
+      "default": "Default Changelog",
+      "ru": "Ченчлог по умолчанию"
     }
   }
 }
