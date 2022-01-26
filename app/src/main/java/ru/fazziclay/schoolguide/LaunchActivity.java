@@ -1,8 +1,6 @@
 package ru.fazziclay.schoolguide;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -13,7 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.SchoolGuideService;
-import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.app.UpdateCheckerService;
 import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetListActivity;
 
 public class LaunchActivity extends Activity {
@@ -23,39 +21,26 @@ public class LaunchActivity extends Activity {
         super.onCreate(savedInstanceState);
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
-        TextView loading = new TextView(this);
-        loading.setTextSize(40);
-        loading.setGravity(Gravity.CENTER);
-        loading.setText(R.string.application_name);
-        setContentView(loading);
+        // UI
+        TextView loadingTextView = new TextView(this);
+        loadingTextView.setTextSize(40);
+        loadingTextView.setGravity(Gravity.CENTER);
+        loadingTextView.setText(R.string.application_name);
 
+        setContentView(loadingTextView);
+
+        // Notification channels
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-
-            NotificationChannel scheduleInformatorNone = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE, getString(R.string.notificationChannel_scheduleInformator_scheduleNone_name), NotificationManager.IMPORTANCE_DEFAULT);
-            scheduleInformatorNone.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNone_description));
-
-            NotificationChannel scheduleInformatorNext = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NEXT, getString(R.string.notificationChannel_scheduleInformator_scheduleNext_name), NotificationManager.IMPORTANCE_DEFAULT);
-            scheduleInformatorNext.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNext_description));
-
-            NotificationChannel scheduleInformatorNow = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NOW, getString(R.string.notificationChannel_scheduleInformator_scheduleNow_name), NotificationManager.IMPORTANCE_DEFAULT);
-            scheduleInformatorNow.setDescription(getString(R.string.notificationChannel_scheduleInformator_scheduleNow_description));
-
-            NotificationChannel updateCenter = new NotificationChannel(UpdateCenterActivity.NOTIFICATION_CHANNEL_ID, getString(R.string.notificationChannel_updateCenter_name), NotificationManager.IMPORTANCE_DEFAULT);
-            updateCenter.setDescription(getString(R.string.notificationChannel_updateCenter_description));
-
-            notificationManager.createNotificationChannel(scheduleInformatorNone);
-            notificationManager.createNotificationChannel(scheduleInformatorNext);
-            notificationManager.createNotificationChannel(scheduleInformatorNow);
-            notificationManager.createNotificationChannel(updateCenter);
+            SharedConstrains.registerAndroidNotificationChannels(this);
         }
 
+        // Loading
         startService(new Intent(this, SchoolGuideService.class));
 
         SchoolGuideApp.get(this);
+        startService(new Intent(this, UpdateCheckerService.class));
         startActivity(new Intent(this, PresetListActivity.class));
 
         finish();

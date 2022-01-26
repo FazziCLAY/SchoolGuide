@@ -9,13 +9,18 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
-        android:label="@string/application_name"
+        android:allowBackup="false"
         android:description="@string/application_description"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/application_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
+        <service
+            android:name=".app.UpdateCheckerService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".DebugActivity"
             android:exported="false" />
@@ -36,6 +41,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,4 +65,5 @@
                 android:resource="@xml/providers_paths" />
         </provider>
     </application>
+
 </manifest>
