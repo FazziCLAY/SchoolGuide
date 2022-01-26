@@ -1,9 +1,6 @@
 package ru.fazziclay.schoolguide.app;
 
 import android.content.Context;
-import android.widget.LinearLayout;
-
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +9,7 @@ import java.io.File;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.manifest.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
@@ -47,8 +45,8 @@ public class SchoolGuideApp {
     private Gson gson;
     private final Settings settings;
 
-    private long latestAutoManifestUpdate = 0;
-    private Manifest manifest;
+    private final long latestAutoManifestUpdate = 0;
+    private GlobalVersionManifest globalVersionManifest;
 
     // Apps
     private final ScheduleInformatorApp scheduleInformatorApp;
@@ -67,7 +65,7 @@ public class SchoolGuideApp {
         cacheDir = context.getExternalCacheDir();
 
         settingsFile = new File(filesDir, "settings.json");
-        settings = (Settings) DataUtil.load(settingsFile, Settings.class);
+        settings = DataUtil.load(settingsFile, Settings.class);
 
         if (!settings.storageSpaceSaving) {
             gson = new GsonBuilder().setPrettyPrinting().create();

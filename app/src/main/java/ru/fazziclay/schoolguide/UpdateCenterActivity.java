@@ -22,12 +22,15 @@ import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Locale;
 
-import ru.fazziclay.schoolguide.app.Manifest;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.app.manifest.GlobalBuiltinSchedule;
+import ru.fazziclay.schoolguide.app.manifest.GlobalKeys;
+import ru.fazziclay.schoolguide.app.manifest.GlobalManager;
+import ru.fazziclay.schoolguide.app.manifest.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCenterBinding;
 import ru.fazziclay.schoolguide.util.ColorUtil;
-import ru.fazziclay.schoolguide.util.NetworkUtil;
 
 public class UpdateCenterActivity extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 2000;
@@ -35,6 +38,8 @@ public class UpdateCenterActivity extends AppCompatActivity {
 
     private ActivityUpdateCenterBinding binding;
     private Gson gson;
+    private String currentVersionType;
+    private String currentLanguage;
 
     public static Intent getLaunchIntent(@NonNull Context context) {
         return new Intent(context, UpdateCenterActivity.class);
@@ -45,6 +50,8 @@ public class UpdateCenterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SchoolGuideApp.get(this);
         gson = new Gson();
+        currentVersionType = SharedConstrains.APPLICATION_BUILD_TYPE;
+        currentLanguage = Locale.getDefault().getLanguage();
 
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -54,10 +61,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setTitle(R.string.updatecenter_activityTitle);
 
-        new Thread(() -> {
-            Status status = load();
-            runOnUiThread(() -> updateUI(status));
-        }).start();
+        load(status -> runOnUiThread(() -> updateUI(status)));
     }
 
     public void updateUI(Status status) {
@@ -98,7 +102,8 @@ public class UpdateCenterActivity extends AppCompatActivity {
 
         if (status == Status.OUTDATED) {
             binding.title.setText(getString(R.string.updatecenter_outdated_title, status.latestVersion.getName()));
-            binding.text.setText(status.latestVersion.getChangelog() == null ? getString(R.string.updatecenter_outdated_changelogEmpty_text) : status.latestVersion.getChangelog()
+            String changelog = status.latestVersion.getChangelog(currentLanguage);
+            binding.text.setText(changelog == null ? getString(R.string.updatecenter_outdated_changelogEmpty_text) : changelog
                     .replace("$(CLIENT_VERSION_CODE)", SharedConstrains.APPLICATION_VERSION_CODE+"")
                     .replace("$(CLIENT_VERSION_NAME)", SharedConstrains.APPLICATION_VERSION_NAME)
             );
@@ -107,8 +112,12 @@ public class UpdateCenterActivity extends AppCompatActivity {
             binding.actionButton.setVisibility(View.VISIBLE);
             binding.actionButton.setText(R.string.updatecenter_outdated_openDownloadLink);
 
-            String downloadUrl = status.latestVersion.getDownloadUrl();
+            String downloadUrl = status.latestVersion.getDownloadUrl(currentVersionType);
             binding.actionButton.setOnClickListener(ignore -> {
+                if (downloadUrl == null) {
+                    Toast.makeText(this, "Error!", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 try {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
                     startActivity(browserIntent);
@@ -129,41 +138,61 @@ public class UpdateCenterActivity extends AppCompatActivity {
         binding.text.setText(ColorUtil.colorize(binding.text.getText().toString(), Color.LTGRAY, Color.TRANSPARENT, Typeface.NORMAL));
     }
 
-    public Status load() {
+    public void load(StatusInterface statusInterface) {
         final int debug = -1;
-        if (debug != 0) {
-            if (debug == 1) {
-                return Status.ERROR.setException(new UnknownHostException());
-            } else if (debug == 2) {
-                return Status.ERROR.setException(new FileNotFoundException());
-            } else if (debug == 3) {
-                return Status.ERROR.setException(new RuntimeException());
-            } else if (debug == 4) {
-                return Status.UPDATED;
-            } else if (debug == 5) {
-                HashMap<String, String> change = new HashMap<>();
-                change.put("default", "Пофикшены баги:\nКорова прилипала к стене\n$[-#ff0000]Вылет из за краша$[-reset]\n\nПодпишись: https://youtube.com/\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_");
-                HashMap<String, String> download = new HashMap<>();
-                download.put("release", "https://google.com");
-                download.put("debug", "https://yandex.ru");
-                Manifest.ManifestVersion v = new Manifest.ManifestVersion(20, "0.6 - ReWriTTen ", change, download);
-                return Status.OUTDATED.setLatestVersion(v);
-            }
-        }
         try {
-            String fileContent = NetworkUtil.parseTextPage(SharedConstrains.VERSION_MANIFEST_V2);
-            Manifest manifest = gson.fromJson(fileContent, Manifest.class);
-
-            if (manifest.latest.release.getCode() > SharedConstrains.APPLICATION_VERSION_CODE) {
-                return Status.OUTDATED
-                        .setLatestVersion(manifest.latest.release);
-            } else {
-                return Status.UPDATED;
+            if (debug != 0) {
+                if (debug == 1) {
+                    statusInterface.run(Status.ERROR.setException(new UnknownHostException()));
+                } else if (debug == 2) {
+                    statusInterface.run(Status.ERROR.setException(new FileNotFoundException()));
+                } else if (debug == 3) {
+                    statusInterface.run(Status.ERROR.setException(new RuntimeException()));
+                } else if (debug == 4) {
+                    statusInterface.run(Status.UPDATED);
+                } else if (debug == 5) {
+                    HashMap<String, String> change = new HashMap<>();
+                    change.put("default", "Пофикшены баги:\nКорова прилипала к стене\n$[-#ff0000]Вылет из за краша$[-reset]\n\nПодпишись: https://youtube.com/\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_");
+                    HashMap<String, String> download = new HashMap<>();
+                    download.put("release", "https://google.com");
+                    download.put("debug", "https://yandex.ru");
+                    GlobalVersionManifest.ManifestVersion v = new GlobalVersionManifest.ManifestVersion(20, "0.6 - ReWriTTen ", change, download);
+                    statusInterface.run(Status.OUTDATED.setLatestVersion(v));
+                }
             }
+            GlobalManager.get(this, new GlobalManager.GlobalManagerInterface() {
+                @Override
+                public void failed(Exception exception) {
+                    statusInterface.run(Status.ERROR.setException(exception));
+                }
+
+                @Override
+                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinSchedule builtinSchedule) {
+                    if (versionManifest.latestVersion == null) {
+                        statusInterface.run(Status.ERROR.setException(new NullPointerException("latestVersion is null")));
+                        return;
+                    }
+                    if (versionManifest.latestVersion.getDownloadUrl(currentVersionType) == null) {
+                        statusInterface.run(Status.ERROR.setException(new NullPointerException("download url is null")));
+                        return;
+                    }
+
+                    if (versionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE) {
+                        statusInterface.run(Status.OUTDATED
+                                .setLatestVersion(versionManifest.latestVersion));
+                    } else {
+                        statusInterface.run(Status.UPDATED);
+                    }
+                }
+            });
         } catch (Exception e) {
-            return Status.ERROR
-                    .setException(e);
+            statusInterface.run(Status.ERROR
+                    .setException(e));
         }
+    }
+
+    interface StatusInterface {
+        void run(Status s);
     }
 
     enum Status {
@@ -171,7 +200,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
         UPDATED,
         OUTDATED;
 
-        public Manifest.ManifestVersion latestVersion;
+        public GlobalVersionManifest.ManifestVersion latestVersion;
         public Exception exception;
 
         public Status setException(Exception e) {
@@ -179,7 +208,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
             return this;
         }
 
-        public Status setLatestVersion(Manifest.ManifestVersion s) {
+        public Status setLatestVersion(GlobalVersionManifest.ManifestVersion s) {
             this.latestVersion = s;
             return this;
         }
