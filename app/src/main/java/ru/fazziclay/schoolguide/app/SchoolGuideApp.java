@@ -6,12 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
-import java.util.UUID;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
-import ru.fazziclay.schoolguide.app.manifest.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To36;
@@ -45,9 +42,6 @@ public class SchoolGuideApp {
     private Gson gson;
     private final Settings settings;
 
-    private final long latestAutoManifestUpdate = 0;
-    private GlobalVersionManifest globalVersionManifest;
-
     // Apps
     private final ScheduleInformatorApp scheduleInformatorApp;
 
@@ -73,15 +67,7 @@ public class SchoolGuideApp {
 
         saveSettings();
 
-        if (System.currentTimeMillis() - latestAutoManifestUpdate > 60*60*1000) {
-
-        }
-
         scheduleInformatorApp = new ScheduleInformatorApp(this);
-    }
-
-    interface SelectPresetDialogInterface {
-        void selected(Schedule schedule, UUID[] selected);
     }
 
     public void saveSettings() {
