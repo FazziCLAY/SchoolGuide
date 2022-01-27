@@ -3,6 +3,7 @@ package ru.fazziclay.schoolguide.app;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -42,7 +43,7 @@ public class SchoolGuideApp {
 
     private final File settingsFile;
 
-    private Gson gson;
+    private final Gson gson;
     private final Settings settings;
 
     private boolean isUpdateAvailable = false;
@@ -65,6 +66,9 @@ public class SchoolGuideApp {
         settings = DataUtil.load(settingsFile, Settings.class);
 
         saveSettings();
+
+        androidContext.startService(new Intent(androidContext, SchoolGuideService.class));
+        androidContext.startService(new Intent(androidContext, UpdateCheckerService.class));
 
         scheduleInformatorApp = new ScheduleInformatorApp(this);
     }

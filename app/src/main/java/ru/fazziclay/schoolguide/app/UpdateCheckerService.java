@@ -39,8 +39,24 @@ public class UpdateCheckerService extends Service {
     private Handler handler;
     private Runnable runnable;
 
+    // он 5 секунд тормозит вагон поезда, если на пути лежит человек
+    // за 5 секунд не сьебётся, будет что будет
+    public static void speedCrutch() {
+        // Технологический костыль, т.к. сервис запускается только во время инициализации
+        // приложения. если он(сервис) запустится слишком быстро, будет рекурсия и всё
+        // нафиг сломаеться
+        // поэтому если мы слишком быстрые, то сон в 5 секунд нафиг.
+        long startCrutch = System.currentTimeMillis();
+        while (!SchoolGuideApp.isInstanceAvailable()) {
+            if (System.currentTimeMillis() - startCrutch > 1000*5) break;
+        }
+        // костыль окончен
+    }
+
     @Override
     public void onCreate() {
+        speedCrutch();
+
         app = SchoolGuideApp.get(this);
         autoUpdateCacheFile = new File(app.getCacheDir(), AUTO_UPDATE_CACHE_FILE);
         autoUpdateCache = DataUtil.load(autoUpdateCacheFile, ManifestAutoUpdateCache.class);
