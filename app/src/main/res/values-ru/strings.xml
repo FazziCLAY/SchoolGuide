@@ -53,16 +53,24 @@
     <string name="presetList_copy">Копировать</string>
     <string name="presetList_copy_cancel">Отмена</string>
     <string name="presetList_copy_copyName">Копия \'%s\'</string>
+    <string name="presetList_presetNameIsEmptyError">Название не должно быть пустым</string>
+    <string name="presetList_rename_nameHint">Введите новое название</string>
+    <string name="presetList_rename_title">Переименованите \'%s\'</string>
+    <string name="presetList_rename_message" />
+    <string name="presetList_rename">Переименовать</string>
+    <string name="presetList_rename_cancel">Отмена</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>
     <string name="presetMenu_colorScheme">Цветовая схема</string>
+    <string name="presetMenu_rename">Переименовать</string>
 
     <string name="presetEdit_activityTitle">Пресет \'%s\'</string>
     <string name="presetEdit_colorScheme_default">Отсутстует</string>
     <string name="presetEdit_colorScheme_previous">Предыдущий</string>
     <string name="presetEdit_colorScheme_apply">Применить</string>
     <string name="presetEdit_colorScheme_title">Цветовая схема</string>
+    <string name="presetEdit_colorScheme_message" />
     <string name="presetEdit_colorScheme_cancel">Отмена</string>
     <string name="presetEdit_addEvent_contentDescription">Добавить событие</string>
 
@@ -74,4 +82,9 @@
     <string name="notificationChannel_scheduleInformator_scheduleNone_description">Уведомляет когда сейчас нету ничего, и в ближайшее настроенное время ничего и не будет</string>
     <string name="notificationChannel_updateCenter_name">Центр обновлений</string>
     <string name="notificationChannel_updateCenter_description">Уведомит о новом обновлении приложения</string>
+
+    <string name="batteryOptimizationDialog_title">Оптимизация батареи</string>
+    <string name="batteryOptimizationDialog_message">Просим вас отключить оптимизацию батареи для прилжения, так оно лучьше работает</string>
+    <string name="batteryOptimizationDialog_disable">Отключить</string>
+    <string name="batteryOptimizationDialog_cancel">Отмена</string>
 </resources>

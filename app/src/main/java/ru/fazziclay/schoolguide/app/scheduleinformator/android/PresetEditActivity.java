@@ -134,9 +134,10 @@ public class PresetEditActivity extends AppCompatActivity {
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, schemesNames));
         spinner.setSelection(selected);
 
+        String message = getString(R.string.presetEdit_colorScheme_message);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.presetEdit_colorScheme_title)
-                .setMessage(R.string.presetEdit_colorScheme_message)
+                .setMessage(message.isEmpty() ? null : message)
                 .setView(spinner)
                 .setPositiveButton(R.string.presetEdit_colorScheme_apply, (dialogInterface, which) -> {
                     int selectedPosition = spinner.getSelectedItemPosition();

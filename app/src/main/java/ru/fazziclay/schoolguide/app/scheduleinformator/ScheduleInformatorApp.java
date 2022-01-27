@@ -49,7 +49,7 @@ public class ScheduleInformatorApp {
         this.notification = getNoneNotification();
 
         scheduleFile = new File(app.getFilesDir(), "scheduleinformator.schedule.json");
-        schedule = (AppSchedule) DataUtil.load(scheduleFile, AppSchedule.class);
+        schedule = DataUtil.load(scheduleFile, AppSchedule.class);
         saveAppSchedule();
 
         serviceStart();
@@ -87,6 +87,7 @@ public class ScheduleInformatorApp {
                 stopForeground();
             } else {
                 this.notification = getNoneNotification();
+                startForeground();
                 sendNotify();
             }
             return 3000;
@@ -97,6 +98,7 @@ public class ScheduleInformatorApp {
                 stopForeground();
             } else {
                 this.notification = getNoneNotification();
+                startForeground();
                 sendNotify();
             }
             return 2000;

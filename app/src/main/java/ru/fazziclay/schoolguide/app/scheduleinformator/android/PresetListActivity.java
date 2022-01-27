@@ -33,6 +33,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.DebugActivity;
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.SettingsActivity;
 import ru.fazziclay.schoolguide.UpdateCenterActivity;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
@@ -98,6 +99,9 @@ public class PresetListActivity extends AppCompatActivity {
 
         } else if (id == R.id.openMathTreningGameItem) {
             startActivity(MathTreningGameActivity.getLaunchIntent(this));
+
+        } else if (id == R.id.openSettingsItem) {
+            startActivity(SettingsActivity.getLaunchIntent(this));
 
         } else if (id == R.id.openDebugItem) {
             startActivity(DebugActivity.getLaunchIntent(this));
@@ -194,7 +198,7 @@ public class PresetListActivity extends AppCompatActivity {
                     } else {
                         schedule.removePreset(uuid);
                     }
-
+                    informatorApp.saveAppSchedule();
                     updateList();
                 })
                 .setNegativeButton(R.string.presetList_delete_cancel, null)
@@ -240,9 +244,53 @@ public class PresetListActivity extends AppCompatActivity {
                     Preset newPreset = preset.clone();
                     newPreset.setName(newName);
                     schedule.putPreset(newUUID, newPreset);
+                    informatorApp.saveAppSchedule();
                     updateList();
                 })
                 .setNegativeButton(R.string.presetList_copy_cancel, null)
+                .create();
+
+        dialog.show();
+    }
+
+    /**
+     * Показать диолог копирования пресета
+     * @param uuid нужынй пресет
+     * **/
+    private void showRenamePresetDialog(UUID uuid) {
+        Preset preset = schedule.getPreset(uuid);
+        if (preset == null) {
+            Log.e("showRenamePresetDialog", "preset null in schedule; uuid="+uuid.toString());
+            return;
+        }
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        EditText name = new EditText(this);
+        name.setHint(R.string.presetList_rename_nameHint);
+        name.setText(preset.getName());
+        name.setMaxLines(PRESET_NAME_MAX_LINES);
+        name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(PRESET_NAME_MAX_LENGTH)});
+        name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        layout.addView(name);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.presetList_rename_title, preset.getName()))
+                .setMessage(getString(R.string.presetList_rename_message))
+                .setView(layout)
+                .setPositiveButton(R.string.presetList_rename, (e, e1) -> {
+                    String newName = name.getText().toString();
+                    if (newName.isEmpty()) {
+                        Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    preset.setName(newName);
+                    informatorApp.saveAppSchedule();
+                    updateList();
+                })
+                .setNegativeButton(R.string.presetList_rename_cancel, null)
                 .create();
 
         dialog.show();
@@ -314,6 +362,9 @@ public class PresetListActivity extends AppCompatActivity {
 
             } else if (item.getItemId() == R.id.delete) {
                 showDeletePresetDialog(presetUUID);
+
+            } else if (item.getItemId() == R.id.rename) {
+                showRenamePresetDialog(presetUUID);
             }
             informatorApp.saveAppSchedule();
             return true;

@@ -56,16 +56,24 @@
     <string name="presetList_copy">Copy</string>
     <string name="presetList_copy_cancel">Cancel</string>
     <string name="presetList_copy_copyName">Copy of \'%s\'</string>
+    <string name="presetList_presetNameIsEmptyError">The name should not be empty</string>
+    <string name="presetList_rename_nameHint">Enter new name</string>
+    <string name="presetList_rename_title">Rename \'%s\'</string>
+    <string name="presetList_rename_message" />
+    <string name="presetList_rename">Rename</string>
+    <string name="presetList_rename_cancel">Cancel</string>
 
     <string name="presetMenu_copy">Copy</string>
     <string name="presetMenu_delete">Delete</string>
     <string name="presetMenu_colorScheme">Color scheme</string>
+    <string name="presetMenu_rename">Rename</string>
 
     <string name="presetEdit_activityTitle">Preset \'%s\'</string>
     <string name="presetEdit_colorScheme_default">None</string>
     <string name="presetEdit_colorScheme_previous">Previous</string>
     <string name="presetEdit_colorScheme_apply">Apply</string>
     <string name="presetEdit_colorScheme_title">Color Scheme</string>
+    <string name="presetEdit_colorScheme_message" />
     <string name="presetEdit_colorScheme_cancel">Cancel</string>
     <string name="presetEdit_addEvent_contentDescription">Add event</string>
 
@@ -77,11 +85,11 @@
     <string name="notificationChannel_scheduleInformator_scheduleNone_description">Now there is nothing planned and soon there is nothing planned</string>
     <string name="notificationChannel_updateCenter_name">Update Center</string>
     <string name="notificationChannel_updateCenter_description">New update notification</string>
+
     <string name="batteryOptimizationDialog_title">Battery optimization</string>
-    <string name="batteryOptimizationDialog_message">Просим вас отключить оптимизацию батареи для прилжения, чо</string>
+    <string name="batteryOptimizationDialog_message">We ask you to disable battery optimization</string>
     <string name="batteryOptimizationDialog_disable">Disable</string>
     <string name="batteryOptimizationDialog_cancel">Cancel</string>
-    <string name="presetList_presetNameIsEmptyError">Not empty name to preset</string>
-    <string name="presetEdit_colorScheme_message">todo</string>
-    <string name="presetMenu_rename">Rename</string>
+
+    <string name="mainOptionMenu_openSettings">SETTINGS</string>
 </resources>

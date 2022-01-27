@@ -25,23 +25,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".app.scheduleinformator.android.PresetListActivity"
             android:exported="false" />
-
         <activity
             android:name=".app.scheduleinformator.android.PresetEditActivity"
             android:exported="false" />
-
         <activity
             android:name=".app.multiplicationtrening.MathTreningGameActivity"
             android:exported="false" />
-
         <activity
             android:name=".UpdateCenterActivity"
             android:exported="false" />
-
         <activity
             android:name=".DebugActivity"
             android:exported="false" />
@@ -50,12 +48,10 @@
             android:name=".app.SchoolGuideService"
             android:enabled="true"
             android:exported="false" />
-
         <service
             android:name=".app.scheduleinformator.InformatorService"
             android:enabled="true"
             android:exported="false" />
-
         <service
             android:name=".app.UpdateCheckerService"
             android:enabled="true"
@@ -71,4 +67,5 @@
                 android:resource="@xml/providers_paths" />
         </provider>
     </application>
+
 </manifest>
