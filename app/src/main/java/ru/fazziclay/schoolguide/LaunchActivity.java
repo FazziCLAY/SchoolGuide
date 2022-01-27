@@ -1,6 +1,7 @@
 package ru.fazziclay.schoolguide;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -23,8 +24,9 @@ public class LaunchActivity extends Activity {
 
         // Loading text
         TextView loadingTextView = new TextView(this);
-        loadingTextView.setTextSize(40);
         loadingTextView.setGravity(Gravity.CENTER);
+        loadingTextView.setTextSize(40);
+        loadingTextView.setTextColor(Color.WHITE);
         loadingTextView.setText(R.string.application_name);
 
         setContentView(loadingTextView);
