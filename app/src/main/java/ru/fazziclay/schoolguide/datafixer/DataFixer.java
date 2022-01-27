@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 
+import ru.fazziclay.schoolguide.AppTrace;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
@@ -19,19 +20,24 @@ public class DataFixer {
     private final Gson gson;
     private final File versionFile;
     private Version version;
+    private final AppTrace appTrace = AppTrace.getInstance();
 
     public DataFixer(Context context, int currentAppVersion, AbstractScheme[] fixSchemes) {
-        Log.d("DataFixer", "<init>");
+        appTrace.trace("init");
         this.context = context;
         this.currentAppVersion = currentAppVersion;
         this.fixSchemes = fixSchemes;
         this.gson = new Gson();
         this.versionFile = new File(context.getFilesDir(), "version.json");
         boolean isPre36 = (context.getExternalFilesDir("").list().length > 0 && !versionFile.exists());
-        this.version = gson.fromJson(
-                FileUtil.read(versionFile, "{}"),
-                Version.class
-        );
+        try {
+            this.version = gson.fromJson(
+                    FileUtil.read(versionFile, "{}"),
+                    Version.class
+            );
+        } catch (Exception ignored) {
+            this.version = Version.createNone();
+        }
         if (version.getFirstVersion() == 0) version.setFirstVersion(isPre36 ? PRE36_VERSION : currentAppVersion);
         if (version.getLatestVersion() == 0) version.setLatestVersion(isPre36 ? PRE36_VERSION : currentAppVersion);
         if (isPre36) {
@@ -41,12 +47,16 @@ public class DataFixer {
         saveVersion();
     }
 
+    /**
+     * Сохранить файл версии (version.json)
+     * **/
     public void saveVersion() {
+        appTrace.trace("saveVersion");
         FileUtil.write(versionFile, gson.toJson(version, Version.class));
     }
 
     public void fixIfAvailable() {
-        Log.d("DataFixer", "fixIfAvailable();");
+        appTrace.trace("fixIfAvailable");
         if (version.getLatestVersion() >= currentAppVersion) {
             return;
         }
@@ -63,7 +73,8 @@ public class DataFixer {
                     i = -1;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                appTrace.setThrowable(e);
+                AppTrace.saveAndLog(getAndroidContext(), appTrace);
             }
 
             i++;

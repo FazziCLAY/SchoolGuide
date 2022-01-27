@@ -21,6 +21,12 @@ public class Version {
         this.versionsHistory = versionsHistory;
     }
 
+    private Version() {}
+
+    public static Version createNone() {
+        return new Version();
+    }
+
     public void addToVersionHistory(int version) {
         if (versionsHistory == null) versionsHistory = new ArrayList<>();
         if (!versionsHistory.contains(version)) {
