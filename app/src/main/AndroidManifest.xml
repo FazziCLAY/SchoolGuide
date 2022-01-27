@@ -3,10 +3,10 @@
     package="ru.fazziclay.schoolguide">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="false"
@@ -16,42 +16,48 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
-        <service
-            android:name=".app.UpdateCheckerService"
-            android:enabled="true"
-            android:exported="false" />
 
-        <activity
-            android:name=".DebugActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UpdateCenterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".app.scheduleinformator.android.PresetEditActivity"
-            android:exported="false" />
-        <activity
-            android:name=".app.scheduleinformator.android.PresetListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".app.multiplicationtrening.MathTreningGameActivity"
-            android:exported="false" />
         <activity
             android:name=".LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".app.scheduleinformator.android.PresetListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".app.scheduleinformator.android.PresetEditActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".app.multiplicationtrening.MathTreningGameActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".UpdateCenterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DebugActivity"
+            android:exported="false" />
 
         <service
             android:name=".app.SchoolGuideService"
             android:enabled="true"
             android:exported="false" />
+
         <service
             android:name=".app.scheduleinformator.InformatorService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".app.UpdateCheckerService"
             android:enabled="true"
             android:exported="false" />
 
@@ -65,5 +71,4 @@
                 android:resource="@xml/providers_paths" />
         </provider>
     </application>
-
 </manifest>

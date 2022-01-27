@@ -7,7 +7,12 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
+import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To36;
 
 public class SharedConstrains {
     public static final int APPLICATION_VERSION_CODE = BuildConfig.VERSION_CODE;
@@ -20,28 +25,45 @@ public class SharedConstrains {
     public static final String VERSION_MANIFEST_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/dev/v34/manifest/v2/version_manifest_v2.json";
     public static final String BUILTIN_SCHEDULE_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/dev/v34/manifest/v2/builtin_schedule_v2.json";
 
+    public static final AbstractScheme[] DATA_FIXER_SCHEMES = {
+            new SchemePre36To36()
+    };
+
     /**
-     * Зарегистрировать каналы уведомлений для андроида
+     * Выдаёт каналы которые нужно зарегистрировать
      * **/
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void registerAndroidNotificationChannels(Context context) {
-        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+    public static List<NotificationChannel> getNotificationChannels(Context context) {
+        final List<NotificationChannel> notificationChannels = new ArrayList<>();
 
-        NotificationChannel scheduleInformatorNone = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE, context.getString(R.string.notificationChannel_scheduleInformator_scheduleNone_name), NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel scheduleInformatorNone = new NotificationChannel(
+                ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NONE,
+                context.getString(R.string.notificationChannel_scheduleInformator_scheduleNone_name),
+                NotificationManager.IMPORTANCE_DEFAULT);
         scheduleInformatorNone.setDescription(context.getString(R.string.notificationChannel_scheduleInformator_scheduleNone_description));
+        notificationChannels.add(scheduleInformatorNone);
 
-        NotificationChannel scheduleInformatorNext = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NEXT, context.getString(R.string.notificationChannel_scheduleInformator_scheduleNext_name), NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel scheduleInformatorNext = new NotificationChannel(
+                ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NEXT,
+                context.getString(R.string.notificationChannel_scheduleInformator_scheduleNext_name),
+                NotificationManager.IMPORTANCE_DEFAULT);
         scheduleInformatorNext.setDescription(context.getString(R.string.notificationChannel_scheduleInformator_scheduleNext_description));
+        notificationChannels.add(scheduleInformatorNext);
 
-        NotificationChannel scheduleInformatorNow = new NotificationChannel(ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NOW, context.getString(R.string.notificationChannel_scheduleInformator_scheduleNow_name), NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel scheduleInformatorNow = new NotificationChannel(
+                ScheduleInformatorApp.NOTIFICATION_CHANNEL_ID_NOW,
+                context.getString(R.string.notificationChannel_scheduleInformator_scheduleNow_name),
+                NotificationManager.IMPORTANCE_DEFAULT);
         scheduleInformatorNow.setDescription(context.getString(R.string.notificationChannel_scheduleInformator_scheduleNow_description));
+        notificationChannels.add(scheduleInformatorNow);
 
-        NotificationChannel updateCenter = new NotificationChannel(UpdateCenterActivity.NOTIFICATION_CHANNEL_ID, context.getString(R.string.notificationChannel_updateCenter_name), NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel updateCenter = new NotificationChannel(
+                UpdateCenterActivity.NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.notificationChannel_updateCenter_name),
+                NotificationManager.IMPORTANCE_DEFAULT);
         updateCenter.setDescription(context.getString(R.string.notificationChannel_updateCenter_description));
+        notificationChannels.add(updateCenter);
 
-        notificationManager.createNotificationChannel(scheduleInformatorNone);
-        notificationManager.createNotificationChannel(scheduleInformatorNext);
-        notificationManager.createNotificationChannel(scheduleInformatorNow);
-        notificationManager.createNotificationChannel(updateCenter);
+        return notificationChannels;
     }
 }

@@ -10,9 +10,8 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 
 public class AppSchedule extends Schedule {
-
     @SerializedName("currentPreset")
-    UUID currentPresetUUID = new UUID(0, 0);
+    private UUID currentPresetUUID = new UUID(0, 0);
 
     public Preset getCurrentPreset() {
         if (currentPresetUUID == null) {

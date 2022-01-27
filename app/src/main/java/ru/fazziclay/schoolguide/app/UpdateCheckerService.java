@@ -28,22 +28,24 @@ public class UpdateCheckerService extends Service {
     public static final int HANDLER_DELAY = 5 * 1000;
     public static final int CHECK_DELAY = 60 * 60 * 1000;
     public static final int CHECK_DELAY_NO_INTERNET = 60 * 1000;
+    public static final String AUTO_UPDATE_CACHE_FILE = "manifest_auto_update_cache.json";
 
+    private SchoolGuideApp app;
     private File autoUpdateCacheFile;
     private ManifestAutoUpdateCache autoUpdateCache;
 
     private NotificationManagerCompat notificationManagerCompat;
 
-    Handler handler;
-    Runnable runnable;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     public void onCreate() {
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-
-        SchoolGuideApp app = SchoolGuideApp.get(this);
-        autoUpdateCacheFile = new File(app.getCacheDir(), "manifest_auto_update_cache.json");
+        app = SchoolGuideApp.get(this);
+        autoUpdateCacheFile = new File(app.getCacheDir(), AUTO_UPDATE_CACHE_FILE);
         autoUpdateCache = DataUtil.load(autoUpdateCacheFile, ManifestAutoUpdateCache.class);
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
 
         handler = new Handler(getMainLooper());
         runnable = () -> {
@@ -64,8 +66,8 @@ public class UpdateCheckerService extends Service {
     }
 
     private void tick() {
-        long left = System.currentTimeMillis() - autoUpdateCache.latestManifestAutoUpdated;
-        if (left > CHECK_DELAY) {
+        long pass = System.currentTimeMillis() - autoUpdateCache.getLatestManifestAutoUpdated();
+        if (pass > CHECK_DELAY) {
             updateLatestUpdateTime(System.currentTimeMillis());
 
             GlobalManager.get(this, new GlobalManager.GlobalManagerInterface() {
@@ -74,6 +76,7 @@ public class UpdateCheckerService extends Service {
                     if (exception instanceof UnknownHostException) {
                         updateLatestUpdateTime((System.currentTimeMillis() - CHECK_DELAY) + CHECK_DELAY_NO_INTERNET);
                     }
+                    app.setUpdateAvailable(false);
                 }
 
                 @Override
@@ -81,14 +84,21 @@ public class UpdateCheckerService extends Service {
                     if (versionManifest.latestVersion == null) return;
                     if (versionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE) {
                         sendUpdateNotify();
+                        app.setUpdateAvailable(true);
+                        return;
                     }
+                    app.setUpdateAvailable(false);
                 }
             });
         }
     }
 
+    /**
+     * Обновить кеш и сохранить его
+     * @see ManifestAutoUpdateCache
+     * **/
     private void updateLatestUpdateTime(long time) {
-        autoUpdateCache.latestManifestAutoUpdated = time;
+        autoUpdateCache.setLatestManifestAutoUpdated(time);
         saveCache();
     }
 

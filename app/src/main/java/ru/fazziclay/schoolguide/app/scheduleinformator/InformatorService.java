@@ -9,15 +9,14 @@ import android.os.Looper;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 public class InformatorService extends Service {
-    public SchoolGuideApp app;
-    public ScheduleInformatorApp scheduleInformatorApp;
+    private ScheduleInformatorApp scheduleInformatorApp;
 
-    public Handler handler;
-    public Runnable runnable;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     public void onCreate() {
-        app = SchoolGuideApp.get(this);
+        SchoolGuideApp app = SchoolGuideApp.get(this);
         scheduleInformatorApp = app.getScheduleInformatorApp();
         scheduleInformatorApp.registerService(this);
 

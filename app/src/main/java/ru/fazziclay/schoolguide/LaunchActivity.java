@@ -33,15 +33,15 @@ public class LaunchActivity extends Activity {
 
         // Notification channels
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            SharedConstrains.registerAndroidNotificationChannels(this);
+            SchoolGuideApp.registerNotificationChannels(this);
         }
 
         // Loading
-        startService(new Intent(this, SchoolGuideService.class));
-
         SchoolGuideApp.get(this);
+        startService(new Intent(this, SchoolGuideService.class));
         startService(new Intent(this, UpdateCheckerService.class));
-        startActivity(new Intent(this, PresetListActivity.class));
+
+        startActivity(PresetListActivity.getLaunchIntent(this));
 
         finish();
     }

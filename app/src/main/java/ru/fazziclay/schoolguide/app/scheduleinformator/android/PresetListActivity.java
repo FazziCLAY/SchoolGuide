@@ -1,6 +1,7 @@
 package ru.fazziclay.schoolguide.app.scheduleinformator.android;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,11 +10,13 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,17 +39,23 @@ import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivit
 import ru.fazziclay.schoolguide.app.scheduleinformator.AppSchedule;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
+import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
 import ru.fazziclay.schoolguide.util.UUIDUtil;
 
 public class PresetListActivity extends AppCompatActivity {
+    public static final int PRESET_NAME_MAX_LENGTH = 25;
+    public static final int PRESET_NAME_MAX_LINES = 1;
+
+    public static Intent getLaunchIntent(Context context) {
+        return new Intent(context, PresetListActivity.class);
+    }
+
     private SchoolGuideApp app;
     private ScheduleInformatorApp informatorApp;
     private ActivityPresetListBinding binding;
 
-    private AppSchedule schedule;
-
-    private UUID[] listPresetsUUIDs;
+    private Schedule schedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,31 +69,14 @@ public class PresetListActivity extends AppCompatActivity {
 
         binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
 
-        registerForContextMenu(binding.presetList);
-
         updateList();
     }
 
     @Override
     protected void onResume() {
-        super.onResume(); // TODO: 2022-01-21 make translatable
+        super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PowerManager powerManager = getSystemService(PowerManager.class);
-            if (!powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
-                @SuppressLint("BatteryLife")
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                        .setTitle("Оптимизация батареи")
-                        .setMessage("Просим вас отключить оптимизацию батареи для прилжения, что бы оно корректно работало")
-                        .setPositiveButton("Отключить", (dialog1, which) -> {
-                            Intent intent = new Intent();
-                            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                            intent.setData(Uri.parse("package:" + getPackageName()));
-                            startActivity(intent);
-                        })
-                        .setNegativeButton("Отмена", null);
-
-                dialog.show();
-            }
+            showDisableBatteryOptimizationDialog();
         }
         updateList();
     }
@@ -92,6 +85,8 @@ public class PresetListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.openDebugItem).setVisible(app.getSettings().developerFeatures);
+        MenuItem openUpdateCenter = menu.findItem(R.id.openUpdateCenterItem);
+        if (app.isUpdateAvailable()) openUpdateCenter.setTitle(String.format("(!) %s", openUpdateCenter.getTitle()));
         return true;
     }
 
@@ -102,25 +97,56 @@ public class PresetListActivity extends AppCompatActivity {
             startActivity(UpdateCenterActivity.getLaunchIntent(this));
 
         } else if (id == R.id.openMathTreningGameItem) {
-            MathTreningGameActivity.open(this);
+            startActivity(MathTreningGameActivity.getLaunchIntent(this));
 
         } else if (id == R.id.openDebugItem) {
-            startActivity(new Intent(this, DebugActivity.class));
+            startActivity(DebugActivity.getLaunchIntent(this));
         }
         return true;
     }
 
+    /**
+     * Показывает диолог и том что было бы неплохо отключить
+     * оптимизацию батареи для приложения, диолог показывается только если это ещё не сделано
+     * **/
+    @SuppressLint("BatteryLife")
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void showDisableBatteryOptimizationDialog() {
+        PowerManager powerManager = getSystemService(PowerManager.class);
+        if (powerManager.isIgnoringBatteryOptimizations(getPackageName())) return;
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.batteryOptimizationDialog_title)
+                .setMessage(R.string.batteryOptimizationDialog_message)
+                .setPositiveButton(R.string.batteryOptimizationDialog_disable, (dialogInterface, which) -> {
+                    try {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                        intent.setData(Uri.parse("package:" + getPackageName()));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        /* don`t puke .__. */
+                    }
+                })
+                .setNegativeButton(R.string.batteryOptimizationDialog_cancel, null);
+
+        dialog.show();
+    }
+
+    /**
+     * Показать диолог создания нового пресета.
+     * @see PresetListActivity#PRESET_NAME_MAX_LINES
+     * @see PresetListActivity#PRESET_NAME_MAX_LENGTH
+     * **/
     private void showCreateNewPresetDialog() {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        final int NAME_MAX_LENGTH = 25;
-        final int NAME_MAX_LINES = 1;
-
         EditText name = new EditText(this);
         name.setHint(R.string.presetList_createNew_nameHint);
-        name.setMaxLines(NAME_MAX_LINES);
-        name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(NAME_MAX_LENGTH)});
+        name.setMaxLines(PRESET_NAME_MAX_LINES);
+        name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(PRESET_NAME_MAX_LENGTH)});
         name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         layout.addView(name);
@@ -128,8 +154,14 @@ public class PresetListActivity extends AppCompatActivity {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.presetList_createNew_title)
                 .setView(layout)
-                .setPositiveButton(R.string.presetList_createNew_create, (e, e1) -> {
-                    schedule.putPreset(UUIDUtil.generateUUID(schedule.getPresetsUUIDs()), new Preset(name.getText().toString()));
+                .setPositiveButton(R.string.presetList_createNew_create, (dialogInterface, which) -> {
+                    String newName = name.getText().toString();
+                    if (newName.isEmpty()) {
+                        Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    UUID newUUID = UUIDUtil.generateUUID(schedule.getPresetsUUIDs());
+                    schedule.putPreset(newUUID, new Preset(newName));
                     informatorApp.saveAppSchedule();
                     updateList();
                 })
@@ -139,15 +171,30 @@ public class PresetListActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Показать диолог удаления пресета
+     * Если в {@link PresetListActivity#schedule} нету выбранного пресета, то не показываем
+     * @param uuid нужный пресет
+     * **/
     private void showDeletePresetDialog(UUID uuid) {
         Preset preset = schedule.getPreset(uuid);
-        if (preset == null) return;
+        if (preset == null) {
+            Log.e("showDeletePresetDialog", "preset null in schedule; uuid="+uuid.toString());
+            return;
+        }
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.presetList_delete_title, preset.getName()))
                 .setMessage(getString(R.string.presetList_delete_message))
-                .setPositiveButton(R.string.presetList_delete, (e, e1) -> {
-                    schedule.removePreset(uuid);
-                    schedule.selectFirst();
+                .setPositiveButton(R.string.presetList_delete, (dialogInterface, which) -> {
+                    if (schedule instanceof AppSchedule) {
+                        boolean selected = ((AppSchedule) schedule).getCurrentPreset() == preset;
+                        schedule.removePreset(uuid);
+                        if (selected) ((AppSchedule) schedule).selectFirst();
+                    } else {
+                        schedule.removePreset(uuid);
+                    }
+
                     updateList();
                 })
                 .setNegativeButton(R.string.presetList_delete_cancel, null)
@@ -156,20 +203,25 @@ public class PresetListActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Показать диолог копирования пресета
+     * @param uuid нужынй пресет
+     * **/
     private void showCopyPresetDialog(UUID uuid) {
         Preset preset = schedule.getPreset(uuid);
-        if (preset == null) return;
+        if (preset == null) {
+            Log.e("showCopyPresetDialog", "preset null in schedule; uuid="+uuid.toString());
+            return;
+        }
+
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-
-        final int NAME_MAX_LENGTH = 25;
-        final int NAME_MAX_LINES = 1;
 
         EditText name = new EditText(this);
         name.setHint(R.string.presetList_copy_nameHint);
         name.setText(getString(R.string.presetList_copy_copyName, preset.getName()));
-        name.setMaxLines(NAME_MAX_LINES);
-        name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(NAME_MAX_LENGTH)});
+        name.setMaxLines(PRESET_NAME_MAX_LINES);
+        name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(PRESET_NAME_MAX_LENGTH)});
         name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         layout.addView(name);
@@ -179,15 +231,15 @@ public class PresetListActivity extends AppCompatActivity {
                 .setMessage(getString(R.string.presetList_copy_message))
                 .setView(layout)
                 .setPositiveButton(R.string.presetList_copy, (e, e1) -> {
-                    try {
-                        Preset newPreset = preset.clone();
-                        newPreset.setName(name.getText().toString());
-                        schedule.putPreset(UUIDUtil.generateUUID(schedule.getPresetsUUIDs()), newPreset);
-                        updateList();
-                    } catch (CloneNotSupportedException exception) {
-                        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-                        exception.printStackTrace();
+                    String newName = name.getText().toString();
+                    if (newName.isEmpty()) {
+                        Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    UUID newUUID = UUIDUtil.generateUUID(schedule.getPresetsUUIDs());
+                    Preset newPreset = preset.clone();
+                    newPreset.setName(newName);
+                    schedule.putPreset(newUUID, newPreset);
                     updateList();
                 })
                 .setNegativeButton(R.string.presetList_copy_cancel, null)
@@ -196,8 +248,11 @@ public class PresetListActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Обновить View список
+     * **/
     private void updateList() {
-        listPresetsUUIDs = schedule.getPresetsUUIDs();
+        UUID[] listPresetsUUIDs = schedule.getPresetsUUIDs();
         binding.presetList.deferNotifyDataSetChanged();
         binding.presetList.setAdapter(new BaseAdapter() {
             @Override
@@ -215,23 +270,29 @@ public class PresetListActivity extends AppCompatActivity {
                 return position;
             }
 
-            @SuppressLint("ViewHolder")
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 UUID presetUUID = listPresetsUUIDs[position];
                 Preset preset = schedule.getPreset(presetUUID);
+                if (preset == null) {
+                    Log.e("updateList", "get preset is null");
+                    return new Button(PresetListActivity.this);
+                }
 
                 return getPresetView(presetUUID, preset);
             }
         });
     }
 
+    /**
+     * Получить View элемента списка
+     * **/
     private View getPresetView(UUID presetUUID, Preset preset) {
-        LinearLayout layout = new LinearLayout(PresetListActivity.this);
+        LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.HORIZONTAL);
 
         LinearLayout.LayoutParams checkboxLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        CheckBox checkBox = new CheckBox(PresetListActivity.this);
+        CheckBox checkBox = new CheckBox(this);
         checkBox.setChecked(preset.equals(informatorApp.getCurrentPreset()));
         checkBox.setTextSize(30);
         checkBox.setPadding(5, 5, 10, 5);
@@ -244,9 +305,8 @@ public class PresetListActivity extends AppCompatActivity {
             updateList();
         });
 
-
-        TextView textView = new TextView(PresetListActivity.this);
-        PopupMenu popupMenu = new PopupMenu(PresetListActivity.this, textView);
+        TextView textView = new TextView(this);
+        PopupMenu popupMenu = new PopupMenu(this, textView);
         popupMenu.inflate(R.menu.menu_preset_list_popup);
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.copy) {
@@ -262,7 +322,7 @@ public class PresetListActivity extends AppCompatActivity {
         textView.setTextSize(30);
         textView.setTextColor(Color.WHITE);
         textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        textView.setOnClickListener(view -> startActivity(PresetEditActivity.getLaunchIntent(PresetListActivity.this, presetUUID)));
+        textView.setOnClickListener(view -> startActivity(PresetEditActivity.getLaunchIntent(this, presetUUID)));
         textView.setOnLongClickListener(v -> {
             popupMenu.show();
             return true;

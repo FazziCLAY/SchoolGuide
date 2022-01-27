@@ -82,7 +82,12 @@ public class Preset implements Cloneable {
     }
 
     @NonNull
-    public Preset clone() throws CloneNotSupportedException {
-        return (Preset) super.clone();
+    public Preset clone() {
+        try {
+            return (Preset) super.clone();
+        } catch (CloneNotSupportedException exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 }

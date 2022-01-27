@@ -13,12 +13,12 @@ import ru.fazziclay.schoolguide.util.FileUtil;
 public class DataFixer {
     private static final int PRE36_VERSION = -36;
 
-    Context context;
-    int currentAppVersion;
-    AbstractScheme[] fixSchemes;
-    Gson gson;
-    File versionFile;
-    Version version;
+    private final Context context;
+    private final int currentAppVersion;
+    private final AbstractScheme[] fixSchemes;
+    private final Gson gson;
+    private final File versionFile;
+    private Version version;
 
     public DataFixer(Context context, int currentAppVersion, AbstractScheme[] fixSchemes) {
         Log.d("DataFixer", "<init>");

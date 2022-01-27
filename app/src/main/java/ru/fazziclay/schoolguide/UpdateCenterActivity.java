@@ -17,8 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.google.gson.Gson;
-
 import java.io.FileNotFoundException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -37,9 +35,9 @@ public class UpdateCenterActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "updatecenter";
 
     private ActivityUpdateCenterBinding binding;
-    private Gson gson;
     private String currentVersionType;
     private String currentLanguage;
+    private final AppTrace appTrace = AppTrace.getInstance();
 
     public static Intent getLaunchIntent(@NonNull Context context) {
         return new Intent(context, UpdateCenterActivity.class);
@@ -48,14 +46,17 @@ public class UpdateCenterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appTrace.trace("onCreate");
         SchoolGuideApp.get(this);
-        gson = new Gson();
         currentVersionType = SharedConstrains.APPLICATION_BUILD_TYPE;
         currentLanguage = Locale.getDefault().getLanguage();
 
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            appTrace.setThrowable(e);
+            AppTrace.saveAndLog(this, appTrace);
+        }
 
         binding = ActivityUpdateCenterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

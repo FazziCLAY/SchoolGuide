@@ -25,7 +25,7 @@ public class ScheduleInformatorApp {
     public static final String NOTIFICATION_CHANNEL_ID_NOW = "scheduleinformator_now";
     public static final int NOTIFICATION_ID = 1000;
 
-    public final Notification noneNotification;
+    public Notification notification;
 
     private final SchoolGuideApp app;
     private final Context context;
@@ -46,20 +46,11 @@ public class ScheduleInformatorApp {
 
         this.notificationManagerCompat = NotificationManagerCompat.from(context);
 
-        this.noneNotification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NONE)
-                .setSmallIcon(R.drawable.planner_s)
-                .setAutoCancel(true)
-                .setContentTitle("Откисай!")
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setOnlyAlertOnce(true)
-                .setSound(null)
-                .build();
+        this.notification = getNoneNotification();
 
         scheduleFile = new File(app.getFilesDir(), "scheduleinformator.schedule.json");
         schedule = (AppSchedule) DataUtil.load(scheduleFile, AppSchedule.class);
         saveAppSchedule();
-
-        setCurrentPreset(schedule.currentPresetUUID);
 
         serviceStart();
     }
@@ -81,7 +72,7 @@ public class ScheduleInformatorApp {
     }
 
     public void setCurrentPreset(UUID preset) {
-        schedule.currentPresetUUID = preset;
+        schedule.setCurrent(preset);
         saveAppSchedule();
     }
 
@@ -95,7 +86,8 @@ public class ScheduleInformatorApp {
             if (settings.stopForegroundIsNone) {
                 stopForeground();
             } else {
-                sendNotify(NOTIFICATION_ID, noneNotification);
+                this.notification = getNoneNotification();
+                sendNotify();
             }
             return 3000;
         }
@@ -104,27 +96,29 @@ public class ScheduleInformatorApp {
             if (settings.stopForegroundIsNone) {
                 stopForeground();
             } else {
-                sendNotify(NOTIFICATION_ID, noneNotification);
+                this.notification = getNoneNotification();
+                sendNotify();
             }
             return 2000;
         }
 
         startForeground();
 
-        ScheduleInformatorNotification notification = new ScheduleInformatorNotification();
-        notification.smallIcon = R.drawable.planner_s;
+        ScheduleInformatorNotification notificationBuilder = new ScheduleInformatorNotification();
+        notificationBuilder.smallIcon = R.drawable.planner_s;
 
         if (isNow) {
-            notification.contentTitle = String.format("%s! (%s)", nowEvent.getName(), TimeUtil.convertToHumanTime(nowEvent.remainsUntilEnd(), ConvertMode.hhMMSS));
+            notificationBuilder.contentTitle = String.format("%s! (%s)", nowEvent.getName(), TimeUtil.convertToHumanTime(nowEvent.remainsUntilEnd(), ConvertMode.hhMMSS));
             if (isNext)
-                notification.contentText = String.format("Следующее: %s", nextEvent.getName());
+                notificationBuilder.contentText = String.format("Следующее: %s", nextEvent.getName());
 
         } else {
-            notification.contentTitle = String.format("Откисай! (%s)", TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
-            notification.contentText = String.format("Следующее: %s", nextEvent.getName());
+            notificationBuilder.contentTitle = String.format("Откисай! (%s)", TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
+            notificationBuilder.contentText = String.format("Следующее: %s", nextEvent.getName());
         }
 
-        sendNotify(NOTIFICATION_ID, notification.toNotification(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT)));
+        notification = notificationBuilder.toNotification(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
+        sendNotify();
         return 1000;
     }
 
@@ -138,7 +132,7 @@ public class ScheduleInformatorApp {
     }
 
     public void startForeground() {
-        if (!isServiceForeground) informatorService.startForeground(NOTIFICATION_ID, noneNotification);
+        if (!isServiceForeground) informatorService.startForeground(NOTIFICATION_ID, notification);
         isServiceForeground = true;
     }
 
@@ -147,8 +141,19 @@ public class ScheduleInformatorApp {
         isServiceForeground = false;
     }
 
-    public void sendNotify(int id, Notification notification) {
-        notificationManagerCompat.notify(id, notification);
+    public void sendNotify() {
+        notificationManagerCompat.notify(NOTIFICATION_ID, notification);
+    }
+
+    public Notification getNoneNotification() {
+        return new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NONE)
+                .setSmallIcon(R.drawable.planner_s)
+                .setAutoCancel(true)
+                .setContentTitle("Откисай!")
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setOnlyAlertOnce(true)
+                .setSound(null)
+                .build();
     }
 
     public static class ScheduleInformatorNotification {

@@ -1,7 +1,7 @@
 package ru.fazziclay.schoolguide.app.multiplicationtrening;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,8 +28,8 @@ import ru.fazziclay.schoolguide.util.DataUtil;
 
 
 public class MathTreningGameActivity extends AppCompatActivity {
-    public static void open(Activity activity) {
-        activity.startActivity(new Intent(activity, MathTreningGameActivity.class));
+    public static Intent getLaunchIntent(Context context) {
+        return new Intent(context, MathTreningGameActivity.class);
     }
 
     private File gameDataFile;

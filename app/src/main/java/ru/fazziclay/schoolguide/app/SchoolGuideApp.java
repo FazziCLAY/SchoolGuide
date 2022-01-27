@@ -1,17 +1,20 @@
 package ru.fazziclay.schoolguide.app;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.util.List;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
-import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
-import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To36;
 import ru.fazziclay.schoolguide.util.DataUtil;
 
 public class SchoolGuideApp {
@@ -42,6 +45,8 @@ public class SchoolGuideApp {
     private Gson gson;
     private final Settings settings;
 
+    private boolean isUpdateAvailable = false;
+
     // Apps
     private final ScheduleInformatorApp scheduleInformatorApp;
 
@@ -50,9 +55,7 @@ public class SchoolGuideApp {
         androidContext = context.getApplicationContext();
         gson = new Gson();
 
-        DataFixer dataFixer = new DataFixer(androidContext, SharedConstrains.APPLICATION_VERSION_CODE, new AbstractScheme[]{
-            new SchemePre36To36()
-        });
+        DataFixer dataFixer = new DataFixer(androidContext, SharedConstrains.APPLICATION_VERSION_CODE, SharedConstrains.DATA_FIXER_SCHEMES);
         dataFixer.fixIfAvailable();
 
         filesDir = context.getExternalFilesDir(null);
@@ -61,13 +64,19 @@ public class SchoolGuideApp {
         settingsFile = new File(filesDir, "settings.json");
         settings = DataUtil.load(settingsFile, Settings.class);
 
-        if (!settings.storageSpaceSaving) {
-            gson = new GsonBuilder().setPrettyPrinting().create();
-        }
-
         saveSettings();
 
         scheduleInformatorApp = new ScheduleInformatorApp(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void registerNotificationChannels(Context context) {
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        List<NotificationChannel> channels = SharedConstrains.getNotificationChannels(context);
+
+        for (NotificationChannel channel : channels) {
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public void saveSettings() {
@@ -100,5 +109,13 @@ public class SchoolGuideApp {
 
     public ScheduleInformatorApp getScheduleInformatorApp() {
         return this.scheduleInformatorApp;
+    }
+
+    public boolean isUpdateAvailable() {
+        return isUpdateAvailable;
+    }
+
+    public void setUpdateAvailable(boolean updateAvailable) {
+        isUpdateAvailable = updateAvailable;
     }
 }

@@ -51,9 +51,8 @@ public class PresetEditActivity extends AppCompatActivity {
 
     private SchoolGuideApp app;
     private Settings settings;
-    private ScheduleInformatorApp informatorApp;
-    private DateFormatSymbols dateFormatSymbols;
     private ActivityPresetEditBinding binding;
+    private DateFormatSymbols dateFormatSymbols;
 
     private UUID presetUUID;
     private Preset preset;
@@ -65,7 +64,7 @@ public class PresetEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         app = SchoolGuideApp.get(this);
         settings = app.getSettings();
-        informatorApp = app.getScheduleInformatorApp();
+        ScheduleInformatorApp informatorApp = app.getScheduleInformatorApp();
         dateFormatSymbols = new DateFormatSymbols();
 
         isFirstMonday = app.getSettings().isFirstMonday;
@@ -119,7 +118,7 @@ public class PresetEditActivity extends AppCompatActivity {
      * **/
     private void showColorSchemeDialog() {
         String[] schemesNames = new String[]{
-                getString(R.string.presetEdit_colorScheme_none),
+                getString(R.string.presetEdit_colorScheme_default),
                 getString(R.string.presetEdit_colorScheme_previous)
         };
         ColorScheme[] schemes = new ColorScheme[]{
@@ -127,8 +126,8 @@ public class PresetEditActivity extends AppCompatActivity {
                 ColorScheme.YESTERDAY
         };
         int selected = 0;
-        for (ColorScheme s : schemes) {
-            if (s == settings.presetEditColorScheme) break;
+        for (ColorScheme scheme : schemes) {
+            if (scheme == settings.presetEditColorScheme) break;
             selected++;
         }
         Spinner spinner = new Spinner(this);
@@ -137,13 +136,13 @@ public class PresetEditActivity extends AppCompatActivity {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.presetEdit_colorScheme_title)
+                .setMessage(R.string.presetEdit_colorScheme_message)
                 .setView(spinner)
                 .setPositiveButton(R.string.presetEdit_colorScheme_apply, (dialogInterface, which) -> {
-                    int position = spinner.getSelectedItemPosition();
-                    settings.presetEditColorScheme = schemes[position];
+                    int selectedPosition = spinner.getSelectedItemPosition();
+                    settings.presetEditColorScheme = schemes[selectedPosition];
                     app.saveSettings();
                     updateEventList();
-                    dialogInterface.cancel();
                 })
                 .setNegativeButton(R.string.presetEdit_colorScheme_cancel, null)
                 .create();
@@ -152,7 +151,7 @@ public class PresetEditActivity extends AppCompatActivity {
     }
 
     /**
-     * Выдаёт список со всеми евентами которые есть в неделе week
+     * Выдаёт список со всеми евентами которые начинаются в неделе week
      * @param week неделя в формате {@link Calendar#SUNDAY}
      * **/
     private CompressedEvent[] getEventsInWeek(int week) {

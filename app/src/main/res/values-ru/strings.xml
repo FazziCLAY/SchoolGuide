@@ -59,7 +59,7 @@
     <string name="presetMenu_colorScheme">Цветовая схема</string>
 
     <string name="presetEdit_activityTitle">Пресет \'%s\'</string>
-    <string name="presetEdit_colorScheme_none">Отсутстует</string>
+    <string name="presetEdit_colorScheme_default">Отсутстует</string>
     <string name="presetEdit_colorScheme_previous">Предыдущий</string>
     <string name="presetEdit_colorScheme_apply">Применить</string>
     <string name="presetEdit_colorScheme_title">Цветовая схема</string>
