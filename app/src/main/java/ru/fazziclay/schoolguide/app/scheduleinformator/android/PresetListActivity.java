@@ -148,6 +148,7 @@ public class PresetListActivity extends AppCompatActivity {
         layout.setOrientation(LinearLayout.VERTICAL);
 
         EditText name = new EditText(this);
+        name.setPadding(13, 10, 13, 10);
         name.setHint(R.string.presetList_createNew_nameHint);
         name.setMaxLines(PRESET_NAME_MAX_LINES);
         name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(PRESET_NAME_MAX_LENGTH)});
@@ -222,6 +223,7 @@ public class PresetListActivity extends AppCompatActivity {
         layout.setOrientation(LinearLayout.VERTICAL);
 
         EditText name = new EditText(this);
+        name.setPadding(13, 10, 13, 10);
         name.setHint(R.string.presetList_copy_nameHint);
         name.setText(getString(R.string.presetList_copy_copyName, preset.getName()));
         name.setMaxLines(PRESET_NAME_MAX_LINES);
@@ -268,6 +270,7 @@ public class PresetListActivity extends AppCompatActivity {
         layout.setOrientation(LinearLayout.VERTICAL);
 
         EditText name = new EditText(this);
+        name.setPadding(13, 10, 13, 10);
         name.setHint(R.string.presetList_rename_nameHint);
         name.setText(preset.getName());
         name.setMaxLines(PRESET_NAME_MAX_LINES);
