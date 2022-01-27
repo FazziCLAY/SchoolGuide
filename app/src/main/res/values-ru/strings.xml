@@ -79,6 +79,7 @@
     <string name="presetEdit_colorScheme_message" />
     <string name="presetEdit_colorScheme_cancel">Отмена</string>
     <string name="presetEdit_addEvent_contentDescription">Добавить событие</string>
+    <string name="presetEdit_emptyDay"><![CDATA[<Пусто>]]></string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Расписание (СЕЙЧАС)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Уведомляет когда сейчас есть что то запланированное</string>

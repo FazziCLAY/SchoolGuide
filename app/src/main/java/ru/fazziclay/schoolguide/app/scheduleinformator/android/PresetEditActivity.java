@@ -190,7 +190,8 @@ public class PresetEditActivity extends AppCompatActivity {
 
             @Override
             public int getChildrenCount(int groupPosition) {
-                return getEventsInWeek(posToWeek(isFirstMonday, groupPosition)).length;
+                int i = getEventsInWeek(posToWeek(isFirstMonday, groupPosition)).length;
+                return Math.max(i, 1); // 1 for <empty> text
             }
 
             @Override
@@ -243,6 +244,15 @@ public class PresetEditActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private View getWeekEventView(int groupPosition, int childPosition) {
         final int week = posToWeek(isFirstMonday, groupPosition);
+
+        int eventsInDay = getEventsInWeek(posToWeek(isFirstMonday, groupPosition)).length;
+        if (eventsInDay == 0) {
+            TextView textView = new TextView(this);
+            textView.setTextSize(21);
+            textView.setText(R.string.presetEdit_emptyDay);
+            return textView;
+        }
+
         final int timeDeleteCoff = SECONDS_IN_DAY * (week-1);
         final CompressedEvent compressedEvent = getEventsInWeek(week)[childPosition];
         if (compressedEvent == null) {
