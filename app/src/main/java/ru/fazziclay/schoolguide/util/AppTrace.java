@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.util;
 
 import android.content.Context;
 import android.os.Build;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
-import ru.fazziclay.schoolguide.util.FileUtil;
 
 public class AppTrace {
     private final long initTime;
