@@ -72,8 +72,10 @@
     <string name="presetMenu_rename">Переименовать</string>
 
     <string name="presetEdit_activityTitle">Пресет \'%s\'</string>
-    <string name="presetEdit_colorScheme_default">Отсутстует</string>
-    <string name="presetEdit_colorScheme_previous">Предыдущий</string>
+    <string name="presetEdit_colorScheme_default">Стандатный</string>
+    <string name="presetEdit_colorScheme_default_description">Стандартный - обычный раскрас без условий</string>
+    <string name="presetEdit_colorScheme_yesterday">Предыдущий</string>
+    <string name="presetEdit_colorScheme_yesterday_description">Предыдущий - окрашивает событие в зелёный, если в прошлый день его не было, а если было - то серый</string>
     <string name="presetEdit_colorScheme_apply">Применить</string>
     <string name="presetEdit_colorScheme_title">Цветовая схема</string>
     <string name="presetEdit_colorScheme_message" />

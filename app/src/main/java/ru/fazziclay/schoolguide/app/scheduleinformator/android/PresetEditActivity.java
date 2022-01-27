@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,7 +121,11 @@ public class PresetEditActivity extends AppCompatActivity {
     private void showColorSchemeDialog() {
         String[] schemesNames = new String[]{
                 getString(R.string.presetEdit_colorScheme_default),
-                getString(R.string.presetEdit_colorScheme_previous)
+                getString(R.string.presetEdit_colorScheme_yesterday)
+        };
+        String[] schemesDescriptions = new String[]{
+                getString(R.string.presetEdit_colorScheme_default_description),
+                getString(R.string.presetEdit_colorScheme_yesterday_description)
         };
         ColorScheme[] schemes = new ColorScheme[]{
                 ColorScheme.DEFAULT,
@@ -130,15 +136,40 @@ public class PresetEditActivity extends AppCompatActivity {
             if (scheme == settings.presetEditColorScheme) break;
             selected++;
         }
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        TextView colorSchemeDescription = new TextView(this);
+        colorSchemeDescription.setPadding(30, 3, 30, 3);
+        colorSchemeDescription.setTextSize(16);
+        colorSchemeDescription.setTextColor(Color.GREEN);
+        colorSchemeDescription.setText(schemesDescriptions[selected]);
+        colorSchemeDescription.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
         Spinner spinner = new Spinner(this);
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, schemesNames));
         spinner.setSelection(selected);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                colorSchemeDescription.setText(schemesDescriptions[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+        spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        layout.addView(colorSchemeDescription);
+        layout.addView(spinner);
 
         String message = getString(R.string.presetEdit_colorScheme_message);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.presetEdit_colorScheme_title)
                 .setMessage(message.isEmpty() ? null : message)
-                .setView(spinner)
+                .setView(layout)
                 .setPositiveButton(R.string.presetEdit_colorScheme_apply, (dialogInterface, which) -> {
                     int selectedPosition = spinner.getSelectedItemPosition();
                     settings.presetEditColorScheme = schemes[selectedPosition];
