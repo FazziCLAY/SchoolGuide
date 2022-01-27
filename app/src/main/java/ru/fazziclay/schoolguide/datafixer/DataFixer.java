@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 
-import ru.fazziclay.schoolguide.AppTrace;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.util.FileUtil;
 

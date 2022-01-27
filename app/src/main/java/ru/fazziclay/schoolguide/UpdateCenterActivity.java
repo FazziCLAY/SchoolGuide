@@ -28,6 +28,7 @@ import ru.fazziclay.schoolguide.app.manifest.GlobalKeys;
 import ru.fazziclay.schoolguide.app.manifest.GlobalManager;
 import ru.fazziclay.schoolguide.app.manifest.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCenterBinding;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.ColorUtil;
 
 public class UpdateCenterActivity extends AppCompatActivity {

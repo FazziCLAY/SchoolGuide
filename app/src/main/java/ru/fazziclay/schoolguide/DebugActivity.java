@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.fazziclay.schoolguide.databinding.ActivityDebugBinding;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.ColorUtil;
 
 public class DebugActivity extends AppCompatActivity {
