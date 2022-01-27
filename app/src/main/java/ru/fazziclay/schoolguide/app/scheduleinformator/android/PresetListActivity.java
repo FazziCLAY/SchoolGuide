@@ -193,7 +193,7 @@ public class PresetListActivity extends AppCompatActivity {
                 .setMessage(getString(R.string.presetList_delete_message))
                 .setPositiveButton(R.string.presetList_delete, (dialogInterface, which) -> {
                     if (schedule instanceof AppSchedule) {
-                        boolean selected = ((AppSchedule) schedule).getCurrentPreset() == preset;
+                        boolean selected = ((AppSchedule) schedule).getSelectedPreset() == preset;
                         schedule.removePreset(uuid);
                         if (selected) ((AppSchedule) schedule).selectFirst();
                     } else {
@@ -344,14 +344,14 @@ public class PresetListActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams checkboxLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         CheckBox checkBox = new CheckBox(this);
-        checkBox.setChecked(preset.equals(informatorApp.getCurrentPreset()));
+        checkBox.setChecked(preset.equals(informatorApp.getSelectedPreset()));
         checkBox.setTextSize(30);
         checkBox.setPadding(5, 5, 10, 5);
         checkBox.setLayoutParams(checkboxLayoutParams);
         checkBox.setOnClickListener(view -> {
             view.clearAnimation();
             checkBox.clearAnimation();
-            informatorApp.setCurrentPreset(presetUUID);
+            informatorApp.setSelectedPreset(presetUUID);
             informatorApp.saveAppSchedule();
             updateList();
         });

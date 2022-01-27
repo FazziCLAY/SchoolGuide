@@ -67,18 +67,18 @@ public class ScheduleInformatorApp {
         context.startService(new Intent(context, InformatorService.class));
     }
 
-    public Preset getCurrentPreset() {
-        return schedule.getCurrentPreset();
+    public Preset getSelectedPreset() {
+        return schedule.getSelectedPreset();
     }
 
-    public void setCurrentPreset(UUID preset) {
-        schedule.setCurrent(preset);
+    public void setSelectedPreset(UUID preset) {
+        schedule.setSelected(preset);
         saveAppSchedule();
     }
 
     public int tick() {
-        CompressedEvent nowEvent = getCurrentPreset().getNowCompressedEvent();
-        CompressedEvent nextEvent = getCurrentPreset().getNextCompressedEvent();
+        CompressedEvent nowEvent = getSelectedPreset().getNowCompressedEvent();
+        CompressedEvent nextEvent = getSelectedPreset().getNextCompressedEvent();
         boolean isNow = nowEvent != null;
         boolean isNext = nextEvent != null;
 

@@ -10,14 +10,14 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
 
 public class AppSchedule extends Schedule {
-    @SerializedName("currentPreset")
-    private UUID currentPresetUUID = new UUID(0, 0);
+    @SerializedName("selectedPreset")
+    private UUID selectedPresetUUID = new UUID(0, 0);
 
-    public Preset getCurrentPreset() {
-        if (currentPresetUUID == null) {
-            currentPresetUUID = new UUID(0, 0);
+    public Preset getSelectedPreset() {
+        if (selectedPresetUUID == null) {
+            selectedPresetUUID = new UUID(0, 0);
         }
-        Preset preset = getPreset(currentPresetUUID);
+        Preset preset = getPreset(selectedPresetUUID);
         if (preset == null) {
             preset = getPreset(selectFirst());
             if (preset != null) return preset;
@@ -28,14 +28,14 @@ public class AppSchedule extends Schedule {
         return preset;
     }
 
-    public void setCurrent(UUID uuid) {
-        currentPresetUUID = uuid;
+    public void setSelected(UUID uuid) {
+        selectedPresetUUID = uuid;
     }
 
     public UUID selectFirst() {
         if (getPresetsUUIDs().length > 0) {
-            currentPresetUUID = getPresetsUUIDs()[0];
-            return currentPresetUUID;
+            selectedPresetUUID = getPresetsUUIDs()[0];
+            return selectedPresetUUID;
         }
         return null;
     }
