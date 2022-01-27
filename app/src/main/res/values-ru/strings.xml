@@ -37,6 +37,11 @@
     <string name="mathTreningGame_settings_generation_max">МАКСимум</string>
     <string name="mathTreningGame_settings_cancel">Отмена</string>
     <string name="mathTreningGame_settings_apply">Применить</string>
+    <string name="mathTreningGame_settings_resetScore">Сбросить счёт</string>
+    <string name="mathTreningGame_resetScore_title">Сбросить счёт</string>
+    <string name="mathTreningGame_resetScore_message">Вы действительно хотите сбросить счёт игры?</string>
+    <string name="mathTreningGame_resetScore_reset">Сбросить!</string>
+    <string name="mathTreningGame_resetScore_cancel">Отмена</string>
 
     <string name="presetList_addPreset_contentDescription">Добавить</string>
     <string name="presetList_createNew_nameHint">Введите название</string>

@@ -1,5 +1,6 @@
 package ru.fazziclay.schoolguide.app.multiplicationtrening;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -89,7 +90,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
         });
 
         gameDataFile = new File(getExternalFilesDir(null), "math_trening_game.json");
-        gameData = (MathTreningGameData) DataUtil.load(gameDataFile, MathTreningGameData.class);
+        gameData = DataUtil.load(gameDataFile, MathTreningGameData.class);
         saveAll();
 
         start = System.currentTimeMillis();
@@ -182,6 +183,13 @@ public class MathTreningGameActivity extends AppCompatActivity {
         Button cancel = dialog.findViewById(R.id.cancel);
         Button save = dialog.findViewById(R.id.save);
 
+        Button resetScore = dialog.findViewById(R.id.resetScore);
+
+        resetScore.setOnClickListener(ignore -> {
+            dialog.cancel();
+            showResetScoreDialog();
+        });
+
         cancel.setOnClickListener(ignore -> {
             start = System.currentTimeMillis();
             dialog.cancel();
@@ -210,6 +218,21 @@ public class MathTreningGameActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void showResetScoreDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.mathTreningGame_resetScore_title)
+                .setMessage(R.string.mathTreningGame_resetScore_message)
+                .setPositiveButton(R.string.mathTreningGame_resetScore_reset, (dialog, which) -> {
+                    gameData.score = 0;
+                    saveAll();
+                    dialog.cancel();
+                    startActivity(getLaunchIntent(this));
+                    finish();
+                })
+                .setNegativeButton(R.string.mathTreningGame_resetScore_cancel ,null)
+                .show();
     }
 
     private void clearInput() {

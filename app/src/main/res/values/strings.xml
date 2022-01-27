@@ -40,6 +40,11 @@
     <string name="mathTreningGame_settings_generation_max">Maximum</string>
     <string name="mathTreningGame_settings_cancel">Cancel</string>
     <string name="mathTreningGame_settings_apply">Apply</string>
+    <string name="mathTreningGame_settings_resetScore">Reset score</string>
+    <string name="mathTreningGame_resetScore_title">Reset score</string>
+    <string name="mathTreningGame_resetScore_message">Do you really want to reset the game score?</string>
+    <string name="mathTreningGame_resetScore_reset">Reset!</string>
+    <string name="mathTreningGame_resetScore_cancel">Cancel</string>
 
     <string name="presetList_addPreset_contentDescription">Add</string>
     <string name="presetList_createNew_nameHint">Enter name</string>
