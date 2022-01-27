@@ -20,9 +20,10 @@
     <string name="updatecenter_notification_title">Update Available</string>
     <string name="updatecenter_notification_text">Please download app update</string>
 
-    <string name="mainOptionMenu_openUpdateCenter">Open update center</string>
-    <string name="mainOptionMenu_openMathTreningGame">Open MathTreningGame</string>
-    <string name="mainOptionMenu_openDebug">Open Debug</string>
+    <string name="mainOptionMenu_openUpdateCenter">Update center</string>
+    <string name="mainOptionMenu_openMathTreningGame">Game \'MathTrening\'</string>
+    <string name="mainOptionMenu_openSettings">Settings</string>
+    <string name="mainOptionMenu_openDebug">Debug</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_resetSpeed">Reset speed</string>
@@ -95,6 +96,4 @@
     <string name="batteryOptimizationDialog_message">We ask you to disable battery optimization</string>
     <string name="batteryOptimizationDialog_disable">Disable</string>
     <string name="batteryOptimizationDialog_cancel">Cancel</string>
-
-    <string name="mainOptionMenu_openSettings">SETTINGS</string>
 </resources>

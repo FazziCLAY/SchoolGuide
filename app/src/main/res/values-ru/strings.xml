@@ -17,9 +17,10 @@
     <string name="updatecenter_notification_title">Доступно обновление</string>
     <string name="updatecenter_notification_text">Пожалуйста скачайте новое обновление приложения</string>
 
-    <string name="mainOptionMenu_openUpdateCenter">Открыть центр обновлений</string>
-    <string name="mainOptionMenu_openMathTreningGame">Открыть MathTreningGame</string>
-    <string name="mainOptionMenu_openDebug">Открыть отладку</string>
+    <string name="mainOptionMenu_openUpdateCenter">Центр обновлений</string>
+    <string name="mainOptionMenu_openMathTreningGame">Игра \'MathTrening\'</string>
+    <string name="mainOptionMenu_openSettings">Настройки</string>
+    <string name="mainOptionMenu_openDebug">Отладка</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_resetSpeed">Сбросить скорость</string>
