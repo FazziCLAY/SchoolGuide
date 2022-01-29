@@ -30,10 +30,11 @@ public class DataFixer {
     private final Gson gson;
     private final File versionFile;
     private Version version;
-    private final AppTrace appTrace = AppTrace.getInstance();
+    private final AppTrace appTrace;
 
-    public DataFixer(Context context, int currentAppVersion, AbstractScheme[] fixSchemes) {
-        appTrace.trace("init");
+    public DataFixer(AppTrace appTrace, Context context, int currentAppVersion, AbstractScheme[] fixSchemes) {
+        appTrace.point("dataFixer init");
+        this.appTrace = appTrace;
         this.context = context;
         this.currentAppVersion = currentAppVersion;
         this.fixSchemes = fixSchemes;
@@ -45,7 +46,8 @@ public class DataFixer {
                     FileUtil.read(versionFile, "{}"),
                     Version.class
             );
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            appTrace.point("exception while version file parse", e);
             this.version = Version.createNone();
         }
         if (version.getFirstVersion() == 0) version.setFirstVersion(isPre36 ? PRE36_VERSION : currentAppVersion);
@@ -61,12 +63,12 @@ public class DataFixer {
      * Сохранить файл версии (version.json)
      * **/
     public void saveVersion() {
-        appTrace.trace("saveVersion");
+        appTrace.point("DataFixer saveVersion");
         FileUtil.write(versionFile, gson.toJson(version, Version.class));
     }
 
     public void fixIfAvailable() {
-        appTrace.trace("fixIfAvailable");
+        appTrace.point("DataFixer fixIfAvailable");
         if (version.getLatestVersion() >= currentAppVersion) {
             return;
         }
@@ -83,17 +85,25 @@ public class DataFixer {
                     i = -1;
                 }
             } catch (Exception e) {
-                appTrace.setThrowable(e);
-                AppTrace.saveAndLog(getAndroidContext(), appTrace);
+                appTrace.point("exception while run scheme "+fixScheme.getClass().getName()+" i="+i, e);
             }
 
             i++;
         }
 
+        version.setLatestVersion(currentAppVersion);
         saveVersion();
     }
 
     public Context getAndroidContext() {
         return context;
+    }
+
+    public AppTrace getAppTrace() {
+        return appTrace;
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 }

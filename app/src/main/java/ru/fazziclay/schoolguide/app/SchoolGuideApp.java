@@ -18,7 +18,9 @@ import java.util.List;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.DataUtil;
+import ru.fazziclay.schoolguide.util.FileUtil;
 
 /**
  * <H1>Главный класс приложения</H1>
@@ -69,6 +71,13 @@ public class SchoolGuideApp {
     public static SchoolGuideApp get() {
         return get(null);
     }
+
+
+    /**
+     * Трейсер приложения, для понимания что вообще происходит
+     * @see AppTrace
+     * **/
+    private final AppTrace appTrace;
 
     /**
      * Контекст андроид приложения
@@ -123,11 +132,12 @@ public class SchoolGuideApp {
         if (context == null) {
             throw new RuntimeException("Failed to create SchoolGuideApp", new NullPointerException("context is null!"));
         }
+        appTrace = new AppTrace("SchoolGuideApp <init>");
         androidContext = context.getApplicationContext();
         gson = new Gson();
 
         // До этого этапа мы не работали с данными, Он исправил все файлы старых версий и сделает их читаемыми для новой
-        DataFixer dataFixer = new DataFixer(androidContext, SharedConstrains.APPLICATION_VERSION_CODE, SharedConstrains.DATA_FIXER_SCHEMES);
+        DataFixer dataFixer = new DataFixer(appTrace, androidContext, SharedConstrains.APPLICATION_VERSION_CODE, SharedConstrains.DATA_FIXER_SCHEMES);
         dataFixer.fixIfAvailable();
 
         filesDir = context.getExternalFilesDir(null);
@@ -167,6 +177,20 @@ public class SchoolGuideApp {
         DataUtil.save(settingsFile, settings);
     }
 
+    public void saveAppTrace() {
+        try {
+            FileUtil.write(new File(androidContext.getExternalCacheDir(), "latestAppTrace.txt"), appTrace.getText());
+        } catch (Exception e) {
+            Log.e("saveAppTrace", "error while saving appTrace", e);
+        }
+    }
+
+    /**
+     * @see SchoolGuideApp#appTrace
+     * **/
+    public AppTrace getAppTrace() {
+        return appTrace;
+    }
 
     /**
      * @see SchoolGuideApp#androidContext

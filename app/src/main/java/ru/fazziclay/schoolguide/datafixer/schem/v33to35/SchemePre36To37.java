@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.UUID;
@@ -22,6 +21,7 @@ import ru.fazziclay.schoolguide.datafixer.old.v37.V37EventInfo;
 import ru.fazziclay.schoolguide.datafixer.old.v37.V37Preset;
 import ru.fazziclay.schoolguide.datafixer.old.v37.V37Settings;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
 /**
@@ -45,6 +45,7 @@ public class SchemePre36To37 extends AbstractScheme {
     final String NEW_SCHEDULE_FILE = "scheduleinformator.schedule.json";
     final String NEW_SETTINGS_FILE = "settings.json";
 
+    AppTrace appTrace;
     Gson gson;
 
     Context context;
@@ -73,8 +74,8 @@ public class SchemePre36To37 extends AbstractScheme {
 
     @Override
     public Version run(DataFixer dataFixer, Version version) {
-        Log.d("SchemePre36To36", "run");
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        appTrace = dataFixer.getAppTrace();
+        gson = dataFixer.getGson();
         context = dataFixer.getAndroidContext();
         cacheDir = context.getExternalCacheDir();
         filesDir = context.getExternalFilesDir(null);
@@ -97,11 +98,15 @@ public class SchemePre36To37 extends AbstractScheme {
         Log.d("SchemePre36To36", "fix");
         try {
             if (oldManifestFile.exists()) oldManifestFile.delete();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            appTrace.point("delete oldManifestFile", e);
+        }
 
         try {
             if (oldStateCacheFile.exists()) oldStateCacheFile.delete();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            appTrace.point("delete oldStateCacheFile", e);
+        }
 
         // == FIX ==
         if (oldScheduleFile.exists()) {
@@ -117,11 +122,15 @@ public class SchemePre36To37 extends AbstractScheme {
 
         try {
             oldSettingsFile.delete();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            appTrace.point("delete oldSettingsFile", e);
+        }
 
         try {
             oldScheduleFile.delete();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            appTrace.point("delete oldScheduleFile", e);
+        }
 
         if (newSchedule != null) {
             FileUtil.write(newScheduleFile, gson.toJson(newSchedule, V37AppSchedule.class));
@@ -138,7 +147,8 @@ public class SchemePre36To37 extends AbstractScheme {
         try {
             fileContent = FileUtil.read(oldScheduleFile, "{}");
             oldSchedule = gson.fromJson(fileContent, V33Schedule.class);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            appTrace.point("fixSchedule parse exception", e);
             oldSchedule = null;
             return;
         }
@@ -197,7 +207,8 @@ public class SchemePre36To37 extends AbstractScheme {
         try {
             fileContent = FileUtil.read(oldSettingsFile, "{}");
             oldSettings = gson.fromJson(fileContent, V33Settings.class);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            appTrace.point("fixSettings parse exception", e);
             oldSchedule = null;
             return;
         }
@@ -206,7 +217,7 @@ public class SchemePre36To37 extends AbstractScheme {
 
         newSettings.developerFeatures = oldSettings.isDeveloperFeatures;
         if (newSchedule != null) {
-            newSchedule.currentPresetUUID = oldSettings.selectedLocalSchedule;
+            newSchedule.selectedPresetUUID = oldSettings.selectedLocalSchedule;
         }
     }
 }

@@ -222,10 +222,4 @@ public class AppTrace {
         }
         return original;
     }
-
-    public static void saveAndLog(Context context, AppTrace t) {
-        try {
-            FileUtil.write(new File(context.getExternalCacheDir(), "latestAppTrace.txt"), t.getText());
-        } catch (Exception ignored) {}
-    }
 }
