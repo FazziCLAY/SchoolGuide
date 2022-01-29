@@ -9,156 +9,218 @@ import java.util.List;
 import java.util.Map;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
-import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 public class AppTrace {
-    private final long initTime;
-    private final Thread initializeInThread;
-    private final int activeThreadsCount;
-    private final StackTraceElement[] stackTraceToInitializer;
-    private final Map<Thread, StackTraceElement[]> allStackTrace;
+    private static final String TEXT_BASE =
+            "0===== FazziCLAY AppTrace =====0\n" +
+                    "--- Init ---\n" +
+                    "timeMillis: $(init/timeMillis)\n" +
+                    "thread: $(init/thread)\n" +
+                    "message: $(init/message)\n" +
+                    "\n" +
+                    "Application: \n$(init/application)\n" +
+                    "\n" +
+                    "Device: \n$(init/device)\n" +
+                    "\n" +
+                    "--- Points ---\n" +
+                    "$(points)\n" +
+                    "\n" +
+                    "--- Init StackTrace ---\n" +
+                    "\n" +
+                    "$(init/stacktrace)" +
+                    "\n" +
+                    "--- Init Threads ---\n" +
+                    "// Active Count: $(threads/activeCount)\n" +
+                    "$(threads)";
 
-    private final List<Trace> traces = new ArrayList<>();
+    private static final String TEXT_APPLICATION =
+            "\\ code: $(code)\n" +
+                    "\\ name: $(name)\n" +
+                    "\\ id: $(id)\n" +
+                    "\\ buildType: $(buildType)";
 
-    private Throwable throwable = null;
+    private static final String TEXT_DEVICE =
+            "\\ Android.SDK: $(android/sdk)\n" +
+                "\\ Brand: $(brand)\n" +
+                "\\ Manufacturer: (manufacturer)\n" +
+                "\\ Bootloader: $(bootloader)";
+
+    private static final String POINT_BASE =
+            "+++ $(title) +++\n" +
+                    "$(message)" +
+                    "+ thread: $(thread)\n" +
+                    "+ time: $(time)\n" +
+                    "+ ___ STACKTRACE ___ +\n" +
+                    "$(stacktrace)\n" +
+                    "+ ___ THROWABLE ___ +\n" +
+                    "$(throwable)";
+
+    private long initTimeMillis;
+    private Thread initThread;
+    private String initMessage;
+    private StackTraceElement[] initStackTrace;
+    private int initActiveThreadsCount;
+    private Map<Thread, StackTraceElement[]> initAllThreadStackTraces;
+
+    private final List<Point> points = new ArrayList<>();
+
+    public AppTrace(String initMessage) {
+        ignoreException(() -> this.initMessage = initMessage);
+        ignoreException(() -> this.initTimeMillis = System.currentTimeMillis());
+        ignoreException(() -> this.initThread = Thread.currentThread());
+        ignoreException(() -> this.initStackTrace = new Exception().getStackTrace());
+        ignoreException(() -> this.initActiveThreadsCount = Thread.activeCount());
+        ignoreException(() -> this.initAllThreadStackTraces = Thread.getAllStackTraces());
+    }
 
     public AppTrace() {
-        initTime = System.currentTimeMillis();
-        initializeInThread = Thread.currentThread();
-        activeThreadsCount = Thread.activeCount();
-        stackTraceToInitializer = new Exception().getStackTrace();
-        allStackTrace = Thread.getAllStackTraces();
+        this(null);
     }
 
-    public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
+    private void ignoreException(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable throwable) {
+            point("AppTrace init error", throwable);
+        }
     }
 
-    public void trace(String message) {
+    public void point(String message, Throwable throwable) {
         long millis = System.currentTimeMillis();
         long nanos = System.nanoTime();
-        Trace trace = new Trace(Thread.currentThread(), new Exception().getStackTrace(), message, millis, nanos);
-        traces.add(trace);
+        points.add(new Point(
+                Thread.currentThread(),
+                new Exception().getStackTrace(),
+                message,
+                throwable,
+                millis,
+                nanos));
     }
 
-    public class Trace {
+    public void point(String message) {
+        point(message, null);
+    }
+
+    private class Point {
         private final Thread thread;
-        private final StackTraceElement[] stack;
         private final String message;
+        private final Throwable throwable;
+        private final StackTraceElement[] stackTrace;
 
         private final long timeMillis;
         private final long timeNanos;
 
-        public Trace(Thread thread, StackTraceElement[] stack, String message, long timeMillis, long timeNanos) {
+        public Point(Thread thread, StackTraceElement[] stackTrace, String message, Throwable throwable, long timeMillis, long timeNanos) {
             this.thread = thread;
-            this.stack = stack;
+            this.stackTrace = stackTrace;
             this.message = message;
+            this.throwable = throwable;
             this.timeMillis = timeMillis;
             this.timeNanos = timeNanos;
         }
 
-        public String toStr() {
-            return String.format("+ thread: %s\n+ time: (%s/%s)\n+ = STACKTRACE =\n%s\n+ - STACKTRACE -",
-                    thread.getName(), timeMillis, timeNanos, stackTraceToStr(stack)
-            );
+        public String format(int position) {
+            return variable(POINT_BASE, new Object[][]{
+                    {"title", "Point #" + position},
+                    {"message", formatMultilineMessage(message)},
+                    {"thread", thread.getName()},
+                    {"time", String.format("%s / %s", timeMillis, timeNanos)},
+                    {"stacktrace", stackTraceToString(stackTrace)},
+                    {"throwable", throwable == null ? null : String.format("Message: %s\nStackTrace:\n%s", throwable, stackTraceToString(throwable.getStackTrace()))}
+            });
         }
+    }
 
-        public String getMessage() {
+    private String formatMultilineMessage(String message) {
+        if (message == null) return null;
+        if (message.contains("\n")) {
+            String[] split = message.split("\n");
+            StringBuilder temp = new StringBuilder();
+            temp.append("\n");
+            for (String s : split) {
+                temp.append("\\ ").append(s).append("\n");
+            }
+            return temp.toString();
+
+        } else {
             return message;
         }
     }
 
+
+    private String formatPoints() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int i = 0;
+        while (i < points.size()) {
+            Point point = points.get(i);
+            if (point == null) continue;
+
+            stringBuilder.append(point.format(i)).append("\n\n");
+            i++;
+        }
+
+        return stringBuilder.toString();
+    }
+
     public String getText() {
-        String s = "==== AppTrace ====" +
-                "\nInit:" +
-                "\n* Time: $(time)" +
-                "\n* Thread: $(initializeInThread)" +
-                "\nDetails:" +
-                "\n* Application:" +
-                "\n* * code: $(details/application/code)" +
-                "\n* * name: $(details/application/name)" +
-                "\n* * id: $(details/application/id)" +
-                "\n* * buildType: $(details/application/buildType)" +
-                "\n" +
-                "\n* SchoolGuideApp:" +
-                "\n* * toString: $(details/schoolguideapp/toString)" +
-                "\n*" +
-                "\n* Device:" +
-                "\n* * ANDROID: $(details/device/android)" +
-                "\n" +
-                "\nThrowable: $(throwable/toString)" +
-                "\n$(throwable/stacktrace)" +
-                "\n" +
-                "\nTraces:" +
-                "\n$(traces)" +
-                "\n" +
-                "\nInitStackTrace:" +
-                "\n$(initstacktrace)" +
-                "\n" +
-                "\nStackTraces(activeThreadsCount=$(stacktraces/activeThreadsCount)):" +
-                "\n$(stacktraces)";
+        return variable(TEXT_BASE, new Object[][]{
+                {"init/timeMillis", initTimeMillis},
+                {"init/thread", initThread.getName()},
+                {"init/message", formatMultilineMessage(initMessage)},
 
-        String schoolGuideToString = (SchoolGuideApp.isInstanceAvailable() ? SchoolGuideApp.get().toString() : "(instance not available)");
+                {"init/application", variable(TEXT_APPLICATION, new Object[][]{
+                        {"code", SharedConstrains.APPLICATION_VERSION_CODE},
+                        {"name", SharedConstrains.APPLICATION_VERSION_NAME},
+                        {"id", SharedConstrains.APPLICATION_ID},
+                        {"buildType", SharedConstrains.APPLICATION_BUILD_TYPE}
+                })},
 
-        StringBuilder allStackTraceStr = new StringBuilder();
-        int i = 0;
-        for (Thread thread : allStackTrace.keySet()) {
-            allStackTraceStr.append("[").append(i).append("] __ Thread: ").append(thread.getName()).append(" __");
-            allStackTraceStr.append("\n").append(stackTraceToStr(allStackTrace.get(thread)));
-            allStackTraceStr.append("\n[").append(i).append("] -- Thread: ").append(thread.getName()).append(" --\n\n");
-            i++;
-        }
-
-        StringBuilder tracesStr = new StringBuilder();
-        i = 0;
-        for (Trace trace : traces) {
-            tracesStr.append(String.format("[%s] === %s ===", i, trace.getMessage()));
-            tracesStr.append("\n");
-            tracesStr.append(trace.toStr());
-            tracesStr.append("\n\n");
-            i++;
-        }
-
-        s = var(s, "traces", tracesStr.toString());
-        s = var(s, "time", initTime);
-        s = var(s, "initializeInThread", initializeInThread.getName());
-        s = var(s, "details/device/android", Build.VERSION.SDK_INT);
-        s = var(s, "details/application/code", SharedConstrains.APPLICATION_VERSION_CODE);
-        s = var(s, "details/application/name", SharedConstrains.APPLICATION_VERSION_NAME);
-        s = var(s, "details/application/id", SharedConstrains.APPLICATION_ID);
-        s = var(s, "details/application/buildType", SharedConstrains.APPLICATION_BUILD_TYPE);
-        s = var(s, "details/schoolguideapp/toString", schoolGuideToString);
-        s = var(s, "stacktraces/activeThreadsCount", activeThreadsCount);
-        s = var(s, "initstacktrace", stackTraceToStr(stackTraceToInitializer));
-        s = var(s, "throwable/toString", (throwable == null ? "null" : throwable.toString()));
-        s = var(s, "throwable/stacktrace", (throwable == null ? "null" : stackTraceToStr(throwable.getStackTrace())));
-        s = var(s, "stacktraces", allStackTraceStr.toString());
-
-        return s;
+                {"init/device", variable(TEXT_DEVICE, new Object[][]{
+                        {"android/sdk", Build.VERSION.SDK_INT},
+                        {"brand", Build.BRAND},
+                        {"manufacturer", Build.MANUFACTURER},
+                        {"bootloader", Build.BOOTLOADER},
+                })},
+                {"points", formatPoints()},
+                {"threads", "TODO add"},
+                {"threads/activeCount", initActiveThreadsCount},
+                {"init/stacktrace", stackTraceToString(initStackTrace)}
+        });
     }
 
-    public String stackTraceToStr(StackTraceElement[] trace) {
+    /**
+     * Превращает stackTrace в строку
+     * <p>at ...</p>
+     * <p>at ...</p>
+     * <p>at ...</p>
+     * **/
+    private static String stackTraceToString(StackTraceElement[] trace) {
         if (trace == null) {
-            return "(stacktrace is null)";
+            return null;
         }
-        StringBuilder ret = new StringBuilder();
+        StringBuilder temp = new StringBuilder();
 
         int i = 0;
+        int maxI = trace.length;
         for (StackTraceElement traceElement : trace) {
-            ret.append("\tat ").append(traceElement);
-            if (i != trace.length-1) ret.append("\n");
+            temp.append("\tat ").append(traceElement.toString());
+            if (i < maxI) temp.append("\n");
             i++;
         }
 
-        return ret.toString();
+        return temp.toString();
     }
 
-    private String var(String original, String key, Object value) {
-        return original.replace("$("+key+")", value.toString());
+    private static String variable(String original, String key, Object value) {
+        return original.replace("$(" + key + ")", value == null ? "null" : value.toString());
     }
 
-    public static AppTrace getInstance() {
-        return new AppTrace();
+    private static String variable(String original, Object[][] vars) {
+        for (Object[] var : vars) {
+            original = variable(original, (String) var[0], var[1]);
+        }
+        return original;
     }
 
     public static void saveAndLog(Context context, AppTrace t) {
