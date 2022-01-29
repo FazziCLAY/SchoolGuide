@@ -1,9 +1,8 @@
 package ru.fazziclay.schoolguide.util;
 
-import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class AppTrace {
 
     private static final String POINT_BASE =
             "+++ $(title) +++\n" +
-                    "$(message)" +
+                    "+ message: $(message)\n" +
                     "+ thread: $(thread)\n" +
                     "+ time: $(time)\n" +
                     "+ ___ STACKTRACE ___ +\n" +
@@ -88,13 +87,15 @@ public class AppTrace {
     public void point(String message, Throwable throwable) {
         long millis = System.currentTimeMillis();
         long nanos = System.nanoTime();
-        points.add(new Point(
+        Point point = new Point(
                 Thread.currentThread(),
                 new Exception().getStackTrace(),
                 message,
                 throwable,
                 millis,
-                nanos));
+                nanos);
+        points.add(point);
+        Log.d("POINT", point.format(0));
     }
 
     public void point(String message) {
