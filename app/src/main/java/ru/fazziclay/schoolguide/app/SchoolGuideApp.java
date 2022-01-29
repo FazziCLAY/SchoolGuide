@@ -52,7 +52,12 @@ public class SchoolGuideApp {
     @Nullable
     public static SchoolGuideApp get(Context context) {
         if (!isInstanceAvailable()) {
-            instance = new SchoolGuideApp(context);
+            try {
+                instance = new SchoolGuideApp(context);
+            } catch (Exception e) {
+                Log.e("SchoolGuideApp#get()", "При создании обьекта приложения, он выдат ошибку", e);
+                return null;
+            }
         }
         return instance;
     }
@@ -115,9 +120,13 @@ public class SchoolGuideApp {
 
 
     public SchoolGuideApp(Context context) {
+        if (context == null) {
+            throw new RuntimeException("Failed to create SchoolGuideApp", new NullPointerException("context is null!"));
+        }
         androidContext = context.getApplicationContext();
         gson = new Gson();
 
+        // До этого этапа мы не работали с данными, Он исправил все файлы старых версий и сделает их читаемыми для новой
         DataFixer dataFixer = new DataFixer(androidContext, SharedConstrains.APPLICATION_VERSION_CODE, SharedConstrains.DATA_FIXER_SCHEMES);
         dataFixer.fixIfAvailable();
 
