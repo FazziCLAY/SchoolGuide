@@ -16,7 +16,13 @@ import java.io.File;
 import java.util.List;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
+import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
+import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.callback.CallbackStorage;
+import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
 import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.DataUtil;
@@ -116,16 +122,48 @@ public class SchoolGuideApp {
     private final Settings settings;
 
     /**
-     * <p>Доступно ли обновление</p>
-     * <p>Меняется из {@link UpdateCheckerService}, для (!) в интерфейсе приложения перед надписью центра обновлений</p>
-     * **/
-    private boolean isUpdateAvailable = false;
-
-    /**
      * Приложение "Информатор Расписания"
      * Там находится всё то что отвечает за распорядок дня так сказать
      * **/
     private final ScheduleInformatorApp scheduleInformatorApp;
+
+    /**
+     * <p>Доступно ли обновление</p>
+     * <p>для (!) в интерфейсе приложения перед надписью центра обновлений</p>
+     * **/
+    private boolean isUpdateAvailable = false;
+
+
+    /**
+     * Последий манифест версий, обновляется автоматически
+     * @see AutoGlobalUpdateService
+     * @see ru.fazziclay.schoolguide.app.global.GlobalManager
+     * @see GlobalVersionManifest
+     * **/
+    private GlobalVersionManifest globalVersionManifest;
+
+    /**
+     * Последний встроенный список расписаний
+     * @see AutoGlobalUpdateService
+     * @see ru.fazziclay.schoolguide.app.global.GlobalManager
+     * @see GlobalBuiltinPresetList
+     * **/
+    private GlobalBuiltinPresetList globalBuiltinPresetList;
+
+    /**
+     * Callback хранилеще для авто обновлений глобальных данных
+     * @see AutoGlobalUpdateService
+     * **/
+    private final CallbackStorage<GlobalUpdateListener> globalUpdateCallbacks = new CallbackStorage<>();
+
+    private final Thread saveAppTraceThread = new Thread(() -> {
+        while (true) {
+            saveAppTrace();
+            try {
+                Thread.sleep(10*1000);
+            } catch (InterruptedException ignored) {}
+        }
+    });
 
 
     public SchoolGuideApp(Context context) {
@@ -148,10 +186,27 @@ public class SchoolGuideApp {
 
         saveSettings();
 
+        registerCallbacks();
+
         androidContext.startService(new Intent(androidContext, SchoolGuideService.class));
-        androidContext.startService(new Intent(androidContext, UpdateCheckerService.class));
+        androidContext.startService(new Intent(androidContext, AutoGlobalUpdateService.class));
 
         scheduleInformatorApp = new ScheduleInformatorApp(this);
+
+        saveAppTraceThread.setDaemon(true);
+        saveAppTraceThread.start();
+    }
+
+    private void registerCallbacks() {
+        globalUpdateCallbacks.addCallback((exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            if (exception == null) {
+                setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.latestVersion != null && globalVersionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
+            }
+
+            return new Status.Builder()
+                    .setDeleteCallback(false)
+                    .build();
+        });
     }
 
     /**
@@ -253,5 +308,25 @@ public class SchoolGuideApp {
      * **/
     public void setUpdateAvailable(boolean updateAvailable) {
         isUpdateAvailable = updateAvailable;
+    }
+
+    public GlobalVersionManifest getGlobalVersionManifest() {
+        return globalVersionManifest;
+    }
+
+    public void setGlobalVersionManifest(GlobalVersionManifest globalVersionManifest) {
+        this.globalVersionManifest = globalVersionManifest;
+    }
+
+    public GlobalBuiltinPresetList getGlobalBuiltinPresetList() {
+        return globalBuiltinPresetList;
+    }
+
+    public void setGlobalBuiltinPresetList(GlobalBuiltinPresetList globalBuiltinPresetList) {
+        this.globalBuiltinPresetList = globalBuiltinPresetList;
+    }
+
+    public CallbackStorage<GlobalUpdateListener> getGlobalUpdateCallbacks() {
+        return globalUpdateCallbacks;
     }
 }

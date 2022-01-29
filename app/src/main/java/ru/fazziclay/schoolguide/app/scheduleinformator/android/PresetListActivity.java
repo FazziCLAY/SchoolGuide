@@ -34,13 +34,19 @@ import java.util.UUID;
 import ru.fazziclay.schoolguide.DebugActivity;
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SettingsActivity;
+import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.UpdateCenterActivity;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
+import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
-import ru.fazziclay.schoolguide.app.scheduleinformator.AppSchedule;
+import ru.fazziclay.schoolguide.app.scheduleinformator.AppPresetList;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
+import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
+import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
 import ru.fazziclay.schoolguide.util.UUIDUtil;
 
@@ -55,15 +61,32 @@ public class PresetListActivity extends AppCompatActivity {
     private SchoolGuideApp app;
     private ScheduleInformatorApp informatorApp;
     private ActivityPresetListBinding binding;
+    private MenuItem openUpdateCenterMenuItem;
 
-    private Schedule schedule;
+    private PresetList presetList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = SchoolGuideApp.get(this);
+        if (app == null) {
+            setContentView(SharedConstrains.getAppNullView(this));
+            return;
+        }
         informatorApp = app.getScheduleInformatorApp();
-        schedule = informatorApp.getSchedule();
+        presetList = informatorApp.getSchedule();
+
+        app.getGlobalUpdateCallbacks().addCallback((exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            if (isFinishing()) return new Status.Builder()
+                    .setDeleteCallback(true)
+                    .build();
+
+            updateOpenUpdateCenterMenuName();
+
+            return new Status.Builder()
+                    .setDeleteCallback(false)
+                    .build();
+        });
 
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -79,6 +102,7 @@ public class PresetListActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             showDisableBatteryOptimizationDialog();
         }
+        updateOpenUpdateCenterMenuName();
         updateList();
     }
 
@@ -86,9 +110,18 @@ public class PresetListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.openDebugItem).setVisible(app.getSettings().developerFeatures);
-        MenuItem openUpdateCenter = menu.findItem(R.id.openUpdateCenterItem);
-        if (app.isUpdateAvailable()) openUpdateCenter.setTitle(String.format("(!) %s", openUpdateCenter.getTitle()));
+        openUpdateCenterMenuItem = menu.findItem(R.id.openUpdateCenterItem);
+        updateOpenUpdateCenterMenuName();
         return true;
+    }
+
+    private void updateOpenUpdateCenterMenuName() {
+        if (openUpdateCenterMenuItem == null) return;
+        if (app.isUpdateAvailable()) {
+            openUpdateCenterMenuItem.setTitle(String.format("(!) %s", getString(R.string.mainOptionMenu_openUpdateCenter)));
+        } else {
+            openUpdateCenterMenuItem.setTitle(R.string.mainOptionMenu_openUpdateCenter);
+        }
     }
 
     @Override
@@ -165,8 +198,8 @@ public class PresetListActivity extends AppCompatActivity {
                         Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    UUID newUUID = UUIDUtil.generateUUID(schedule.getPresetsUUIDs());
-                    schedule.putPreset(newUUID, new Preset(newName));
+                    UUID newUUID = UUIDUtil.generateUUID(presetList.getPresetsIds());
+                    presetList.putPreset(newUUID, new Preset(newName));
                     informatorApp.saveAppSchedule();
                     updateList();
                 })
@@ -178,11 +211,11 @@ public class PresetListActivity extends AppCompatActivity {
 
     /**
      * Показать диолог удаления пресета
-     * Если в {@link PresetListActivity#schedule} нету выбранного пресета, то не показываем
+     * Если в {@link PresetListActivity#presetList} нету выбранного пресета, то не показываем
      * @param uuid нужный пресет
      * **/
     private void showDeletePresetDialog(UUID uuid) {
-        Preset preset = schedule.getPreset(uuid);
+        Preset preset = presetList.getPreset(uuid);
         if (preset == null) {
             Log.e("showDeletePresetDialog", "preset null in schedule; uuid="+uuid.toString());
             return;
@@ -192,12 +225,12 @@ public class PresetListActivity extends AppCompatActivity {
                 .setTitle(getString(R.string.presetList_delete_title, preset.getName()))
                 .setMessage(getString(R.string.presetList_delete_message))
                 .setPositiveButton(R.string.presetList_delete, (dialogInterface, which) -> {
-                    if (schedule instanceof AppSchedule) {
-                        boolean selected = ((AppSchedule) schedule).getSelectedPreset() == preset;
-                        schedule.removePreset(uuid);
-                        if (selected) ((AppSchedule) schedule).selectFirst();
+                    if (presetList instanceof AppPresetList) {
+                        boolean selected = ((AppPresetList) presetList).getSelectedPreset() == preset;
+                        presetList.removePreset(uuid);
+                        if (selected) ((AppPresetList) presetList).selectFirst();
                     } else {
-                        schedule.removePreset(uuid);
+                        presetList.removePreset(uuid);
                     }
                     informatorApp.saveAppSchedule();
                     updateList();
@@ -213,7 +246,7 @@ public class PresetListActivity extends AppCompatActivity {
      * @param uuid нужынй пресет
      * **/
     private void showCopyPresetDialog(UUID uuid) {
-        Preset preset = schedule.getPreset(uuid);
+        Preset preset = presetList.getPreset(uuid);
         if (preset == null) {
             Log.e("showCopyPresetDialog", "preset null in schedule; uuid="+uuid.toString());
             return;
@@ -242,10 +275,10 @@ public class PresetListActivity extends AppCompatActivity {
                         Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    UUID newUUID = UUIDUtil.generateUUID(schedule.getPresetsUUIDs());
+                    UUID newUUID = UUIDUtil.generateUUID(presetList.getPresetsIds());
                     Preset newPreset = preset.clone();
                     newPreset.setName(newName);
-                    schedule.putPreset(newUUID, newPreset);
+                    presetList.putPreset(newUUID, newPreset);
                     informatorApp.saveAppSchedule();
                     updateList();
                 })
@@ -260,7 +293,7 @@ public class PresetListActivity extends AppCompatActivity {
      * @param uuid нужынй пресет
      * **/
     private void showRenamePresetDialog(UUID uuid) {
-        Preset preset = schedule.getPreset(uuid);
+        Preset preset = presetList.getPreset(uuid);
         if (preset == null) {
             Log.e("showRenamePresetDialog", "preset null in schedule; uuid="+uuid.toString());
             return;
@@ -303,7 +336,7 @@ public class PresetListActivity extends AppCompatActivity {
      * Обновить View список
      * **/
     private void updateList() {
-        UUID[] listPresetsUUIDs = schedule.getPresetsUUIDs();
+        UUID[] listPresetsUUIDs = presetList.getPresetsIds();
         binding.presetList.deferNotifyDataSetChanged();
         binding.presetList.setAdapter(new BaseAdapter() {
             @Override
@@ -324,7 +357,7 @@ public class PresetListActivity extends AppCompatActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 UUID presetUUID = listPresetsUUIDs[position];
-                Preset preset = schedule.getPreset(presetUUID);
+                Preset preset = presetList.getPreset(presetUUID);
                 if (preset == null) {
                     Log.e("updateList", "get preset is null");
                     return new Button(PresetListActivity.this);

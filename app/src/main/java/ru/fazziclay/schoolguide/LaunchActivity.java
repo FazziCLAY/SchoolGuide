@@ -48,7 +48,11 @@ public class LaunchActivity extends Activity {
         }
 
         // Loading
-        SchoolGuideApp.get(this);
+        SchoolGuideApp app = SchoolGuideApp.get(this);
+        if (app == null) {
+            setContentView(SharedConstrains.getAppNullView(this));
+            return;
+        }
         startActivity(PresetListActivity.getLaunchIntent(this));
 
         finish();

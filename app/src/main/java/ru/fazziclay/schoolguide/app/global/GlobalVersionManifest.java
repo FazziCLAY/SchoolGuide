@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide.app.manifest;
+package ru.fazziclay.schoolguide.app.global;
 
 import java.util.HashMap;
 

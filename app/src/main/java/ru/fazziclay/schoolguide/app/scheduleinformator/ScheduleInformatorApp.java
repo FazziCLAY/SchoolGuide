@@ -3,6 +3,7 @@ package ru.fazziclay.schoolguide.app.scheduleinformator;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -11,10 +12,16 @@ import java.io.File;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.app.AppBuiltinSchedule;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
+import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
+import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalManager;
+import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.DataUtil;
 import ru.fazziclay.schoolguide.util.time.ConvertMode;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
@@ -28,19 +35,28 @@ public class ScheduleInformatorApp {
     public Notification notification;
 
     private final SchoolGuideApp app;
+    private final AppTrace appTrace;
     private final Context context;
     private final Settings settings;
 
     private final NotificationManagerCompat notificationManagerCompat;
 
     private final File scheduleFile;
-    private final AppSchedule schedule;
+    private final AppPresetList schedule;
 
     private InformatorService informatorService = null;
     boolean isServiceForeground = false;
 
+    // Builtin
+    AppBuiltinSchedule appBuiltinSchedule;
+    File appBuiltinScheduleFile;
+
+    GlobalBuiltinPresetList globalBuiltinSchedule;
+    // =======
+
     public ScheduleInformatorApp(SchoolGuideApp app) {
         this.app = app;
+        this.appTrace = app.getAppTrace();
         this.context = app.getAndroidContext();
         this.settings = app.getSettings();
 
@@ -49,14 +65,25 @@ public class ScheduleInformatorApp {
         this.notification = getNoneNotification();
 
         scheduleFile = new File(app.getFilesDir(), "scheduleinformator.schedule.json");
-        schedule = DataUtil.load(scheduleFile, AppSchedule.class);
+        schedule = DataUtil.load(scheduleFile, AppPresetList.class);
         saveAppSchedule();
+
+        appBuiltinScheduleFile = new File(app.getFilesDir(), "scheduleinformator.builtinSchedule.json");
+        appBuiltinSchedule = DataUtil.load(appBuiltinScheduleFile, AppBuiltinSchedule.class);
+        saveAppBuiltinSchedule();
 
         serviceStart();
     }
 
     public void saveAppSchedule() {
+        if (schedule == null) {
+            Log.d("saveAppSchedule", "schedule == null!!!!", new NullPointerException("Exception by fazziclay!"));
+        }
         DataUtil.save(scheduleFile, schedule);
+    }
+
+    public void saveAppBuiltinSchedule() {
+        DataUtil.save(appBuiltinScheduleFile, appBuiltinSchedule);
     }
 
     public void serviceStop() {
@@ -72,11 +99,42 @@ public class ScheduleInformatorApp {
     }
 
     public void setSelectedPreset(UUID preset) {
-        schedule.setSelected(preset);
+        schedule.setSelectedPreset(preset);
         saveAppSchedule();
     }
 
+    long latestBuiltinScheduleCheck;
     public int tick() {
+        if (System.currentTimeMillis() - latestBuiltinScheduleCheck > 1000*5) {
+            GlobalManager.get(context, new GlobalManager.GlobalManagerInterface() {
+                @Override
+                public void failed(Exception exception) {
+                    exception.printStackTrace();
+                }
+
+                @Override
+                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
+                    globalBuiltinSchedule = builtinSchedule;
+                    for (UUID autoSyncUUID : appBuiltinSchedule.selectedAutoSyncPresets) {
+                        Preset builtinPreset = globalBuiltinSchedule.getPreset(autoSyncUUID);
+                        Preset localPreset = schedule.getPreset(autoSyncUUID);
+
+                        if (localPreset != null && localPreset.syncedByGlobal && builtinPreset == null) {
+                            localPreset.deletedInGlobal = true;
+                        }
+
+                        if (builtinPreset != null) {
+                            Preset putPreset = builtinPreset.clone();
+                            putPreset.syncedByGlobal = true;
+                            schedule.putPreset(autoSyncUUID, putPreset);
+                        }
+                    }
+                    saveAppSchedule();
+                }
+            });
+
+            latestBuiltinScheduleCheck = System.currentTimeMillis();
+        }
         CompressedEvent nowEvent = getSelectedPreset().getNowCompressedEvent();
         CompressedEvent nextEvent = getSelectedPreset().getNextCompressedEvent();
         boolean isNow = nowEvent != null;
@@ -181,7 +239,7 @@ public class ScheduleInformatorApp {
         return scheduleFile;
     }
 
-    public AppSchedule getSchedule() {
+    public AppPresetList getSchedule() {
         return schedule;
     }
 }

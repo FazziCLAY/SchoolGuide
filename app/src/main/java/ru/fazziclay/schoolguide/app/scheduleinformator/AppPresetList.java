@@ -1,41 +1,44 @@
 package ru.fazziclay.schoolguide.app.scheduleinformator;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
-import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Schedule;
+import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
 
-public class AppSchedule extends Schedule {
+public class AppPresetList extends PresetList implements SelectablePresetList {
     @SerializedName("selectedPreset")
     private UUID selectedPresetUUID = new UUID(0, 0);
 
+    @Override
     public Preset getSelectedPreset() {
-        if (selectedPresetUUID == null) {
-            selectedPresetUUID = new UUID(0, 0);
-        }
         Preset preset = getPreset(selectedPresetUUID);
         if (preset == null) {
             preset = getPreset(selectFirst());
             if (preset != null) return preset;
             preset = new Preset();
-            preset.setName("(PRESET_NULL)");
-            Log.e("ERROR", "getCurrentPreset: null");
+            preset.setName("Undefined Preset");
+            //Log.e("ERROR", "getCurrentPreset: null");
         }
         return preset;
     }
 
-    public void setSelected(UUID uuid) {
+    @Override
+    public void setSelectedPreset(UUID uuid) {
         selectedPresetUUID = uuid;
     }
 
+    @Override
+    public UUID getSelectedPresetId() {
+        return selectedPresetUUID;
+    }
+
+    @Override
     public UUID selectFirst() {
-        if (getPresetsUUIDs().length > 0) {
-            selectedPresetUUID = getPresetsUUIDs()[0];
-            return selectedPresetUUID;
+        if (getPresetsIds().length > 0) {
+            setSelectedPreset(getPresetsIds()[0]);
+            return getSelectedPresetId();
         }
         return null;
     }

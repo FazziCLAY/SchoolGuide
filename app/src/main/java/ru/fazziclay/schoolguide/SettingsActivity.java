@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.databinding.SettingsActivityBinding;
@@ -17,49 +19,66 @@ public class SettingsActivity extends AppCompatActivity {
         return new Intent(context, SettingsActivity.class);
     }
 
-    SchoolGuideApp app;
-    Settings settings;
-    SettingsActivityBinding binding;
+    private SchoolGuideApp app;
+    private Settings settings;
+    private SettingsActivityBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         app = SchoolGuideApp.get(this);
+        if (app == null) {
+            setContentView(SharedConstrains.getAppNullView(this));
+            return;
+        }
         settings = app.getSettings();
 
         binding = SettingsActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActualState(settings);
+        setCallbacks();
+    }
+
+    private void setActualState(Settings settings) {
         binding.developerFeatures.setChecked(settings.developerFeatures);
+        binding.stopForegroundIsNone.setChecked(settings.stopForegroundIsNone);
+        binding.isFirstMonday.setChecked(settings.isFirstMonday);
+    }
+
+    private void setCallbacks() {
         binding.developerFeatures.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settings.developerFeatures = isChecked;
-            app.saveSettings();
+            save();
         });
 
-        binding.stopForegroundIsNone.setChecked(settings.stopForegroundIsNone);
         binding.stopForegroundIsNone.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settings.stopForegroundIsNone = isChecked;
-            app.saveSettings();
+            save();
         });
 
-        binding.isFirstMonday.setChecked(settings.isFirstMonday);
         binding.isFirstMonday.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settings.isFirstMonday = isChecked;
-            app.saveSettings();
+            save();
         });
 
         binding.changeScheduleNotifyBeforeTime.setOnClickListener(v -> {
             EditText editText = new EditText(this);
-            editText.setText(settings.scheduleNotifyBeforeTime+"");
+            editText.setText(String.valueOf(settings.scheduleNotifyBeforeTime));
 
             new AlertDialog.Builder(this)
                     .setView(editText)
-                    .setPositiveButton("apply", (ig, ign) -> {
+                    .setPositiveButton("APPLY", (ig, ign) -> {
                         settings.scheduleNotifyBeforeTime = Integer.parseInt(editText.getText().toString());
                         app.saveSettings();
                     })
                     .show();
         });
+    }
+
+    private void save() {
+        app.saveSettings();
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), "Saved!", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 }

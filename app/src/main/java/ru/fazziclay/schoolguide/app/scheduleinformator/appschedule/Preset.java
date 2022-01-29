@@ -13,6 +13,10 @@ public class Preset implements Cloneable {
     String name;
     String author;
 
+    // TODO: 2022-01-28 make private
+    public boolean deletedInGlobal = false;
+    public boolean syncedByGlobal = false;
+
     public HashMap<UUID, EventInfo> eventsInfos = new HashMap<>();
     public List<Event> eventsPositions = new ArrayList<>();
 
@@ -39,9 +43,9 @@ public class Preset implements Cloneable {
         int i = 0;
         while (i < eventsPositions.size()) {
             Event event1 = eventsPositions.get(i);
-            if (TimeUtil.getWeekSeconds() < event1.start && event1.start < m) {
+            if (TimeUtil.getWeekSeconds() < event1.getStart() && event1.getEnd() < m) {
                 event = event1;
-                m = event1.start;
+                m = event1.getStart();
             }
             i++;
         }
@@ -58,7 +62,7 @@ public class Preset implements Cloneable {
 
     public CompressedEvent compressEvent(Event event) {
         if (event == null) return null;
-        return CompressedEvent.create(event, getEventInfo(event.eventInfo));
+        return CompressedEvent.create(event, getEventInfo(event.getEventInfo()));
     }
 
     public EventInfo getEventInfo(UUID uuid) {

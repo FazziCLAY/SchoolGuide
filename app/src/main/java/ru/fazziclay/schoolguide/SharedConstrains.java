@@ -4,12 +4,15 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To37;
@@ -35,6 +38,7 @@ public class SharedConstrains {
 
     /**
      * Выдаёт каналы которые нужно зарегистрировать
+     * @see SchoolGuideApp#registerNotificationChannels(Context)
      * **/
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static List<NotificationChannel> getNotificationChannels(Context context) {
@@ -69,5 +73,14 @@ public class SharedConstrains {
         notificationChannels.add(updateCenter);
 
         return notificationChannels;
+    }
+
+    /**
+     * Если {@link SchoolGuideApp#get()} выдал null то ставить setContentView
+     * **/
+    public static View getAppNullView(Context context) {
+        TextView textView = new TextView(context);
+        textView.setText("Ошибка инициализации :(");
+        return textView;
     }
 }

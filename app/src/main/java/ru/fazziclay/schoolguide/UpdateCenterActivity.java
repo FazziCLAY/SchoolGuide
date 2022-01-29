@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
-import ru.fazziclay.schoolguide.app.manifest.GlobalBuiltinSchedule;
-import ru.fazziclay.schoolguide.app.manifest.GlobalKeys;
-import ru.fazziclay.schoolguide.app.manifest.GlobalManager;
-import ru.fazziclay.schoolguide.app.manifest.GlobalVersionManifest;
+import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
+import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalManager;
+import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCenterBinding;
 import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.ColorUtil;
@@ -35,10 +35,11 @@ public class UpdateCenterActivity extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 2000;
     public static final String NOTIFICATION_CHANNEL_ID = "updatecenter";
 
+    private SchoolGuideApp app;
     private ActivityUpdateCenterBinding binding;
-    private String currentVersionType;
+    private String currentVersionBuildType;
     private String currentLanguage;
-    private final AppTrace appTrace = AppTrace.getInstance();
+    private AppTrace appTrace;
 
     public static Intent getLaunchIntent(@NonNull Context context) {
         return new Intent(context, UpdateCenterActivity.class);
@@ -47,16 +48,19 @@ public class UpdateCenterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appTrace.trace("onCreate");
-        SchoolGuideApp.get(this);
-        currentVersionType = SharedConstrains.APPLICATION_BUILD_TYPE;
+        app = SchoolGuideApp.get(this);
+        if (app == null) {
+            setContentView(SharedConstrains.getAppNullView(this));
+            return;
+        }
+        appTrace = app.getAppTrace();
+        currentVersionBuildType = SharedConstrains.APPLICATION_BUILD_TYPE;
         currentLanguage = Locale.getDefault().getLanguage();
 
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } catch (Exception e) {
-            appTrace.setThrowable(e);
-            AppTrace.saveAndLog(this, appTrace);
+            appTrace.point("setNightMode", e);
         }
 
         binding = ActivityUpdateCenterBinding.inflate(getLayoutInflater());
@@ -114,10 +118,10 @@ public class UpdateCenterActivity extends AppCompatActivity {
             binding.actionButton.setVisibility(View.VISIBLE);
             binding.actionButton.setText(R.string.updatecenter_outdated_openDownloadLink);
 
-            String downloadUrl = status.latestVersion.getDownloadUrl(currentVersionType);
+            String downloadUrl = status.latestVersion.getDownloadUrl(currentVersionBuildType);
             binding.actionButton.setOnClickListener(ignore -> {
                 if (downloadUrl == null) {
-                    Toast.makeText(this, "Error!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.updatecenter_outdated_downloadError_urlNull, Toast.LENGTH_LONG).show();
                     return;
                 }
                 try {
@@ -165,16 +169,17 @@ public class UpdateCenterActivity extends AppCompatActivity {
             GlobalManager.get(this, new GlobalManager.GlobalManagerInterface() {
                 @Override
                 public void failed(Exception exception) {
+                    appTrace.point("failed, getGlobalManager. PROCESSED CORRECTLY!", exception);
                     statusInterface.run(Status.ERROR.setException(exception));
                 }
 
                 @Override
-                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinSchedule builtinSchedule) {
+                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
                     if (versionManifest.latestVersion == null) {
                         statusInterface.run(Status.ERROR.setException(new NullPointerException("latestVersion is null")));
                         return;
                     }
-                    if (versionManifest.latestVersion.getDownloadUrl(currentVersionType) == null) {
+                    if (versionManifest.latestVersion.getDownloadUrl(currentVersionBuildType) == null) {
                         statusInterface.run(Status.ERROR.setException(new NullPointerException("download url is null")));
                         return;
                     }
@@ -188,6 +193,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
                 }
             });
         } catch (Exception e) {
+            appTrace.point("load unexpected exception\nuser notified", e);
             statusInterface.run(Status.ERROR
                     .setException(e));
         }

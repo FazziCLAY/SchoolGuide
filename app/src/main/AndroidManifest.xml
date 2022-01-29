@@ -9,13 +9,17 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:description="@string/application_description"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/application_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
+        <service
+            android:name=".app.global.AutoGlobalUpdateService"
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
             android:name=".LaunchActivity"
@@ -50,10 +54,6 @@
             android:exported="false" />
         <service
             android:name=".app.scheduleinformator.InformatorService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".app.UpdateCheckerService"
             android:enabled="true"
             android:exported="false" />
 

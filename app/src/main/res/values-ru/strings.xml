@@ -14,6 +14,7 @@
     <string name="updatecenter_outdated_changelogEmpty_text">Список изменений пуст.</string>
     <string name="updatecenter_outdated_openDownloadLink">Загрузить</string>
     <string name="updatecenter_outdated_downloadError_activityNotFound">Пожалуйста установите web-браузер (например FireFox)</string>
+    <string name="updatecenter_outdated_downloadError_urlNull">Ошибка: URL-адрес пуст</string>
     <string name="updatecenter_notification_title">Доступно обновление</string>
     <string name="updatecenter_notification_text">Пожалуйста скачайте новое обновление приложения</string>
 

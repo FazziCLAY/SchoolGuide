@@ -17,6 +17,7 @@
     <string name="updatecenter_outdated_changelogEmpty_text">Change log is null.</string>
     <string name="updatecenter_outdated_openDownloadLink">Download</string>
     <string name="updatecenter_outdated_downloadError_activityNotFound">Please install web browser (for example FireFox)</string>
+    <string name="updatecenter_outdated_downloadError_urlNull">Error: URL is null</string>
     <string name="updatecenter_notification_title">Update Available</string>
     <string name="updatecenter_notification_text">Please download app update</string>
 
