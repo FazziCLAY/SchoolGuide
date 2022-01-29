@@ -17,7 +17,10 @@ public class DataUtil {
         if (file.exists()) {
             String fileContent = FileUtil.read(file);
             try {
-                data = gson.fromJson(fileContent, clazz);
+                T temp = gson.fromJson(fileContent, clazz);
+                if (temp != null) {
+                    data = temp;
+                }
             } catch (Exception ignored) {}
         }
 
