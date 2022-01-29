@@ -1,6 +1,6 @@
 package ru.fazziclay.schoolguide.app;
 
-import static ru.fazziclay.schoolguide.app.UpdateCheckerService.speedCrutch;
+import static ru.fazziclay.schoolguide.util.Crutches.appInitializationDelay;
 
 import android.app.Service;
 import android.content.Intent;
@@ -10,7 +10,7 @@ public class SchoolGuideService extends Service {
 
     @Override
     public void onCreate() {
-        speedCrutch();
+        appInitializationDelay();
         SchoolGuideApp.get(this);
     }
 
