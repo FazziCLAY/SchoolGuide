@@ -12,7 +12,7 @@ import java.util.List;
 
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
-import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To36;
+import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To37;
 
 public class SharedConstrains {
     public static final int APPLICATION_VERSION_CODE = BuildConfig.VERSION_CODE;
@@ -30,7 +30,7 @@ public class SharedConstrains {
      * @see ru.fazziclay.schoolguide.datafixer.DataFixer
      * **/
     public static final AbstractScheme[] DATA_FIXER_SCHEMES = {
-            new SchemePre36To36()
+            new SchemePre36To37()
     };
 
     /**

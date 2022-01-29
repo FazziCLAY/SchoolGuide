@@ -16,15 +16,27 @@ import ru.fazziclay.schoolguide.datafixer.old.v33.V33LessonInfo;
 import ru.fazziclay.schoolguide.datafixer.old.v33.V33LocalSchedule;
 import ru.fazziclay.schoolguide.datafixer.old.v33.V33Schedule;
 import ru.fazziclay.schoolguide.datafixer.old.v33.V33Settings;
-import ru.fazziclay.schoolguide.datafixer.old.v36.V36AppSchedule;
-import ru.fazziclay.schoolguide.datafixer.old.v36.V36Event;
-import ru.fazziclay.schoolguide.datafixer.old.v36.V36EventInfo;
-import ru.fazziclay.schoolguide.datafixer.old.v36.V36Preset;
-import ru.fazziclay.schoolguide.datafixer.old.v36.V36Settings;
+import ru.fazziclay.schoolguide.datafixer.old.v37.V37AppSchedule;
+import ru.fazziclay.schoolguide.datafixer.old.v37.V37Event;
+import ru.fazziclay.schoolguide.datafixer.old.v37.V37EventInfo;
+import ru.fazziclay.schoolguide.datafixer.old.v37.V37Preset;
+import ru.fazziclay.schoolguide.datafixer.old.v37.V37Settings;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
-public class SchemePre36To36 extends AbstractScheme {
+/**
+ * <p>Востанавливает данные версий до v36 (0.3) до версии v37</p>
+ *
+ * <p>Удаляет старый манифест(он брался с гитхаба и клался в кеш)</p>
+ * <p>Удаляет старый state_cache(кеш стадий)</p>
+ *
+ * <p>Востанавливает расписание schedule.json -> scheduleinformator.schedule.json</p>
+ * <p>Востанавливает настройки settings.json -> settings.json</p>
+ *
+ * @see DataFixer
+ * @see AbstractScheme
+ * **/
+public class SchemePre36To37 extends AbstractScheme {
     final String OLD_MANIFEST_FILE = "manifest.json";
     final String OLD_STATECACHE_FILE = "state_cache.json";
     final String OLD_SCHEDULE_FILE = "schedule.json";
@@ -48,10 +60,10 @@ public class SchemePre36To36 extends AbstractScheme {
     File newSettingsFile;
 
     V33Schedule oldSchedule;
-    V36AppSchedule newSchedule;
+    V37AppSchedule newSchedule;
 
     V33Settings oldSettings;
-    V36Settings newSettings;
+    V37Settings newSettings;
 
     @Override
     public boolean isCompatible(Version version) {
@@ -112,11 +124,11 @@ public class SchemePre36To36 extends AbstractScheme {
         } catch (Exception ignored) {}
 
         if (newSchedule != null) {
-            FileUtil.write(newScheduleFile, gson.toJson(newSchedule, V36AppSchedule.class));
+            FileUtil.write(newScheduleFile, gson.toJson(newSchedule, V37AppSchedule.class));
         }
 
         if (newSettings != null) {
-            FileUtil.write(newSettingsFile, gson.toJson(newSettings, V36Settings.class));
+            FileUtil.write(newSettingsFile, gson.toJson(newSettings, V37Settings.class));
         }
     }
 
@@ -131,7 +143,7 @@ public class SchemePre36To36 extends AbstractScheme {
             return;
         }
 
-        newSchedule = new V36AppSchedule();
+        newSchedule = new V37AppSchedule();
         UUID[] oldSchedulesKeys = oldSchedule.schedules.keySet().toArray(new UUID[0]);
 
         int i = 0;
@@ -139,7 +151,7 @@ public class SchemePre36To36 extends AbstractScheme {
             UUID oldScheduleKey = oldSchedulesKeys[i];
             V33LocalSchedule oldLocalSchedule = oldSchedule.schedules.get(oldScheduleKey);
 
-            V36Preset newPreset = new V36Preset();
+            V37Preset newPreset = new V37Preset();
             newPreset.name = oldLocalSchedule.name == null ? "Unknown" : oldLocalSchedule.name;
             newPreset.author = null;
 
@@ -161,8 +173,8 @@ public class SchemePre36To36 extends AbstractScheme {
                             UUID oldLessonInfoPointer = oldLesson.lesson;
                             V33LessonInfo oldLessonInfo = oldSchedule.lessons.get(oldLessonInfoPointer);
                             if (oldLessonInfo != null) {
-                                newPreset.eventsInfos.put(oldLessonInfoPointer, new V36EventInfo(oldLessonInfo.name));
-                                newPreset.eventsPositions.add(new V36Event(
+                                newPreset.eventsInfos.put(oldLessonInfoPointer, new V37EventInfo(oldLessonInfo.name));
+                                newPreset.eventsPositions.add(new V37Event(
                                         oldLessonInfoPointer,
                                         dayCoff + oldLesson.start,
                                         dayCoff + (oldLesson.start + oldLesson.duration)
@@ -190,7 +202,7 @@ public class SchemePre36To36 extends AbstractScheme {
             return;
         }
 
-        newSettings = new V36Settings();
+        newSettings = new V37Settings();
 
         newSettings.developerFeatures = oldSettings.isDeveloperFeatures;
         if (newSchedule != null) {
