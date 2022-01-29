@@ -17,9 +17,10 @@ public class FileUtil {
     }
 
     private static void createNew(String path) {
-        int lastSep = fixPathSeparator(path).lastIndexOf(File.separator);
+        path = fixPathSeparator(path);
+        int lastSep = path.lastIndexOf(File.separator);
         if (lastSep > 0) {
-            String dirPath = fixPathSeparator(path).substring(0, lastSep);
+            String dirPath = path.substring(0, lastSep);
             createDirIfNotExists(dirPath);
             File folder = new File(dirPath);
             folder.mkdirs();
@@ -34,14 +35,6 @@ public class FileUtil {
         }
     }
 
-    public static String read(String path, String defaultValue) {
-        String content = read(path);
-        if (content != null && content.equals("")) {
-            return defaultValue;
-        }
-        return content;
-    }
-
     public static String read(File file, String defaultValue) {
         return read(file.getAbsolutePath(), defaultValue);
     }
@@ -50,13 +43,21 @@ public class FileUtil {
         return read(file.getAbsolutePath());
     }
 
+    public static String read(String path, String defaultValue) {
+        String content = read(path);
+        if (content != null && content.equals("")) {
+            return defaultValue;
+        }
+        return content;
+    }
+
     public static String read(String path) {
+        path = fixPathSeparator(path);
         try {
-            createNew(fixPathSeparator(path));
+            createNew(path);
 
             StringBuilder stringBuilder = new StringBuilder();
-            FileReader fileReader = null;
-            fileReader = new FileReader(fixPathSeparator(path));
+            FileReader fileReader = new FileReader(path);
 
             char[] buff = new char[1024];
             int length;
@@ -84,9 +85,10 @@ public class FileUtil {
     }
 
     public static void write(String path, String content) {
+        path = fixPathSeparator(path);
         try {
-            createNew(fixPathSeparator(path));
-            FileWriter fileWriter = new FileWriter(fixPathSeparator(path), false);
+            createNew(path);
+            FileWriter fileWriter = new FileWriter(path, false);
             fileWriter.write(content);
             fileWriter.flush();
             fileWriter.close();
