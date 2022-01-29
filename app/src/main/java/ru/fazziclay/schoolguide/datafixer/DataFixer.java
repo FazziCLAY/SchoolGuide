@@ -11,6 +11,16 @@ import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
+/**
+ * <H1>DataFixer</H1>
+ * <H2>Исправляет данные старых версий и делает их читаемыми для новой</H2>
+ *
+ * <p>Требуется создать объект, передать в него нужно андроид контекст, текущую версию приложения, и схему востановления({@link AbstractScheme})</p>
+ * <p>Для определения использует файл version.json в data/data</p>
+ *
+ * @see AbstractScheme
+ * @see Version
+ * **/
 public class DataFixer {
     private static final int PRE36_VERSION = -36;
 

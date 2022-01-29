@@ -6,6 +6,10 @@ import java.io.File;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
+/**
+ * Набор утилит для записи обьектов в файл и чтение их обратно в обекты
+ * @apiNote Use GSON
+ * **/
 public class DataUtil {
     public static <T> T load(Gson gson, File file, Class<T> clazz) {
         T data = gson.fromJson("{}", clazz);
@@ -14,8 +18,7 @@ public class DataUtil {
             String fileContent = FileUtil.read(file);
             try {
                 data = gson.fromJson(fileContent, clazz);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
 
         return data;

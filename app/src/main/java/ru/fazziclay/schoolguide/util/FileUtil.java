@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Набор утилит для работы с файлами
+ * **/
 public class FileUtil {
     public static void createDirIfNotExists(String path) {
         File file = new File(fixPathSeparator(path));

@@ -1,5 +1,8 @@
 package ru.fazziclay.schoolguide.util;
 
+/**
+ * Набот утилит для сортировки
+ * **/
 public class SortUtil {
     public static void sort(Object[] list, Stringer stringer) {
         int n = list.length;

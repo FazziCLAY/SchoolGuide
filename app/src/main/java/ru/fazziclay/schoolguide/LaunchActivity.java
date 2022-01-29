@@ -12,6 +12,16 @@ import androidx.appcompat.app.AppCompatDelegate;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetListActivity;
 
+/**
+ * <p>Активити которое запускается первым, оно запускает всю систему если она ещё не запущена, и запускает нужный
+ * активити</p>
+ *
+ * <p>Оно ставит тему на тёмную</p>
+ * <p>ставит на экран текст названия приложения</p>
+ * <p>если андроид позволяет: регистрирует каналы уведомлений {@link SchoolGuideApp#registerNotificationChannels(Context)}</p>
+ * <p>вызывает {@link SchoolGuideApp#get(Context)}</p>
+ * <p>запускает {@link PresetListActivity}</p>
+ * **/
 public class LaunchActivity extends Activity {
 
     @Override

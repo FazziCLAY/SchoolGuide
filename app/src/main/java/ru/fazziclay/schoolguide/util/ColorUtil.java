@@ -16,7 +16,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Набор утилит длоя работы с цветами
+ * **/
 public class ColorUtil {
+    /**
+     * Конвертирует цвет в виде int в #AARRGGBB
+     * **/
     public static String colorToHex(int color) {
         int a = Color.alpha(color);
         int r = Color.red(color);
@@ -25,17 +31,24 @@ public class ColorUtil {
         return "#" + byteToHex(a) + byteToHex(r) + byteToHex(g) + byteToHex(b);
     }
 
+    /**
+     * Конвертирует байты в строку
+     * @see ColorUtil#colorToHex(int)
+     * **/
     private static String byteToHex(int value) {
         String hex = "00".concat(Integer.toHexString(value));
         return hex.substring(hex.length()-2);
     }
 
     /**
-     * &[] - system
-     * &[0] - 0 - type
-     * &[01] - 1 - value
+     * Возвращает {@link SpannableString} из строки, подчиняется форматированию вот так:
+     * <p>$[] - system</p>
+     * <p>$[0] - 0 - type</p>
+     * <p>$[01] - 1 - value</p>
      *
-     * <code>"Hello &[-#ffffffff]&[=#66000000]"</code>
+     * <code>"Hello $[-#ffffffff;=#66000000] w$[@bolditalic]orld"</code>
+     * @see Spannable
+     * @see SpannableString
      * **/
     public static SpannableString colorize(String text, int defaultFgColor, int defaultBgColor, int defaultStyle) {
         if (text == null) return null;
@@ -168,6 +181,9 @@ public class ColorUtil {
         return spannableText;
     }
 
+    /**
+     * @see ColorUtil#colorize(String, int, int, int)
+     * **/
     public static class SpanText {
         public String text;
         public int fgColor;

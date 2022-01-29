@@ -25,6 +25,10 @@ public class SharedConstrains {
     public static final String VERSION_MANIFEST_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/dev/v34/manifest/v2/version_manifest_v2.json";
     public static final String BUILTIN_SCHEDULE_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/dev/v34/manifest/v2/builtin_schedule_v2.json";
 
+    /**
+     * Схемы востановления DataFixer`a
+     * @see ru.fazziclay.schoolguide.datafixer.DataFixer
+     * **/
     public static final AbstractScheme[] DATA_FIXER_SCHEMES = {
             new SchemePre36To36()
     };

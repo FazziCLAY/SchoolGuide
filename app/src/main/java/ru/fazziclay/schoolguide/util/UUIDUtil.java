@@ -2,6 +2,9 @@ package ru.fazziclay.schoolguide.util;
 
 import java.util.UUID;
 
+/**
+ * Набор утилит для UUIDшников
+ * **/
 public class UUIDUtil {
     /**
      * @return Случайный UUID который не будет содержатся в исключениях
