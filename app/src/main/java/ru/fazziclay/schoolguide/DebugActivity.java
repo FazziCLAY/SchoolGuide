@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.databinding.ActivityDebugBinding;
 import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.ColorUtil;
@@ -19,13 +20,19 @@ public class DebugActivity extends AppCompatActivity {
         return new Intent(context, DebugActivity.class);
     }
 
-    ActivityDebugBinding binding;
-    AppTrace trace = new AppTrace();
+    private SchoolGuideApp app;
+    private ActivityDebugBinding binding;
+    private AppTrace appTrace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        trace.trace("onCreate");
+        app = SchoolGuideApp.get(this);
+        if (app == null) {
+            setContentView(SharedConstrains.getAppNullView(this));
+            return;
+        }
+        appTrace = app.getAppTrace();
         binding = ActivityDebugBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -42,7 +49,5 @@ public class DebugActivity extends AppCompatActivity {
                 binding.textColorizeResult.setText(ColorUtil.colorize(input, Color.CYAN, Color.RED, Typeface.ITALIC));
             }
         });
-        trace.trace("preSave");
-        AppTrace.saveAndLog(this, trace);
     }
 }
