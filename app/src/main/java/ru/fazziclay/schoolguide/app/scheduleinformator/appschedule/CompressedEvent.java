@@ -3,8 +3,8 @@ package ru.fazziclay.schoolguide.app.scheduleinformator.appschedule;
 import java.util.UUID;
 
 public class CompressedEvent extends WeekTimeSegment {
-    String name;
-    UUID eventInfoUUID;
+    private final String name;
+    private final UUID eventInfoUUID;
 
     public CompressedEvent(String name, UUID eventInfoUUID, int start, int end) {
         super(start, end);
@@ -13,7 +13,7 @@ public class CompressedEvent extends WeekTimeSegment {
     }
 
     public static CompressedEvent create(Event event, EventInfo eventInfo) {
-        return new CompressedEvent(eventInfo.name, event.eventInfo, event.start, event.end);
+        return new CompressedEvent(eventInfo.getName(), event.getEventInfo(), event.getStart(), event.getEnd());
     }
 
     public String getName() {
