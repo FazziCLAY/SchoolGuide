@@ -8,11 +8,11 @@
     "changelog": {
       "default": "Приложение переделано!\nНововведения узнаете после установки!"
     },
-    "code": 36,
-    "downloadUrl": "TODO", // TODO fix
+    "code": 34,
+    "downloadUrl": "TODO",
     "name": "ReWriTTen",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 30,
+  "manifestKey": 32,
   "version": 4
 }
