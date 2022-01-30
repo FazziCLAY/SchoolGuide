@@ -337,6 +337,33 @@ public class PresetListActivity extends AppCompatActivity {
      * **/
     private void updateList() {
         UUID[] listPresetsUUIDs = presetList.getPresetsIds();
+        binding.emptyText.setVisibility(View.GONE);
+        if (listPresetsUUIDs.length == 0) {
+            binding.emptyText.setVisibility(View.VISIBLE);
+            binding.presetList.deferNotifyDataSetChanged();
+            binding.presetList.setAdapter(new BaseAdapter() {
+                @Override
+                public int getCount() {
+                    return 0;
+                }
+
+                @Override
+                public Object getItem(int position) {
+                    return null;
+                }
+
+                @Override
+                public long getItemId(int position) {
+                    return position;
+                }
+
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    return null;
+                }
+            });
+            return;
+        }
         binding.presetList.deferNotifyDataSetChanged();
         binding.presetList.setAdapter(new BaseAdapter() {
             @Override
