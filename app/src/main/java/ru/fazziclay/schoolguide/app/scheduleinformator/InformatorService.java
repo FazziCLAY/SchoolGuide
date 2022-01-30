@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
+import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 public class InformatorService extends Service {
@@ -18,7 +19,7 @@ public class InformatorService extends Service {
 
     @Override
     public void onCreate() {
-        appInitializationDelay();
+        appInitializationDelay(SharedConstrains.CRUTCH_INIT_DELAY);
         SchoolGuideApp app = SchoolGuideApp.get(this);
         scheduleInformatorApp = app.getScheduleInformatorApp();
         scheduleInformatorApp.registerService(this);

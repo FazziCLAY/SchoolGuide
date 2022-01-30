@@ -66,6 +66,8 @@
     <string name="presetList_rename_message" />
     <string name="presetList_rename">Переименовать</string>
     <string name="presetList_rename_cancel">Отмена</string>
+    <string name="presetList_empty_title">Нету пресетов</string>
+    <string name="presetList_empty_message">Нажмите кнопку + или скопируйте из встроенного списка пресетов</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>

@@ -37,18 +37,14 @@ import ru.fazziclay.schoolguide.SettingsActivity;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.UpdateCenterActivity;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
-import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
-import ru.fazziclay.schoolguide.app.global.GlobalKeys;
-import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
 import ru.fazziclay.schoolguide.app.scheduleinformator.AppPresetList;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
-import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
-import ru.fazziclay.schoolguide.util.UUIDUtil;
 
 public class PresetListActivity extends AppCompatActivity {
     public static final int PRESET_NAME_MAX_LENGTH = 25;
@@ -76,12 +72,12 @@ public class PresetListActivity extends AppCompatActivity {
         informatorApp = app.getScheduleInformatorApp();
         presetList = informatorApp.getSchedule();
 
-        app.getGlobalUpdateCallbacks().addCallback((exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
             if (isFinishing()) return new Status.Builder()
                     .setDeleteCallback(true)
                     .build();
 
-            updateOpenUpdateCenterMenuName();
+            runOnUiThread(this::updateOpenUpdateCenterMenuName);
 
             return new Status.Builder()
                     .setDeleteCallback(false)
@@ -198,8 +194,7 @@ public class PresetListActivity extends AppCompatActivity {
                         Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    UUID newUUID = UUIDUtil.generateUUID(presetList.getPresetsIds());
-                    presetList.putPreset(newUUID, new Preset(newName));
+                    presetList.addPreset(new Preset(newName));
                     informatorApp.saveAppSchedule();
                     updateList();
                 })
@@ -275,10 +270,9 @@ public class PresetListActivity extends AppCompatActivity {
                         Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    UUID newUUID = UUIDUtil.generateUUID(presetList.getPresetsIds());
                     Preset newPreset = preset.clone();
                     newPreset.setName(newName);
-                    presetList.putPreset(newUUID, newPreset);
+                    presetList.addPreset(newPreset);
                     informatorApp.saveAppSchedule();
                     updateList();
                 })

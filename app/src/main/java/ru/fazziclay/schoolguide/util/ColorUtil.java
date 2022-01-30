@@ -46,6 +46,8 @@ public class ColorUtil {
      * <p>$[0] - 0 - type</p>
      * <p>$[01] - 1 - value</p>
      *
+     * <p>- foreground; = background; @text style(default/bold/italic/bolditalic)</p>
+     *
      * <code>"Hello $[-#ffffffff;=#66000000] w$[@bolditalic]orld"</code>
      * @see Spannable
      * @see SpannableString
@@ -184,14 +186,14 @@ public class ColorUtil {
     /**
      * @see ColorUtil#colorize(String, int, int, int)
      * **/
-    public static class SpanText {
-        public String text;
-        public int fgColor;
-        public int bgColor;
-        public int style;
+    private static class SpanText {
+        String text;
+        int fgColor;
+        int bgColor;
+        int style;
 
-        public int start;
-        public int end;
+        int start;
+        int end;
 
         public SpanText(String text, int fgColor, int bgColor, int style, int start) {
             this.text = text;

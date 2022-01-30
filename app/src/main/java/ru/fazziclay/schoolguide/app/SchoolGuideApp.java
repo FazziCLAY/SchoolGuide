@@ -20,6 +20,7 @@ import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
 import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
 import ru.fazziclay.schoolguide.callback.Status;
@@ -198,7 +199,7 @@ public class SchoolGuideApp {
     }
 
     private void registerCallbacks() {
-        globalUpdateCallbacks.addCallback((exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+        globalUpdateCallbacks.addCallback(CallbackImportance.MAX, (exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
             if (exception == null) {
                 setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.latestVersion != null && globalVersionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
             }

@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
 
@@ -25,7 +24,6 @@ public class AppTrace {
                     "$(points)\n" +
                     "\n" +
                     "--- Init StackTrace ---\n" +
-                    "\n" +
                     "$(init/stacktrace)" +
                     "\n" +
                     "--- Init Threads ---\n" +
@@ -59,7 +57,7 @@ public class AppTrace {
     private String initMessage;
     private StackTraceElement[] initStackTrace;
     private int initActiveThreadsCount;
-    private Map<Thread, StackTraceElement[]> initAllThreadStackTraces;
+    //private Map<Thread, StackTraceElement[]> initAllThreadStackTraces;
 
     private final List<Point> points = new ArrayList<>();
 
@@ -69,11 +67,7 @@ public class AppTrace {
         ignoreException(() -> this.initThread = Thread.currentThread());
         ignoreException(() -> this.initStackTrace = new Exception().getStackTrace());
         ignoreException(() -> this.initActiveThreadsCount = Thread.activeCount());
-        ignoreException(() -> this.initAllThreadStackTraces = Thread.getAllStackTraces());
-    }
-
-    public AppTrace() {
-        this(null);
+        //ignoreException(() -> this.initAllThreadStackTraces = Thread.getAllStackTraces());
     }
 
     private void ignoreException(Runnable runnable) {
@@ -84,6 +78,7 @@ public class AppTrace {
         }
     }
 
+    private boolean logException = false;
     public void point(String message, Throwable throwable) {
         long millis = System.currentTimeMillis();
         long nanos = System.nanoTime();
@@ -95,7 +90,14 @@ public class AppTrace {
                 millis,
                 nanos);
         points.add(point);
-        Log.d("POINT", point.format(0));
+        try {
+            Log.d("POINT", point.format(0));
+        } catch (Exception e) {
+            if (!logException) {
+                logException = true;
+                point("Log.D exception!", e);
+            }
+        }
     }
 
     public void point(String message) {
@@ -137,9 +139,8 @@ public class AppTrace {
         if (message.contains("\n")) {
             String[] split = message.split("\n");
             StringBuilder temp = new StringBuilder();
-            temp.append("\n");
             for (String s : split) {
-                temp.append("\\ ").append(s).append("\n");
+                temp.append("\n").append("\\ ").append(s);
             }
             return temp.toString();
 

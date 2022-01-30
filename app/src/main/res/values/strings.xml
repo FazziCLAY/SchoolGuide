@@ -69,6 +69,8 @@
     <string name="presetList_rename_message" />
     <string name="presetList_rename">Rename</string>
     <string name="presetList_rename_cancel">Cancel</string>
+    <string name="presetList_empty_title">No presets</string>
+    <string name="presetList_empty_message">Click + button or copy from built-in preset list</string>
 
     <string name="presetMenu_copy">Copy</string>
     <string name="presetMenu_delete">Delete</string>

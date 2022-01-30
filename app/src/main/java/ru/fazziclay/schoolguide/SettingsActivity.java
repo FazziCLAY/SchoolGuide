@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -69,8 +70,13 @@ public class SettingsActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setView(editText)
                     .setPositiveButton("APPLY", (ig, ign) -> {
-                        settings.scheduleNotifyBeforeTime = Integer.parseInt(editText.getText().toString());
-                        app.saveSettings();
+                        try {
+                            settings.scheduleNotifyBeforeTime = Integer.parseInt(editText.getText().toString());
+                        } catch (Exception e) {
+                            app.getAppTrace().point("changeScheduleNotifyBeforeTimeDialog", e);
+                            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                        save();
                     })
                     .show();
         });

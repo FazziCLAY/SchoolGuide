@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
 import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
@@ -21,7 +22,7 @@ public class AutoGlobalUpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        appInitializationDelay();
+        appInitializationDelay(SharedConstrains.CRUTCH_INIT_DELAY);
         app = SchoolGuideApp.get(this);
         if (app == null) {
             Log.e("ERROR", "AutoGlobalUpdateService: app is null! stopSelf");

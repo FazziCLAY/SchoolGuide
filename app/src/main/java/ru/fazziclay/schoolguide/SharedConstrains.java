@@ -35,6 +35,7 @@ public class SharedConstrains {
     public static final AbstractScheme[] DATA_FIXER_SCHEMES = {
             new SchemePre36To37()
     };
+    public static final long CRUTCH_INIT_DELAY = 1000 * 6;
 
     /**
      * Выдаёт каналы которые нужно зарегистрировать

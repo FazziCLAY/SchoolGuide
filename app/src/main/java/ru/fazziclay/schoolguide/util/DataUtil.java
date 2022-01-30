@@ -1,5 +1,7 @@
 package ru.fazziclay.schoolguide.util;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -32,6 +34,16 @@ public class DataUtil {
     }
 
     public static void save(Gson gson, File file, Object obj) {
+        if (obj == null) {
+            Log.e("Save", "save object is null!");
+            if (SchoolGuideApp.isInstanceAvailable()) {
+                SchoolGuideApp app = SchoolGuideApp.get();
+                if (app != null) {
+                    app.getAppTrace().point("save object is null!", new NullPointerException("by fazziclay!"));
+                }
+            }
+            return;
+        }
         FileUtil.write(file, gson.toJson(obj, obj.getClass()));
     }
 

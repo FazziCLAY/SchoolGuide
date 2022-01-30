@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.util.SortUtil;
+import ru.fazziclay.schoolguide.util.UUIDUtil;
 
 public class PresetList {
     private final HashMap<UUID, Preset> presets = new HashMap<>();
@@ -21,6 +22,18 @@ public class PresetList {
      * **/
     public void putPreset(UUID uuid, Preset preset) {
         presets.put(uuid, preset);
+    }
+
+    /**
+     * Добавить пресет в список, возвращает его ID
+     * **/
+    public UUID addPreset(Preset preset) {
+        for (Preset p : presets.values()) {
+            if (p == preset) throw new RuntimeException("preset exist in preset list!");
+        }
+        UUID id = UUIDUtil.generateUUID(presets.keySet().toArray(new UUID[0]));
+        putPreset(id, preset);
+        return id;
     }
 
     /**

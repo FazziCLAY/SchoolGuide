@@ -7,25 +7,26 @@
         android:id="@+id/developerFeatures"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="developerFeatures" />
+        android:text="Возможности разработчика" />
 
+    <!-- TODO make translatable -->
     <Button
         android:id="@+id/changeScheduleNotifyBeforeTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="scheduleNotifyBeforeTime"
+        android:text="Начинать уведомлять кода осталось... (в секундах)"
         android:textAllCaps="false" />
 
     <CheckBox
         android:id="@+id/stopForegroundIsNone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="stopForegroundIsNone" />
+        android:text="Убирать уведомление когда оно не показывает информацию" />
 
     <CheckBox
         android:id="@+id/isFirstMonday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="isFirstMonday" />
+        android:text="Первый день недели поднидельник" />
 
 </LinearLayout>

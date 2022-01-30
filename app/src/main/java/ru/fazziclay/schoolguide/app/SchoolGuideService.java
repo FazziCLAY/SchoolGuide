@@ -6,11 +6,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import ru.fazziclay.schoolguide.SharedConstrains;
+
 public class SchoolGuideService extends Service {
 
     @Override
     public void onCreate() {
-        appInitializationDelay();
+        appInitializationDelay(SharedConstrains.CRUTCH_INIT_DELAY);
         SchoolGuideApp.get(this);
     }
 

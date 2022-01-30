@@ -6,14 +6,14 @@ public class Crutches {
     /**
      * Уходит в цикл если инстанс приложения не доступен, к цикле максимум крутится 5 секунд, потом выходит из цикла.
      * **/
-    public static void appInitializationDelay() {
+    public static void appInitializationDelay(long maxWait) {
         long startCrutch = System.currentTimeMillis();
         while (!SchoolGuideApp.isInstanceAvailable()) {
-            if (System.currentTimeMillis() - startCrutch > 1000*5) break;
+            if (System.currentTimeMillis() - startCrutch > maxWait) break;
         }
     }
 
-    /*private void sendUpdateNotify() {
+    /*1private void sendUpdateNotify() {
         final int NOTIFICATION_ID = UpdateCenterActivity.NOTIFICATION_ID;
         final String NOTIFICATION_CHANNEL_ID = UpdateCenterActivity.NOTIFICATION_CHANNEL_ID;
 

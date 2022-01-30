@@ -11,6 +11,7 @@ import java.net.URL;
 public class NetworkUtil {
     /**
      * Спарсить данные со странички и вернуть их текстом (в основном для парсинга json-страниц)
+     * @return содержание страницы
      * **/
     public static String parseTextPage(String url) throws IOException {
         StringBuilder result = new StringBuilder();
