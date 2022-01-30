@@ -29,7 +29,7 @@ public class UUIDUtil {
             }
             i++;
             if (i > 1000) {
-                throw new RuntimeException("Error generating. Iterations count: " + i);
+                throw new RuntimeException("Error generating uuid. Iterations count > " + i);
             }
         }
         return uuid;
