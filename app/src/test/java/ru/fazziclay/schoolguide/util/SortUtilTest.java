@@ -36,7 +36,7 @@ public class SortUtilTest {
         };
         System.out.println("original:" + Arrays.toString(array));
 
-        SortUtil.sort(array, o -> (String) o);
+        SortUtil.sort(array, o -> o);
 
         System.out.println("sorted: "  + Arrays.toString(array));
     }
