@@ -32,7 +32,7 @@ public class CallbackTest {
         });
     }
 
-    private interface TestCallback extends ICallback {
+    private interface TestCallback extends Callback {
         void sendMessage(String message);
     }
 }

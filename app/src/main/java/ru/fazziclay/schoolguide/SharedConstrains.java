@@ -1,11 +1,11 @@
 package ru.fazziclay.schoolguide;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
@@ -14,6 +14,7 @@ import java.util.List;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.databinding.ErrorAppNullBinding;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
 import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To37;
 
@@ -79,9 +80,15 @@ public class SharedConstrains {
     /**
      * Если {@link SchoolGuideApp#get()} выдал null то ставить setContentView
      * **/
-    public static View getAppNullView(Context context) {
-        TextView textView = new TextView(context);
-        textView.setText("Ошибка инициализации :(");
-        return textView;
+    public static View getAppNullView(Activity activity) {
+        ErrorAppNullBinding binding = ErrorAppNullBinding.inflate(activity.getLayoutInflater());
+
+        binding.errorText.setText(activity.getString(
+                R.string.error_appNull_message,
+                String.valueOf(ErrorCode.ERROR_APP_GET_RETURN_NULL),
+                activity == null ? "null" : activity.getClass().getName()
+        ));
+
+        return binding.getRoot();
     }
 }

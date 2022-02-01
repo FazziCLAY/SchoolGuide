@@ -99,4 +99,7 @@
     <string name="batteryOptimizationDialog_message">Просим вас отключить оптимизацию батареи для прилжения, так оно лучьше работает</string>
     <string name="batteryOptimizationDialog_disable">Отключить</string>
     <string name="batteryOptimizationDialog_cancel">Отмена</string>
+
+    <string name="error_appNull_title">ОШИБКА!</string>
+    <string name="error_appNull_message">Ошибка инициализации!\nСвяжитесь с разработчиком!\nКод: %s\n\nActivity: %s</string>
 </resources>

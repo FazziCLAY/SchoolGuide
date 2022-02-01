@@ -1,4 +1,4 @@
 package ru.fazziclay.schoolguide.callback;
 
-public interface ICallback {
+public interface Callback {
 }

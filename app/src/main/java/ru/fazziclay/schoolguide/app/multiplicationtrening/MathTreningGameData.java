@@ -4,7 +4,6 @@ public class MathTreningGameData {
     int score = 0;
     String action = "*";
 
-
     int n1RangeMin = 2;
     int n1RangeMax = 9;
 

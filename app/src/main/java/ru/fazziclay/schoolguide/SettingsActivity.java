@@ -45,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         binding.developerFeatures.setChecked(settings.developerFeatures);
         binding.stopForegroundIsNone.setChecked(settings.stopForegroundIsNone);
         binding.isFirstMonday.setChecked(settings.isFirstMonday);
+        binding.syncGlobalPresetList.setChecked(settings.globalPresetListSync);
     }
 
     private void setCallbacks() {
@@ -60,6 +61,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.isFirstMonday.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settings.isFirstMonday = isChecked;
+            save();
+        });
+
+        binding.syncGlobalPresetList.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settings.globalPresetListSync = isChecked;
             save();
         });
 

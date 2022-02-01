@@ -29,4 +29,10 @@
         android:layout_height="wrap_content"
         android:text="Первый день недели поднидельник" />
 
+    <CheckBox
+        android:id="@+id/syncGlobalPresetList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Синхронизировать список пресетов с глобальным" />
+
 </LinearLayout>

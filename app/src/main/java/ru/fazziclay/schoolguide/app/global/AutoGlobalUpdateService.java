@@ -11,7 +11,7 @@ import android.util.Log;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
-import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.app.GlobalUpdateListener;
 
 public class AutoGlobalUpdateService extends Service {
     private SchoolGuideApp app;
@@ -33,17 +33,15 @@ public class AutoGlobalUpdateService extends Service {
 
         handler = new Handler(getMainLooper());
         runnable = () -> {
-            GlobalManager.get(this, new GlobalManager.GlobalManagerInterface() {
+            GlobalManager.get(app, new GlobalManager.GlobalManagerInterface() {
                 @Override
-                public void failed(Exception exception) {
-                    callbacks.run((callbackStorage, callback) -> callback.onGlobalUpdate(exception, null, null, null));
-                }
+                public void failed(Exception exception) {}
 
                 @Override
                 public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
                     app.setGlobalVersionManifest(versionManifest);
                     app.setGlobalBuiltinPresetList(builtinSchedule);
-                    callbacks.run((callbackStorage, callback) -> callback.onGlobalUpdate(null, keys, versionManifest, builtinSchedule));
+                    callbacks.run((callbackStorage, callback) -> callback.onGlobalUpdate(keys, versionManifest, builtinSchedule));
                 }
             });
             handler.postDelayed(runnable, 60 * 60 * 1000);

@@ -102,4 +102,13 @@
     <string name="batteryOptimizationDialog_message">We ask you to disable battery optimization</string>
     <string name="batteryOptimizationDialog_disable">Disable</string>
     <string name="batteryOptimizationDialog_cancel">Cancel</string>
+
+    <string name="error_appNull_title">ERROR!</string>
+    <string name="error_appNull_message">Initialize error!\nContact to developer!\nCode: %s\n\nActivity: %s</string>
+    <string name="scheduleInformator_none_title">Application active</string>
+    <string name="scheduleInformator_none_text">There are no events in the near future</string>
+    <string name="scheduleInformator_next_title">Rest! (%s)</string>
+    <string name="scheduleInformator_next_text">Next: %s</string>
+    <string name="scheduleInformator_now_title">%s! (%s)</string>
+    <string name="scheduleInformator_now_next_text">Next: %s</string>
 </resources>

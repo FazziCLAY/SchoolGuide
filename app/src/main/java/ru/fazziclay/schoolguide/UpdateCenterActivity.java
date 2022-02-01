@@ -166,7 +166,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
                     statusInterface.run(Status.OUTDATED.setLatestVersion(v));
                 }
             }
-            GlobalManager.get(this, new GlobalManager.GlobalManagerInterface() {
+            GlobalManager.get(app, new GlobalManager.GlobalManagerInterface() {
                 @Override
                 public void failed(Exception exception) {
                     appTrace.point("failed, getGlobalManager. PROCESSED CORRECTLY!", exception);
@@ -193,7 +193,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
                 }
             });
         } catch (Exception e) {
-            appTrace.point("load unexpected exception\nuser notified", e);
+            appTrace.point("load unexpected exception\n(user notified)", e);
             statusInterface.run(Status.ERROR
                     .setException(e));
         }

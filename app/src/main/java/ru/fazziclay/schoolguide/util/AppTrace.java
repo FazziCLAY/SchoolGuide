@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 public class AppTrace {
     private static final String TEXT_BASE =
@@ -78,7 +79,7 @@ public class AppTrace {
         }
     }
 
-    private boolean logException = false;
+    private boolean pointDebugLogException = false;
     public void point(String message, Throwable throwable) {
         long millis = System.currentTimeMillis();
         long nanos = System.nanoTime();
@@ -93,10 +94,13 @@ public class AppTrace {
         try {
             Log.d("POINT", point.format(0));
         } catch (Exception e) {
-            if (!logException) {
-                logException = true;
+            if (!pointDebugLogException) {
+                pointDebugLogException = true;
                 point("Log.D exception!", e);
             }
+        }
+        if (SchoolGuideApp.isInstanceAvailable()) {
+            SchoolGuideApp.get().saveAppTrace();
         }
     }
 
@@ -126,7 +130,7 @@ public class AppTrace {
             return variable(POINT_BASE, new Object[][]{
                     {"title", "Point #" + position},
                     {"message", formatMultilineMessage(message)},
-                    {"thread", thread.getName()},
+                    {"thread", thread == null ? "null" : thread.getName()},
                     {"time", String.format("%s / %s", timeMillis, timeNanos)},
                     {"stacktrace", stackTraceToString(stackTrace)},
                     {"throwable", throwable == null ? null : String.format("Message: %s\nStackTrace:\n%s", throwable, stackTraceToString(throwable.getStackTrace()))}
@@ -206,7 +210,7 @@ public class AppTrace {
         int i = 0;
         int maxI = trace.length;
         for (StackTraceElement traceElement : trace) {
-            temp.append("\tat ").append(traceElement.toString());
+            temp.append("\tat ").append(traceElement == null ? "null" : traceElement.toString());
             if (i < maxI) temp.append("\n");
             i++;
         }
@@ -215,12 +219,18 @@ public class AppTrace {
     }
 
     private static String variable(String original, String key, Object value) {
+        if (key == null) return original;
         return original.replace("$(" + key + ")", value == null ? "null" : value.toString());
     }
 
     private static String variable(String original, Object[][] vars) {
+        if (original == null) return "original null";
         for (Object[] var : vars) {
-            original = variable(original, (String) var[0], var[1]);
+            try {
+                original = variable(original, (String) var[0], var[1]);
+            } catch (Exception e) {
+                original = "=[!VARIABLE EXCEPTION!]=\n" + e + "\n\n" + original;
+            }
         }
         return original;
     }

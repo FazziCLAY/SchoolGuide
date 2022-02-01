@@ -1,9 +1,11 @@
 package ru.fazziclay.schoolguide.callback;
 
+import android.telecom.Call;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class CallbackStorage <T extends ICallback> {
+public class CallbackStorage <T extends Callback> {
     private final List<CallbackInternal> callbacks = new ArrayList<>();
 
     public void run(RunCallbackInterface<T> runner) {
@@ -39,12 +41,20 @@ public class CallbackStorage <T extends ICallback> {
         callbacks.remove(callbackInternal);
     }
 
+    public void deleteCallback(T callback) {
+        int i = 0;
+        while (i < callbacks.size()) {
+            CallbackInternal internal = callbacks.get(i);
+            if (internal.callback == callback) callbacks.remove(internal);
+            i++;
+        }
+    }
+
     public void addCallback(CallbackImportance importance, T callback) {
         callbacks.add(new CallbackInternal(callback, importance));
     }
 
-
-    public interface RunCallbackInterface <T extends ICallback > {
+    public interface RunCallbackInterface <T extends Callback> {
         Status run(CallbackStorage<T> callbackStorage, T callback);
     }
 

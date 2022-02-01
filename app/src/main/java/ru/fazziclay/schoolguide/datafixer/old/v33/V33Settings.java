@@ -7,4 +7,6 @@ public class V33Settings {
     public List<Integer> versionsHistory;
     public boolean isDeveloperFeatures = false;
     public UUID selectedLocalSchedule;
+
+    public boolean isSyncDeveloperSchedule = false;
 }

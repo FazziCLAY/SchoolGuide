@@ -36,10 +36,11 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SettingsActivity;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.UpdateCenterActivity;
+import ru.fazziclay.schoolguide.app.GlobalUpdateListener;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
-import ru.fazziclay.schoolguide.app.scheduleinformator.AppPresetList;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
+import ru.fazziclay.schoolguide.app.scheduleinformator.SelectablePresetList;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
@@ -61,6 +62,8 @@ public class PresetListActivity extends AppCompatActivity {
 
     private PresetList presetList;
 
+    private GlobalUpdateListener globalUpdateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,17 +75,21 @@ public class PresetListActivity extends AppCompatActivity {
         informatorApp = app.getScheduleInformatorApp();
         presetList = informatorApp.getSchedule();
 
-        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
-            if (isFinishing()) return new Status.Builder()
-                    .setDeleteCallback(true)
-                    .build();
+        globalUpdateListener = (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            boolean activityClosed = isFinishing();
 
-            runOnUiThread(this::updateOpenUpdateCenterMenuName);
+            try {
+                if (!activityClosed) {
+                    runOnUiThread(this::updateOpenUpdateCenterMenuName);
+                }
+            } catch (Exception ignored) {}
+
 
             return new Status.Builder()
-                    .setDeleteCallback(false)
+                    .setDeleteCallback(activityClosed)
                     .build();
-        });
+        };
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.LOW, globalUpdateListener);
 
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -100,6 +107,12 @@ public class PresetListActivity extends AppCompatActivity {
         }
         updateOpenUpdateCenterMenuName();
         updateList();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        app.getGlobalUpdateCallbacks().deleteCallback(globalUpdateListener);
     }
 
     @Override
@@ -134,6 +147,10 @@ public class PresetListActivity extends AppCompatActivity {
 
         } else if (id == R.id.openDebugItem) {
             startActivity(DebugActivity.getLaunchIntent(this));
+
+        } else if (id == R.id.openBuiltInPresetList) {
+            // TODO: 2/1/22 add
+
         }
         return true;
     }
@@ -220,10 +237,11 @@ public class PresetListActivity extends AppCompatActivity {
                 .setTitle(getString(R.string.presetList_delete_title, preset.getName()))
                 .setMessage(getString(R.string.presetList_delete_message))
                 .setPositiveButton(R.string.presetList_delete, (dialogInterface, which) -> {
-                    if (presetList instanceof AppPresetList) {
-                        boolean selected = ((AppPresetList) presetList).getSelectedPreset() == preset;
+                    if (presetList instanceof SelectablePresetList) {
+                        SelectablePresetList selectablePresetList = (SelectablePresetList) presetList;
+                        boolean selected = selectablePresetList.getSelectedPreset() == preset;
                         presetList.removePreset(uuid);
-                        if (selected) ((AppPresetList) presetList).selectFirst();
+                        if (selected) selectablePresetList.selectFirst();
                     } else {
                         presetList.removePreset(uuid);
                     }
@@ -306,9 +324,10 @@ public class PresetListActivity extends AppCompatActivity {
 
         layout.addView(name);
 
+        String message = getString(R.string.presetList_rename_message);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.presetList_rename_title, preset.getName()))
-                .setMessage(getString(R.string.presetList_rename_message))
+                .setMessage(message.isEmpty() ? null : message)
                 .setView(layout)
                 .setPositiveButton(R.string.presetList_rename, (e, e1) -> {
                     String newName = name.getText().toString();

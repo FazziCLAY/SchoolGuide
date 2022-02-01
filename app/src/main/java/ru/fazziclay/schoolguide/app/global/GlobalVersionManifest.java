@@ -2,9 +2,14 @@ package ru.fazziclay.schoolguide.app.global;
 
 import java.util.HashMap;
 
-public class GlobalVersionManifest {
+public class GlobalVersionManifest implements GlobalData {
     public int key = 0;
     public ManifestVersion latestVersion;
+
+    @Override
+    public int getGlobalKey() {
+        return key;
+    }
 
     public static class ManifestVersion {
         public int code = 0;
@@ -20,13 +25,15 @@ public class GlobalVersionManifest {
             this.download = download;
         }
 
-        public ManifestVersion() {}
-
         public String getDownloadUrl(String type) {
             if (download == null) return null;
             final String release = "release";
             final String debug = "debug";
-            return download.get(type.equals("debug") ? debug : release);
+            final String _type = type.equals("debug") ? debug : release;
+            if (!download.containsKey(_type)) {
+                return null;
+            }
+            return download.get(_type);
         }
 
         public String getChangelog(String language) {

@@ -34,7 +34,7 @@ public class Status {
         }
 
         public Builder setChangeImportance(CallbackImportance importance) {
-            this.changeImportance = true;
+            this.changeImportance = importance != null;
             this.changeTo = importance;
             return this;
         }

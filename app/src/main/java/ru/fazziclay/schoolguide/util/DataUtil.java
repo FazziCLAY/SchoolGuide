@@ -39,7 +39,7 @@ public class DataUtil {
             if (SchoolGuideApp.isInstanceAvailable()) {
                 SchoolGuideApp app = SchoolGuideApp.get();
                 if (app != null) {
-                    app.getAppTrace().point("save object is null!", new NullPointerException("by fazziclay!"));
+                    app.getAppTrace().point("save object is null!", new NullPointerException("Exception by fazziclay!"));
                 }
             }
             return;

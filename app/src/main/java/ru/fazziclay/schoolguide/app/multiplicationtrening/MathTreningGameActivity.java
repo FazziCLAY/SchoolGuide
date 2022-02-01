@@ -91,6 +91,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
 
         gameDataFile = new File(getExternalFilesDir(null), "math_trening_game.json");
         gameData = DataUtil.load(gameDataFile, MathTreningGameData.class);
+        fixGenerationRange();
         saveAll();
 
         start = System.currentTimeMillis();
@@ -105,6 +106,19 @@ public class MathTreningGameActivity extends AppCompatActivity {
             timeUpdateHandler.postDelayed(timeUpdateRunnable, 20);
         };
         timeUpdateHandler.post(timeUpdateRunnable);
+    }
+
+    private void fixGenerationRange() {
+        if (gameData.n1RangeMin > gameData.n1RangeMax) {
+            int min = gameData.n1RangeMin;
+            gameData.n1RangeMin = gameData.n1RangeMax;
+            gameData.n1RangeMax = min;
+        }
+        if (gameData.n2RangeMin > gameData.n2RangeMax) {
+            int min = gameData.n2RangeMin;
+            gameData.n2RangeMin = gameData.n2RangeMax;
+            gameData.n2RangeMax = min;
+        }
     }
 
     private void nextDuration() {
@@ -145,6 +159,8 @@ public class MathTreningGameActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.skip) {
+            gameData.score -= 1;
+            saveAll();
             regenerate();
 
         } else if (item.getItemId() == R.id.gameSettings) {
@@ -211,6 +227,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
             gameData.n1RangeMax = newN1max;
             gameData.n2RangeMin = newN2min;
             gameData.n2RangeMax = newN2max;
+            fixGenerationRange();
             saveAll();
 
             regenerate();
@@ -286,7 +303,7 @@ public class MathTreningGameActivity extends AppCompatActivity {
         } else if ("-".equals(action)) {
             return n1 - n2;
         } else if ("/".equals(action)) {
-            return n1 / n2;
+            return Math.round(n1 / n2);
         } else if ("+".equals(action)) {
             return n1 + n2;
         } else if ("^".equals(action)) {

@@ -1,6 +1,6 @@
 package ru.fazziclay.schoolguide.app.global;
 
-import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -13,19 +13,16 @@ import ru.fazziclay.schoolguide.util.FileUtil;
 import ru.fazziclay.schoolguide.util.NetworkUtil;
 
 public class GlobalManager {
-    public static void get(Context context, GlobalManagerInterface globalManagerInterface) {
+    public static void get(SchoolGuideApp app, GlobalManagerInterface globalManagerInterface) {
         Thread thread = new Thread(() -> {
-            SchoolGuideApp app = SchoolGuideApp.get();
-            Gson gson = new Gson();
-            File cacheDir = context.getExternalCacheDir();
-            if (app != null) {
-                cacheDir = app.getCacheDir();
-            }
-
-            File localVersionManifestFile = new File(cacheDir, "local.versionManifest.json");
-            File localBuiltinScheduleFile = new File(cacheDir, "local.builtinSchedule.json");
-
             try {
+                Gson gson = app.getGson();
+                File cacheDir = app.getCacheDir();
+
+                File localVersionManifestFile = new File(cacheDir, "local.versionManifest.json");
+                File localBuiltinScheduleFile = new File(cacheDir, "local.builtinSchedule.json");
+
+
                 String keysStr = NetworkUtil.parseTextPage(SharedConstrains.KEYS_V2);
                 GlobalKeys globalKeys = gson.fromJson(keysStr, GlobalKeys.class);
 
@@ -46,8 +43,8 @@ public class GlobalManager {
 
                 globalManagerInterface.success(globalKeys, versionManifest, builtinSchedule);
             } catch (Exception e) {
-                e.printStackTrace();
                 globalManagerInterface.failed(e);
+                Log.e("GlobalManager", "failed! (processed by globalManagerInterface!)", e);
             }
         });
         thread.setName("GlobalManager-get");

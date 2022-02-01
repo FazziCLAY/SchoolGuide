@@ -7,7 +7,8 @@ import ru.fazziclay.schoolguide.util.SortUtil;
 import ru.fazziclay.schoolguide.util.UUIDUtil;
 
 public class PresetList {
-    private final HashMap<UUID, Preset> presets = new HashMap<>();
+    public HashMap<UUID, Preset> presets = new HashMap<>();
+
 
     /**
      * Выдаёт пресет по его Айди, если нету то null

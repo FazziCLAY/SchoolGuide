@@ -22,7 +22,6 @@ import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
-import ru.fazziclay.schoolguide.callback.GlobalUpdateListener;
 import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.datafixer.DataFixer;
 import ru.fazziclay.schoolguide.util.AppTrace;
@@ -45,7 +44,7 @@ public class SchoolGuideApp {
      * Инстанс, нужен для того что бы каждый раз не создавать обьект
      * @see SchoolGuideApp
      * **/
-    public static SchoolGuideApp instance = null;
+    private static SchoolGuideApp instance = null;
 
     /**
      * Доступен ли инстанс приложения
@@ -157,15 +156,6 @@ public class SchoolGuideApp {
      * **/
     private final CallbackStorage<GlobalUpdateListener> globalUpdateCallbacks = new CallbackStorage<>();
 
-    private final Thread saveAppTraceThread = new Thread(() -> {
-        while (true) {
-            saveAppTrace();
-            try {
-                Thread.sleep(10*1000);
-            } catch (InterruptedException ignored) {}
-        }
-    });
-
 
     public SchoolGuideApp(Context context) {
         if (context == null) {
@@ -174,6 +164,11 @@ public class SchoolGuideApp {
         appTrace = new AppTrace("SchoolGuideApp <init>");
         androidContext = context.getApplicationContext();
         gson = new Gson();
+
+        // Notification channels
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            SchoolGuideApp.registerNotificationChannels(androidContext);
+        }
 
         // До этого этапа мы не работали с данными, Он исправил все файлы старых версий и сделает их читаемыми для новой
         DataFixer dataFixer = new DataFixer(appTrace, androidContext, SharedConstrains.APPLICATION_VERSION_CODE, SharedConstrains.DATA_FIXER_SCHEMES);
@@ -193,16 +188,11 @@ public class SchoolGuideApp {
         androidContext.startService(new Intent(androidContext, AutoGlobalUpdateService.class));
 
         scheduleInformatorApp = new ScheduleInformatorApp(this);
-
-        saveAppTraceThread.setDaemon(true);
-        saveAppTraceThread.start();
     }
 
     private void registerCallbacks() {
-        globalUpdateCallbacks.addCallback(CallbackImportance.MAX, (exception, globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
-            if (exception == null) {
-                setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.latestVersion != null && globalVersionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
-            }
+        globalUpdateCallbacks.addCallback(CallbackImportance.MAX, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.latestVersion != null && globalVersionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
 
             return new Status.Builder()
                     .setDeleteCallback(false)
@@ -235,7 +225,7 @@ public class SchoolGuideApp {
 
     public void saveAppTrace() {
         try {
-            FileUtil.write(new File(androidContext.getExternalCacheDir(), "latestAppTrace.txt"), appTrace.getText());
+            FileUtil.write(new File(cacheDir, "latest_app_trace.txt"), appTrace.getText());
         } catch (Exception e) {
             Log.e("saveAppTrace", "error while saving appTrace", e);
         }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 
@@ -31,7 +32,9 @@ public class LaunchActivity extends Activity {
         // Dark theme only
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            Log.e("Dark theme", "error to set defaultNightMode to YES", e);
+        }
 
         // Loading text
         TextView loadingTextView = new TextView(this);
@@ -42,11 +45,6 @@ public class LaunchActivity extends Activity {
 
         setContentView(loadingTextView);
 
-        // Notification channels
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            SchoolGuideApp.registerNotificationChannels(this);
-        }
-
         // Loading
         SchoolGuideApp app = SchoolGuideApp.get(this);
         if (app == null) {
@@ -54,7 +52,6 @@ public class LaunchActivity extends Activity {
             return;
         }
         startActivity(PresetListActivity.getLaunchIntent(this));
-
         finish();
     }
 }

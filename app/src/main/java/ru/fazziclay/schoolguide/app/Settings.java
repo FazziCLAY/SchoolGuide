@@ -5,7 +5,9 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.android.PresetEditActivit
 public class Settings {
     public boolean developerFeatures = false;
     public int scheduleNotifyBeforeTime = 2*60*60;
-    public boolean stopForegroundIsNone = false;
+    public boolean stopForegroundIsNone = true;
     public boolean isFirstMonday = true;
     public PresetEditActivity.ColorScheme presetEditColorScheme = PresetEditActivity.ColorScheme.DEFAULT;
+
+    public boolean globalPresetListSync = false;
 }

@@ -12,15 +12,12 @@ import java.io.File;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.app.AppBuiltinSchedule;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
-import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
-import ru.fazziclay.schoolguide.app.global.GlobalKeys;
-import ru.fazziclay.schoolguide.app.global.GlobalManager;
-import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
+import ru.fazziclay.schoolguide.callback.CallbackImportance;
+import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.DataUtil;
 import ru.fazziclay.schoolguide.util.time.ConvertMode;
@@ -47,13 +44,6 @@ public class ScheduleInformatorApp {
     private InformatorService informatorService = null;
     boolean isServiceForeground = false;
 
-    // Builtin
-    AppBuiltinSchedule appBuiltinSchedule;
-    File appBuiltinScheduleFile;
-
-    GlobalBuiltinPresetList globalBuiltinSchedule;
-    // =======
-
     public ScheduleInformatorApp(SchoolGuideApp app) {
         this.app = app;
         this.appTrace = app.getAppTrace();
@@ -68,22 +58,37 @@ public class ScheduleInformatorApp {
         schedule = DataUtil.load(scheduleFile, AppPresetList.class);
         saveAppSchedule();
 
-        appBuiltinScheduleFile = new File(app.getFilesDir(), "scheduleinformator.builtinSchedule.json");
-        appBuiltinSchedule = DataUtil.load(appBuiltinScheduleFile, AppBuiltinSchedule.class);
-        saveAppBuiltinSchedule();
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            if (globalBuiltinPresetList != null && settings.globalPresetListSync && globalBuiltinPresetList.presets != null) {
+                int i = 0;
+                while (i < globalBuiltinPresetList.getPresetsIds().length) {
+                    UUID gPresetUUID = globalBuiltinPresetList.getPresetsIds()[i];
+                    Preset gPreset = globalBuiltinPresetList.getPreset(gPresetUUID);
+
+                    if (gPreset == null) {
+                        schedule.removePreset(gPresetUUID);
+                    } else {
+                        gPreset.syncedByGlobal = true;
+                        schedule.putPreset(gPresetUUID, gPreset);
+                    }
+
+                    i++;
+                }
+
+                schedule.presets = globalBuiltinPresetList.presets;
+                saveAppSchedule();
+            }
+            return new Status.Builder().build();
+        });
 
         serviceStart();
     }
 
     public void saveAppSchedule() {
         if (schedule == null) {
-            Log.d("saveAppSchedule", "schedule == null!!!!", new NullPointerException("Exception by fazziclay!"));
+            Log.e("saveAppSchedule", "schedule == null!!!!", new NullPointerException("Exception by fazziclay!"));
         }
         DataUtil.save(scheduleFile, schedule);
-    }
-
-    public void saveAppBuiltinSchedule() {
-        DataUtil.save(appBuiltinScheduleFile, appBuiltinSchedule);
     }
 
     public void serviceStop() {
@@ -103,38 +108,7 @@ public class ScheduleInformatorApp {
         saveAppSchedule();
     }
 
-    long latestBuiltinScheduleCheck;
     public int tick() {
-        if (System.currentTimeMillis() - latestBuiltinScheduleCheck > 1000*5) {
-            GlobalManager.get(context, new GlobalManager.GlobalManagerInterface() {
-                @Override
-                public void failed(Exception exception) {
-                    exception.printStackTrace();
-                }
-
-                @Override
-                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
-                    globalBuiltinSchedule = builtinSchedule;
-                    for (UUID autoSyncUUID : appBuiltinSchedule.selectedAutoSyncPresets) {
-                        Preset builtinPreset = globalBuiltinSchedule.getPreset(autoSyncUUID);
-                        Preset localPreset = schedule.getPreset(autoSyncUUID);
-
-                        if (localPreset != null && localPreset.syncedByGlobal && builtinPreset == null) {
-                            localPreset.deletedInGlobal = true;
-                        }
-
-                        if (builtinPreset != null) {
-                            Preset putPreset = builtinPreset.clone();
-                            putPreset.syncedByGlobal = true;
-                            schedule.putPreset(autoSyncUUID, putPreset);
-                        }
-                    }
-                    saveAppSchedule();
-                }
-            });
-
-            latestBuiltinScheduleCheck = System.currentTimeMillis();
-        }
         CompressedEvent nowEvent = getSelectedPreset().getNowCompressedEvent();
         CompressedEvent nextEvent = getSelectedPreset().getNextCompressedEvent();
         boolean isNow = nowEvent != null;
@@ -144,8 +118,8 @@ public class ScheduleInformatorApp {
             if (settings.stopForegroundIsNone) {
                 stopForeground();
             } else {
-                this.notification = getNoneNotification();
                 startForeground();
+                this.notification = getNoneNotification();
                 sendNotify();
             }
             return 3000;
@@ -155,8 +129,8 @@ public class ScheduleInformatorApp {
             if (settings.stopForegroundIsNone) {
                 stopForeground();
             } else {
-                this.notification = getNoneNotification();
                 startForeground();
+                this.notification = getNoneNotification();
                 sendNotify();
             }
             return 2000;
@@ -168,13 +142,17 @@ public class ScheduleInformatorApp {
         notificationBuilder.smallIcon = R.drawable.planner_s;
 
         if (isNow) {
-            notificationBuilder.contentTitle = String.format("%s! (%s)", nowEvent.getName(), TimeUtil.convertToHumanTime(nowEvent.remainsUntilEnd(), ConvertMode.hhMMSS));
+            String title = context.getString(R.string.scheduleInformator_now_title);
+            String message = context.getString(R.string.scheduleInformator_now_next_text);
+            notificationBuilder.contentTitle = String.format(title, nowEvent.getName(), TimeUtil.convertToHumanTime(nowEvent.remainsUntilEnd(), ConvertMode.hhMMSS));
             if (isNext)
-                notificationBuilder.contentText = String.format("Следующее: %s", nextEvent.getName());
+                notificationBuilder.contentText = String.format(message, nextEvent.getName());
 
         } else {
-            notificationBuilder.contentTitle = String.format("Откисай! (%s)", TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
-            notificationBuilder.contentText = String.format("Следующее: %s", nextEvent.getName());
+            String title = context.getString(R.string.scheduleInformator_next_title);
+            String message = context.getString(R.string.scheduleInformator_next_text);
+            notificationBuilder.contentTitle = String.format(title, TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
+            notificationBuilder.contentText = String.format(message, nextEvent.getName());
         }
 
         notification = notificationBuilder.toNotification(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
@@ -206,10 +184,13 @@ public class ScheduleInformatorApp {
     }
 
     public Notification getNoneNotification() {
+        String title = context.getString(R.string.scheduleInformator_none_title);
+        String message = context.getString(R.string.scheduleInformator_none_text);
         return new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NONE)
                 .setSmallIcon(R.drawable.planner_s)
                 .setAutoCancel(true)
-                .setContentTitle("Откисай!")
+                .setContentTitle(title.isEmpty() ? null : title)
+                .setContentText(message.isEmpty() ? null : message)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setOnlyAlertOnce(true)
                 .setSound(null)
