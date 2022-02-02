@@ -2,7 +2,7 @@
   "developerSchedule": {
     "lessons": {
       "de6ddffe-ff52-4e0d-bf60-8e89d7bd9859": {
-        "name": "Химмя"
+        "name": "Химия"
       },
       "f99ea75b-e716-41b6-b7f6-277147ca1bab": {
         "name": "Русский язык"
@@ -816,6 +816,6 @@
     "name": "0.3.1 - Beta",
     "pageUrl": "https://fazziclay.github.io/schoolguide/"
   },
-  "manifestKey": 23,
+  "manifestKey": 24,
   "version": 4
 }
