@@ -216,9 +216,10 @@ public class SchemePre36To37 extends AbstractScheme {
         newSettings = new V37Settings();
 
         newSettings.developerFeatures = oldSettings.isDeveloperFeatures;
+        newSettings.globalPresetListSync = oldSettings.isSyncDeveloperSchedule;
+
         if (newSchedule != null) {
             newSchedule.selectedPresetUUID = oldSettings.selectedLocalSchedule;
         }
-        newSettings.globalPresetListSync = oldSettings.isSyncDeveloperSchedule;
     }
 }
