@@ -1,7 +1,5 @@
 package ru.fazziclay.schoolguide.callback;
 
-import android.telecom.Call;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class CallbackStorage <T extends Callback> {
 
             Status status = runner.run(this, internal.callback);
             if (status.isDeleteCallback()) deleteCallback(internal);
-            if (status.isChangeImportance()) internal.importance = status.getChangeImportanceTo();
+            if (status.isChangeImportance()) internal.importance = status.getChangeImportance();
 
             i++;
         }

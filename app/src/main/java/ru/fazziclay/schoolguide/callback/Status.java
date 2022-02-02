@@ -2,13 +2,13 @@ package ru.fazziclay.schoolguide.callback;
 
 public class Status {
     private final boolean deleteCallback;
-    private final boolean changeImportance;
-    private final CallbackImportance changeImportanceTo;
+    private final boolean isChangeImportance;
+    private final CallbackImportance changeImportance;
 
-    private Status(boolean deleteCallback, boolean changeImportance, CallbackImportance changeImportanceTo) {
+    private Status(boolean deleteCallback, boolean isChangeImportance, CallbackImportance changeImportance) {
         this.deleteCallback = deleteCallback;
+        this.isChangeImportance = isChangeImportance;
         this.changeImportance = changeImportance;
-        this.changeImportanceTo = changeImportanceTo;
     }
 
     public boolean isDeleteCallback() {
@@ -16,31 +16,31 @@ public class Status {
     }
 
     public boolean isChangeImportance() {
-        return changeImportance;
+        return isChangeImportance;
     }
 
-    public CallbackImportance getChangeImportanceTo() {
-        return changeImportanceTo;
+    public CallbackImportance getChangeImportance() {
+        return changeImportance;
     }
 
     public static class Builder {
         private boolean deleteCallback;
-        private boolean changeImportance;
-        private CallbackImportance changeTo;
+        private boolean isChangeImportance;
+        private CallbackImportance changeImportance;
 
         public Builder setDeleteCallback(boolean deleteCallback) {
             this.deleteCallback = deleteCallback;
             return this;
         }
 
-        public Builder setChangeImportance(CallbackImportance importance) {
-            this.changeImportance = importance != null;
-            this.changeTo = importance;
+        public Builder setNewImportance(CallbackImportance importance) {
+            this.isChangeImportance = importance != null;
+            this.changeImportance = importance;
             return this;
         }
 
         public Status build() {
-            return new Status(deleteCallback, changeImportance, changeTo);
+            return new Status(deleteCallback, isChangeImportance, changeImportance);
         }
     }
 }

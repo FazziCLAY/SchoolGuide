@@ -20,7 +20,7 @@ public class CallbackTest {
 
             return new Status.Builder()
                     .setDeleteCallback(false)
-                    .setChangeImportance(CallbackImportance.MAX)
+                    .setNewImportance(CallbackImportance.MAX)
                     .build();
         });
 
