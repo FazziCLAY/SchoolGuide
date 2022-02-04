@@ -40,7 +40,8 @@ public class AppTrace {
     private static final String TEXT_DEVICE =
             "\\ Android.SDK: $(android/sdk)\n" +
                 "\\ Brand: $(brand)\n" +
-                "\\ Manufacturer: (manufacturer)\n" +
+                "\\ Product: $(product)\n" +
+                "\\ Manufacturer: $(manufacturer)\n" +
                 "\\ Bootloader: $(bootloader)";
 
     private static final String POINT_BASE =
@@ -187,6 +188,7 @@ public class AppTrace {
                 {"init/device", variable(TEXT_DEVICE, new Object[][]{
                         {"android/sdk", Build.VERSION.SDK_INT},
                         {"brand", Build.BRAND},
+                        {"product", Build.PRODUCT},
                         {"manufacturer", Build.MANUFACTURER},
                         {"bootloader", Build.BOOTLOADER},
                 })},
