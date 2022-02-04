@@ -110,4 +110,17 @@ public class FileUtil {
         File file = new File(fixPathSeparator(path));
         return file.listFiles();
     }
+
+    public static void deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String child : children) {
+                deleteDir(new File(dir, child));
+            }
+            dir.delete();
+
+        } else if (dir != null && dir.isFile()) {
+            dir.delete();
+        }
+    }
 }
