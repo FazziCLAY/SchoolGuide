@@ -55,6 +55,8 @@ public class ColorUtil {
     public static SpannableString colorize(String text, int defaultFgColor, int defaultBgColor, int defaultStyle) {
         if (text == null) return null;
 
+        StringBuilder log = new StringBuilder();
+
         int currentForegroundSpan = defaultFgColor;
         int currentBackgroundSpan = defaultBgColor;
         int currentStyleSpan = defaultStyle;
@@ -66,7 +68,7 @@ public class ColorUtil {
         int oi = 0; // курсор по chars
         int ni = 0; // курсор по новой строке
         while (oi < chars.length) {
-            Log.d("ColorUtil.colorize()", "startWhile oi=" + oi + "; ni=" + ni + "; cfg=" + currentForegroundSpan + "; cbg=" + currentBackgroundSpan + "; cs=" + currentStyleSpan);
+            log.append("startWhile oi=").append(oi).append("; ni=").append(ni).append("; cfg=").append(currentForegroundSpan).append("; cbg=").append(currentBackgroundSpan).append("; cs=").append(currentStyleSpan).append("\n");
             boolean appendOld = true;
             boolean appendNew = true;
             String toAppend = "";
@@ -167,8 +169,8 @@ public class ColorUtil {
         }
 
         SpannableString spannableText = new SpannableString(fullText.toString());
-        Log.d("SpannableText", spannableText.toString());
-        Log.d("SpanTextList", Arrays.toString(spanTextList.toArray()));
+        log.append("SpannableText = ").append(spannableText).append("\n");
+        log.append("SpanTextList = ").append(Arrays.toString(spanTextList.toArray()));
         int i = 0;
         while (i < spanTextList.size()) {
             SpanText spanText = spanTextList.get(i);
@@ -179,6 +181,11 @@ public class ColorUtil {
             spannableText.setSpan(new BackgroundColorSpan(spanText.bgColor), start, end, Spanned.SPAN_COMPOSING);
             spannableText.setSpan(new StyleSpan(spanText.style), start, end, Spanned.SPAN_COMPOSING);
             i++;
+        }
+        if (true) {
+            try {
+                Log.d("colorUtil.colorize()", log.toString());
+            } catch (Exception ignored) {}
         }
         return spannableText;
     }
