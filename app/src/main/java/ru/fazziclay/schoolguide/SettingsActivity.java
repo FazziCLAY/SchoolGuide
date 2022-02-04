@@ -13,9 +13,6 @@ import androidx.preference.PreferenceManager;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
-import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
-import ru.fazziclay.schoolguide.callback.CallbackStorage;
-import ru.fazziclay.schoolguide.callback.Status;
 
 public class SettingsActivity extends AppCompatActivity {
     private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
@@ -39,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (KEY_IS_DEVELOPER_FEATURES.equals(key)) {
             settings.isDeveloperFeatures = sharedPreferences.getBoolean(key, false);
         } else if (KEY_IS_BUILTIN_PRESET_LIST.equals(key)) {
-            settings.isBuiltInPresetList = sharedPreferences.getBoolean(key, false);
+            settings.isBuiltinPresetList = sharedPreferences.getBoolean(key, false);
             AutoGlobalUpdateService.update(app);
         } else if (KEY_IS_SHOW_EMPTY_NOTIFICATION.equals(key)) {
             settings.isStopForegroundIsNone = !sharedPreferences.getBoolean(key, false);
@@ -79,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         preferences.edit()
                 .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, !settings.isStopForegroundIsNone)
                 .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
-                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltInPresetList)
+                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltinPresetList)
                 .putBoolean(KEY_IS_FIRST_MONDAY, settings.isFirstMonday)
                 .apply();
 

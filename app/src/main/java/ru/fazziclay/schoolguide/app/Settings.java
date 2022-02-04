@@ -9,5 +9,5 @@ public class Settings {
     public boolean isFirstMonday = true;
     public PresetEditActivity.ColorScheme presetEditColorScheme = PresetEditActivity.ColorScheme.DEFAULT;
 
-    public boolean isBuiltInPresetList = false;
+    public boolean isBuiltinPresetList = false;
 }

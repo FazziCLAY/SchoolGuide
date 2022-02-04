@@ -65,7 +65,7 @@ public class ScheduleInformatorApp {
                     UUID gPresetUUID = globalBuiltinPresetList.getPresetsIds()[i];
                     Preset gPreset = globalBuiltinPresetList.getPreset(gPresetUUID);
 
-                    if (gPreset == null || !settings.isBuiltInPresetList) {
+                    if (gPreset == null || !settings.isBuiltinPresetList) {
                         schedule.removePreset(gPresetUUID);
                     } else {
                         gPreset.setSyncedByGlobal(true);
