@@ -13,6 +13,19 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:title="@string/settings_title_presetEdit"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="isFirstMonday"
+            app:title="@string/settings_isFirstMonday_title"
+            app:summaryOn="@string/settings_isFirstMonday_summaryOn"
+            app:summaryOff="@string/settings_isFirstMonday_summaryOff" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:title="@string/settings_title_advanced"
         app:iconSpaceReserved="false">
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -52,6 +53,8 @@ public class LaunchActivity extends Activity {
             setContentView(SharedConstrains.getAppNullView(this));
             return;
         }
+
+        Toast.makeText(this, "УРА, В НОВОМ ОБНОВЛЕНИИ ПОЯВЛЯЕТСЯ ТЕКСТ! v37", Toast.LENGTH_SHORT).show();
 
         startActivity(PresetListActivity.getLaunchIntent(this));
         finish();

@@ -21,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
     private static final String KEY_IS_BUILTIN_PRESET_LIST = "isBuiltinPresetList";
     private static final String KEY_IS_SHOW_EMPTY_NOTIFICATION = "isShowEmptyNotification";
+    private static final String KEY_IS_FIRST_MONDAY = "isFirstMonday";
 
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -35,19 +36,15 @@ public class SettingsActivity extends AppCompatActivity {
         boolean contains = sharedPreferences.contains(key);
         if (!contains) return;
 
-        switch (key) {
-            case KEY_IS_DEVELOPER_FEATURES:
-                settings.isDeveloperFeatures = sharedPreferences.getBoolean(key, false);
-                break;
-
-            case KEY_IS_BUILTIN_PRESET_LIST:
-                settings.isBuiltInPresetList = sharedPreferences.getBoolean(key, false);
-                AutoGlobalUpdateService.update(app);
-                break;
-
-            case KEY_IS_SHOW_EMPTY_NOTIFICATION:
-                settings.isStopForegroundIsNone = !sharedPreferences.getBoolean(key, false);
-                break;
+        if (KEY_IS_DEVELOPER_FEATURES.equals(key)) {
+            settings.isDeveloperFeatures = sharedPreferences.getBoolean(key, false);
+        } else if (KEY_IS_BUILTIN_PRESET_LIST.equals(key)) {
+            settings.isBuiltInPresetList = sharedPreferences.getBoolean(key, false);
+            AutoGlobalUpdateService.update(app);
+        } else if (KEY_IS_SHOW_EMPTY_NOTIFICATION.equals(key)) {
+            settings.isStopForegroundIsNone = !sharedPreferences.getBoolean(key, false);
+        } else if (KEY_IS_FIRST_MONDAY.equals(key)) {
+            settings.isFirstMonday = sharedPreferences.getBoolean(key, false);
         }
         app.saveSettings();
         app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onPresetListUpdate());
@@ -83,6 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, !settings.isStopForegroundIsNone)
                 .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
                 .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltInPresetList)
+                .putBoolean(KEY_IS_FIRST_MONDAY, settings.isFirstMonday)
                 .apply();
 
         preferences.registerOnSharedPreferenceChangeListener(listener);

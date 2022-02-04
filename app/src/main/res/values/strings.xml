@@ -116,6 +116,10 @@
     <string name="settings_activityTitle">SchoolGuide - Settings</string>
     <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
     <string name="settings_builtinPresetList_title">Built in sdchedule</string>
+    <string name="settings_title_presetEdit">Preset editor</string>
+    <string name="settings_isFirstMonday_title">First monday</string>
+    <string name="settings_isFirstMonday_summaryOn">Monday</string>
+    <string name="settings_isFirstMonday_summaryOff">Saturday</string>
     <string name="settings_developerFeatures_title">developer feaures</string>
     <string name="settings_developerFeatures_summary">symmaru do not user used!</string>
     <string name="settings_title_advanced">Andanced</string>
