@@ -111,11 +111,11 @@ public class PresetListActivity extends AppCompatActivity {
                     .build();
         };
 
-        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.LOW, globalUpdateListener);
-        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.LOW, presetListUpdateListener);
-
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.LOW, globalUpdateListener);
+        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.LOW, presetListUpdateListener);
 
         binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
 
@@ -138,8 +138,6 @@ public class PresetListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        app.getGlobalUpdateCallbacks().deleteCallback(globalUpdateListener);
-        app.getPresetListUpdateCallbacks().deleteCallback(presetListUpdateListener);
     }
 
     @Override
