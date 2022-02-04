@@ -96,12 +96,14 @@ public class AppTrace {
         } catch (Exception e) {
             if (!pointDebugLogException) {
                 pointDebugLogException = true;
-                point("Log.D exception!", e);
+                point("Print point message to Log.d exception!", e);
             }
         }
-        if (SchoolGuideApp.isInstanceAvailable()) {
-            SchoolGuideApp.get().saveAppTrace();
-        }
+        try {
+            if (SchoolGuideApp.isInstanceAvailable()) {
+                SchoolGuideApp.get().saveAppTrace();
+            }
+        } catch (Exception ignored) {}
     }
 
     public void point(String message) {
