@@ -60,6 +60,7 @@ public class ScheduleInformatorApp {
 
         app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
             if (globalBuiltinPresetList != null && globalBuiltinPresetList.presets != null) {
+                boolean change = globalBuiltinPresetList.getPresetsIds().length > 0;
                 int i = 0;
                 while (i < globalBuiltinPresetList.getPresetsIds().length) {
                     UUID gPresetUUID = globalBuiltinPresetList.getPresetsIds()[i];
@@ -76,6 +77,7 @@ public class ScheduleInformatorApp {
                 }
 
                 saveAppSchedule();
+                if (change) app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onPresetListUpdate());
             }
             return new Status.Builder().build();
         });
