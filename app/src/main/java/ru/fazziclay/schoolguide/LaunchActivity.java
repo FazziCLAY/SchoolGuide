@@ -54,8 +54,6 @@ public class LaunchActivity extends Activity {
             return;
         }
 
-        Toast.makeText(this, "УРА, В НОВОМ ОБНОВЛЕНИИ ПОЯВЛЯЕТСЯ ТЕКСТ! v37", Toast.LENGTH_SHORT).show();
-
         startActivity(PresetListActivity.getLaunchIntent(this));
         finish();
     }

@@ -29,13 +29,13 @@ public class GlobalManager {
                 GlobalVersionManifest versionManifest = DataUtil.load(localVersionManifestFile, GlobalVersionManifest.class);
                 GlobalBuiltinPresetList builtinSchedule = DataUtil.load(localBuiltinScheduleFile, GlobalBuiltinPresetList.class);
 
-                if (globalKeys.versionManifest != versionManifest.key) {
+                if (globalKeys.versionManifest != versionManifest.getGlobalKey()) {
                     String versionManifestStr = NetworkUtil.parseTextPage(SharedConstrains.VERSION_MANIFEST_V2);
                     versionManifest = gson.fromJson(versionManifestStr, GlobalVersionManifest.class);
                     FileUtil.write(localVersionManifestFile, versionManifestStr);
                 }
 
-                if (globalKeys.builtinSchedule != builtinSchedule.key) {
+                if (globalKeys.builtinSchedule != builtinSchedule.getGlobalKey()) {
                     String builtinScheduleStr = NetworkUtil.parseTextPage(SharedConstrains.BUILTIN_SCHEDULE_V2);
                     builtinSchedule = gson.fromJson(builtinScheduleStr, GlobalBuiltinPresetList.class);
                     FileUtil.write(localBuiltinScheduleFile, builtinScheduleStr);

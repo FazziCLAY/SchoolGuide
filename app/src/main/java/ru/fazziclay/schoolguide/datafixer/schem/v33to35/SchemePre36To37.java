@@ -88,7 +88,11 @@ public class SchemePre36To37 extends AbstractScheme {
         newScheduleFile = new File(filesDir, NEW_SCHEDULE_FILE);
         newSettingsFile = new File(filesDir, NEW_SETTINGS_FILE);
 
-        fix();
+        try {
+            fix();
+        } catch (Exception e) {
+            appTrace.point("Error in fix(what?)", e);
+        }
 
         version.setLatestVersion(36);
         return version;

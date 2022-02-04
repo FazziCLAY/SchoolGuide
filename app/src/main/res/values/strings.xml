@@ -103,7 +103,7 @@
     <string name="batteryOptimizationDialog_cancel">Cancel</string>
 
     <string name="error_appNull_title">ERROR!</string>
-    <string name="error_appNull_message">Initialize error!\nContact to developer!\nCode: %s\n\nActivity: %s</string>
+    <string name="error_appNull_message">Initialize error!\nContact to developer!\nVersion: %s\nCode: %s\n\nActivity: %s</string>
 
     <string name="scheduleInformator_notification_none_title">Application active</string>
     <string name="scheduleInformator_notification_none_text">There are no events in the near future</string>
@@ -114,16 +114,16 @@
 
 
     <string name="settings_activityTitle">SchoolGuide - Settings</string>
-    <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
-    <string name="settings_builtinPresetList_title">Built in sdchedule</string>
-    <string name="settings_title_presetEdit">Preset editor</string>
-    <string name="settings_isFirstMonday_title">First monday</string>
-    <string name="settings_isFirstMonday_summaryOn">Monday</string>
-    <string name="settings_isFirstMonday_summaryOff">Saturday</string>
-    <string name="settings_developerFeatures_title">developer feaures</string>
-    <string name="settings_developerFeatures_summary">symmaru do not user used!</string>
-    <string name="settings_title_advanced">Andanced</string>
     <string name="settings_title_notification">Notification</string>
-    <string name="settings_showEmptyNotification_summary">Когда еведомление пустое оно не будет скрыватся (помогает если после изчезновения уведомление оно больше не появляется)</string>
-    <string name="settings_showEmptyNotification_title">empty notify</string>
+    <string name="settings_showEmptyNotification_title">Show empty notification</string>
+    <string name="settings_showEmptyNotification_summary">When the notification is empty, it will not disappear\n(it helps if the notification no longer appears after disappearing)</string>
+    <string name="settings_title_presetEdit">Preset editor</string>
+    <string name="settings_isFirstMonday_title">First week day</string>
+    <string name="settings_isFirstMonday_summaryOn">Monday</string>
+    <string name="settings_isFirstMonday_summaryOff">Sunday</string>
+    <string name="settings_title_advanced">Advanced</string>
+    <string name="settings_builtinPresetList_title">Built-in presets</string>
+    <string name="settings_builtinPresetList_summary">Put built-in presets to preset list</string>
+    <string name="settings_developerFeatures_title">Developer features</string>
+    <string name="settings_developerFeatures_summary" />
 </resources>

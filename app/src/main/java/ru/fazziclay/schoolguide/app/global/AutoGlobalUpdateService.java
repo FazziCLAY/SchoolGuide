@@ -10,10 +10,10 @@ import android.util.Log;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
-import ru.fazziclay.schoolguide.callback.CallbackStorage;
-import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
 
 public class AutoGlobalUpdateService extends Service {
+    private static final int UPDATE_DELAY = 60 * 60 * 1000;
+
     private SchoolGuideApp app;
     private Handler handler;
     private Runnable runnable;
@@ -32,7 +32,7 @@ public class AutoGlobalUpdateService extends Service {
         handler = new Handler(getMainLooper());
         runnable = () -> {
             update(app);
-            handler.postDelayed(runnable, 60 * 60 * 1000);
+            handler.postDelayed(runnable, UPDATE_DELAY);
         };
     }
 

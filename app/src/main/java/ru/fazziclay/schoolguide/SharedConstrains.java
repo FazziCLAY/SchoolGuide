@@ -85,6 +85,7 @@ public class SharedConstrains {
 
         binding.errorText.setText(activity.getString(
                 R.string.error_appNull_message,
+                String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE),
                 String.valueOf(ErrorCode.ERROR_APP_GET_RETURN_NULL),
                 activity == null ? "null" : activity.getClass().getName()
         ));
