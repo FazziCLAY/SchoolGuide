@@ -1,7 +1,10 @@
 package ru.fazziclay.schoolguide.app;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -9,13 +12,17 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.List;
 
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.UpdateCenterActivity;
 import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
 import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
@@ -202,6 +209,46 @@ public class SchoolGuideApp {
                     .setDeleteCallback(false)
                     .build();
         });
+
+        globalUpdateCallbacks.addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            if (isUpdateAvailable) {
+                try {
+                    sendUpdateNotify();
+                } catch (Exception e) {
+                    appTrace.point("update available! error while app.sendUpdateNotify();", e);
+                }
+            }
+            
+            return new Status.Builder()
+                    .setDeleteCallback(false)
+                    .build();
+        });
+    }
+
+    @SuppressLint("UnspecifiedImmutableFlag")
+    public void sendUpdateNotify() {
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(androidContext);
+        final int NOTIFICATION_ID = UpdateCenterActivity.NOTIFICATION_ID;
+        final String NOTIFICATION_CHANNEL_ID = UpdateCenterActivity.NOTIFICATION_CHANNEL_ID;
+
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(androidContext, 0, UpdateCenterActivity.getLaunchIntent(androidContext), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(androidContext, 0, UpdateCenterActivity.getLaunchIntent(androidContext), PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        Notification notification = new NotificationCompat.Builder(androidContext, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSound(null)
+                .setOnlyAlertOnce(true)
+                .setSilent(true)
+                .setContentTitle(androidContext.getString(R.string.updatecenter_notification_title))
+                .setContentText(androidContext.getString(R.string.updatecenter_notification_text))
+                .setContentIntent(pendingIntent)
+                .build();
+
+        managerCompat.notify(NOTIFICATION_ID, notification);
     }
 
     /**
