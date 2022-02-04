@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide.app;
+package ru.fazziclay.schoolguide.app.listener;
 
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalKeys;

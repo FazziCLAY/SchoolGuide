@@ -6,26 +6,25 @@
     <string name="updatecenter_error_title">Ошибка :(</string>
     <string name="updatecenter_error_unknownHost_text">$[-#ff2222]Отсутствует подключение к $[@bold]интернету$[@reset]!</string>
     <string name="updatecenter_error_unknownHost_reload">Перезагрузить</string>
-    <string name="updatecenter_error_fileNotFound_text">"$[@bold;-#ff0000]Сервис закрыт :($[@reset;-reset]\nПриложение не смогло найти последнюю версию, $[@bold;-#dddddd]очень рекомендуем зайти на страницу проекта:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
+    <string name="updatecenter_error_fileNotFound_text">$[@bold;-#ff0000]Сервис закрыт :($[@reset;-reset]\nПриложение не смогло найти последнюю версию, $[@bold;-#dddddd]очень рекомендуем зайти на страницу проекта:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide</string>
     <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Неизвестная ошибка.$[@reset;-reset]\nПриложение не смогло распознать ошибку, скорее всего сейчас технические неполадки\nОшибка: $[=#080607;-#cc0000;=#000000]%s</string>
-    <string name="updatecenter_updated_title">Обновлено</string>
+    <string name="updatecenter_updated_title">Обновлено!</string>
     <string name="updatecenter_updated_text">$[-#a0a0ff]Сейчас у вас установлена $[@bold;-#7070ff]самая последняя$[@reset;-#a0a0ff] версия, так держать!</string>
-    <string name="updatecenter_outdated_title">Доступно обновление\n%s</string>
-    <string name="updatecenter_outdated_changelogEmpty_text">Список изменений пуст.</string>
+    <string name="updatecenter_outdated_title">Доступно обновление\n\'%s\'</string>
+    <string name="updatecenter_outdated_changelogEmpty_text">Список изменений пуст</string>
     <string name="updatecenter_outdated_openDownloadLink">Загрузить</string>
     <string name="updatecenter_outdated_downloadError_activityNotFound">Пожалуйста установите web-браузер (например FireFox)</string>
-    <string name="updatecenter_outdated_downloadError_urlNull">Ошибка: URL-адрес пуст</string>
+    <string name="updatecenter_outdated_downloadError_urlNull">Ошибка центра обновления: URL-адрес пуст</string>
     <string name="updatecenter_notification_title">Доступно обновление</string>
     <string name="updatecenter_notification_text">Пожалуйста скачайте новое обновление приложения</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Центр обновлений</string>
+    <string name="mainOptionMenu_openUpdateCenter_available">(!) ДОСТУПНО ОБНОВЛЕНИЕ (!)</string>
     <string name="mainOptionMenu_openMathTreningGame">Игра \'MathTrening\'</string>
     <string name="mainOptionMenu_openSettings">Настройки</string>
     <string name="mainOptionMenu_openDebug">Отладка</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
-    <string name="mathTreningGame_optionMenu_resetSpeed">Сбросить скорость</string>
-    <string name="mathTreningGame_optionMenu_resetScore">Сбросить счёт</string>
     <string name="mathTreningGame_optionMenu_skip">Пропустить</string>
     <string name="mathTreningGame_optionMenu_gameSettings">Настройки игры</string>
     <string name="mathTreningGame_statistic">Счёт: %s</string>
@@ -45,13 +44,13 @@
     <string name="mathTreningGame_resetScore_reset">Сбросить!</string>
     <string name="mathTreningGame_resetScore_cancel">Отмена</string>
 
-    <string name="presetList_addPreset_contentDescription">Добавить</string>
+    <string name="presetList_addPreset_contentDescription">Добавить пресет</string>
     <string name="presetList_createNew_nameHint">Введите название</string>
     <string name="presetList_createNew_title">Создать новый пресет</string>
     <string name="presetList_createNew_create">Создать</string>
     <string name="presetList_createNew_cancel">Отмена</string>
     <string name="presetList_delete_title">Удалить пресет \'%s\'</string>
-    <string name="presetList_delete_message">Вы действительно хотите удалить пресет?\nВы сможете востановить его только если это пресет из встроенного расписания!</string>
+    <string name="presetList_delete_message">Вы действительно хотите удалить пресет?</string>
     <string name="presetList_delete">Удалить</string>
     <string name="presetList_delete_cancel">Отмена</string>
     <string name="presetList_copy_nameHint">Введите новое название</string>
@@ -60,14 +59,14 @@
     <string name="presetList_copy">Копировать</string>
     <string name="presetList_copy_cancel">Отмена</string>
     <string name="presetList_copy_copyName">Копия \'%s\'</string>
-    <string name="presetList_presetNameIsEmptyError">Название не должно быть пустым</string>
+    <string name="presetList_exception_presetNameEmpty">Название не должно быть пустым</string>
     <string name="presetList_rename_nameHint">Введите новое название</string>
     <string name="presetList_rename_title">Переименованите \'%s\'</string>
     <string name="presetList_rename_message" />
     <string name="presetList_rename">Переименовать</string>
     <string name="presetList_rename_cancel">Отмена</string>
-    <string name="presetList_empty_title">Нету пресетов</string>
-    <string name="presetList_empty_message">Нажмите кнопку + или скопируйте из встроенного списка пресетов</string>
+    <string name="presetList_emptyMessage_title">Нету пресетов</string>
+    <string name="presetList_emptyMessage_message">Нажмите кнопку + или включите в настройках приложения встроенное расписание</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>
@@ -102,4 +101,22 @@
 
     <string name="error_appNull_title">ОШИБКА!</string>
     <string name="error_appNull_message">Ошибка инициализации!\nСвяжитесь с разработчиком!\nКод: %s\n\nActivity: %s</string>
+
+    <string name="scheduleInformator_notification_none_title">Приложение активно</string>
+    <string name="scheduleInformator_notification_none_text">В ближайшее время эвентов нету</string>
+    <string name="scheduleInformator_notification_next_title">Отдых! (%s)</string>
+    <string name="scheduleInformator_notification_next_text">След.: %s</string>
+    <string name="scheduleInformator_notification_now_title">%s! (%s)</string>
+    <string name="scheduleInformator_notification_now_next_text">След.: %s</string>
+
+
+    <string name="settings_activityTitle">SchoolGuide - Настройки</string>
+    <string name="settings_title_notification">Уведомление</string>
+    <string name="settings_showEmptyNotification_title">Показывать пустое уведомление</string>
+    <string name="settings_showEmptyNotification_summary">Когда уведомление пустое, оно не будет изчезать\n(помогает если после изчезновения уведомление больше не появляется)</string>
+    <string name="settings_title_advanced">Дополнительно</string>
+    <string name="settings_builtinPresetList_title">Встроенные пресеты</string>
+    <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
+    <string name="settings_developerFeatures_title">Возможности разработчика</string>
+    <string name="settings_developerFeatures_summary">Не рекомендуем вам использовать эту функцию!</string>
 </resources>

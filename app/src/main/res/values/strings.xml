@@ -22,13 +22,12 @@
     <string name="updatecenter_notification_text">Please download app update</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Update center</string>
+    <string name="mainOptionMenu_openUpdateCenter_available">(!) UPDATE AVAILABLE (!)</string>
     <string name="mainOptionMenu_openMathTreningGame">Game \'MathTrening\'</string>
     <string name="mainOptionMenu_openSettings">Settings</string>
     <string name="mainOptionMenu_openDebug">Debug</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
-    <string name="mathTreningGame_optionMenu_resetSpeed">Reset speed</string>
-    <string name="mathTreningGame_optionMenu_resetScore">Reset score</string>
     <string name="mathTreningGame_optionMenu_skip">Skip</string>
     <string name="mathTreningGame_optionMenu_gameSettings">Game settings</string>
     <string name="mathTreningGame_statistic">Score: %s</string>
@@ -38,8 +37,8 @@
     <string name="mathTreningGame_settings_generation">Generation:</string>
     <string name="mathTreningGame_settings_generation_number1">Number 1:</string>
     <string name="mathTreningGame_settings_generation_number2">Number 2:</string>
-    <string name="mathTreningGame_settings_generation_min">Minimal</string>
-    <string name="mathTreningGame_settings_generation_max">Maximum</string>
+    <string name="mathTreningGame_settings_generation_min">MINimal</string>
+    <string name="mathTreningGame_settings_generation_max">MAXimum</string>
     <string name="mathTreningGame_settings_cancel">Cancel</string>
     <string name="mathTreningGame_settings_apply">Apply</string>
     <string name="mathTreningGame_settings_resetScore">Reset score</string>
@@ -48,13 +47,13 @@
     <string name="mathTreningGame_resetScore_reset">Reset!</string>
     <string name="mathTreningGame_resetScore_cancel">Cancel</string>
 
-    <string name="presetList_addPreset_contentDescription">Add</string>
+    <string name="presetList_addPreset_contentDescription">Add preset</string>
     <string name="presetList_createNew_nameHint">Enter name</string>
     <string name="presetList_createNew_title">Create new preset</string>
     <string name="presetList_createNew_create">Create</string>
     <string name="presetList_createNew_cancel">Cancel</string>
     <string name="presetList_delete_title">Delete preset \'%s\'</string>
-    <string name="presetList_delete_message">Do you really want to delete preset?\nYou can restore it only if it is a preset from the built-in schedule!</string>
+    <string name="presetList_delete_message">Do you really want to delete preset?</string>
     <string name="presetList_delete">Delete</string>
     <string name="presetList_delete_cancel">Cancel</string>
     <string name="presetList_copy_nameHint">Enter new name</string>
@@ -63,14 +62,14 @@
     <string name="presetList_copy">Copy</string>
     <string name="presetList_copy_cancel">Cancel</string>
     <string name="presetList_copy_copyName">Copy of \'%s\'</string>
-    <string name="presetList_presetNameIsEmptyError">The name should not be empty</string>
+    <string name="presetList_exception_presetNameEmpty">The name should not be empty</string>
     <string name="presetList_rename_nameHint">Enter new name</string>
     <string name="presetList_rename_title">Rename \'%s\'</string>
     <string name="presetList_rename_message" />
     <string name="presetList_rename">Rename</string>
     <string name="presetList_rename_cancel">Cancel</string>
-    <string name="presetList_empty_title">No presets</string>
-    <string name="presetList_empty_message">Click + button or copy from built-in preset list</string>
+    <string name="presetList_emptyMessage_title">No presets</string>
+    <string name="presetList_emptyMessage_message">Click + button or copy from built-in preset list</string>
 
     <string name="presetMenu_copy">Copy</string>
     <string name="presetMenu_delete">Delete</string>
@@ -105,10 +104,22 @@
 
     <string name="error_appNull_title">ERROR!</string>
     <string name="error_appNull_message">Initialize error!\nContact to developer!\nCode: %s\n\nActivity: %s</string>
-    <string name="scheduleInformator_none_title">Application active</string>
-    <string name="scheduleInformator_none_text">There are no events in the near future</string>
-    <string name="scheduleInformator_next_title">Rest! (%s)</string>
-    <string name="scheduleInformator_next_text">Next: %s</string>
-    <string name="scheduleInformator_now_title">%s! (%s)</string>
-    <string name="scheduleInformator_now_next_text">Next: %s</string>
+
+    <string name="scheduleInformator_notification_none_title">Application active</string>
+    <string name="scheduleInformator_notification_none_text">There are no events in the near future</string>
+    <string name="scheduleInformator_notification_next_title">Rest! (%s)</string>
+    <string name="scheduleInformator_notification_next_text">Next: %s</string>
+    <string name="scheduleInformator_notification_now_title">%s! (%s)</string>
+    <string name="scheduleInformator_notification_now_next_text">Next: %s</string>
+
+
+    <string name="settings_activityTitle">SchoolGuide - Settings</string>
+    <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
+    <string name="settings_builtinPresetList_title">Built in sdchedule</string>
+    <string name="settings_developerFeatures_title">developer feaures</string>
+    <string name="settings_developerFeatures_summary">symmaru do not user used!</string>
+    <string name="settings_title_advanced">Andanced</string>
+    <string name="settings_title_notification">Notification</string>
+    <string name="settings_showEmptyNotification_summary">Когда еведомление пустое оно не будет скрыватся (помогает если после изчезновения уведомление оно больше не появляется)</string>
+    <string name="settings_showEmptyNotification_title">empty notify</string>
 </resources>

@@ -10,12 +10,10 @@ import java.util.UUID;
 import ru.fazziclay.schoolguide.util.time.TimeUtil;
 
 public class Preset implements Cloneable {
-    String name;
-    String author;
+    private String name;
+    private String author;
 
-    // TODO: 2022-01-28 make private
-    public boolean deletedInGlobal = false;
-    public boolean syncedByGlobal = false;
+    private boolean syncedByGlobal = false;
 
     public HashMap<UUID, EventInfo> eventsInfos = new HashMap<>();
     public List<Event> eventsPositions = new ArrayList<>();
@@ -65,6 +63,16 @@ public class Preset implements Cloneable {
         return CompressedEvent.create(event, getEventInfo(event.getEventInfo()));
     }
 
+    @NonNull
+    public Preset clone() {
+        try {
+            return (Preset) super.clone();
+        } catch (CloneNotSupportedException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
     public EventInfo getEventInfo(UUID uuid) {
         return eventsInfos.get(uuid);
     }
@@ -85,13 +93,11 @@ public class Preset implements Cloneable {
         return author;
     }
 
-    @NonNull
-    public Preset clone() {
-        try {
-            return (Preset) super.clone();
-        } catch (CloneNotSupportedException exception) {
-            exception.printStackTrace();
-            return null;
-        }
+    public boolean isSyncedByGlobal() {
+        return syncedByGlobal;
+    }
+
+    public void setSyncedByGlobal(boolean syncedByGlobal) {
+        this.syncedByGlobal = syncedByGlobal;
     }
 }

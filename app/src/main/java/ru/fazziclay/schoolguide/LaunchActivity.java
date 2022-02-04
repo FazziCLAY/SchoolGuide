@@ -2,6 +2,7 @@ package ru.fazziclay.schoolguide;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class LaunchActivity extends Activity {
             setContentView(SharedConstrains.getAppNullView(this));
             return;
         }
+
         startActivity(PresetListActivity.getLaunchIntent(this));
         finish();
     }

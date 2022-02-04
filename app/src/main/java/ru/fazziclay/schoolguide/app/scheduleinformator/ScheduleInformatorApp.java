@@ -29,7 +29,7 @@ public class ScheduleInformatorApp {
     public static final String NOTIFICATION_CHANNEL_ID_NOW = "scheduleinformator_now";
     public static final int NOTIFICATION_ID = 1000;
 
-    public Notification notification;
+    private Notification notification;
 
     private final SchoolGuideApp app;
     private final AppTrace appTrace;
@@ -42,7 +42,7 @@ public class ScheduleInformatorApp {
     private final AppPresetList schedule;
 
     private InformatorService informatorService = null;
-    boolean isServiceForeground = false;
+    private boolean isServiceForeground = false;
 
     public ScheduleInformatorApp(SchoolGuideApp app) {
         this.app = app;
@@ -59,23 +59,22 @@ public class ScheduleInformatorApp {
         saveAppSchedule();
 
         app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
-            if (globalBuiltinPresetList != null && settings.globalPresetListSync && globalBuiltinPresetList.presets != null) {
+            if (globalBuiltinPresetList != null && globalBuiltinPresetList.presets != null) {
                 int i = 0;
                 while (i < globalBuiltinPresetList.getPresetsIds().length) {
                     UUID gPresetUUID = globalBuiltinPresetList.getPresetsIds()[i];
                     Preset gPreset = globalBuiltinPresetList.getPreset(gPresetUUID);
 
-                    if (gPreset == null) {
+                    if (gPreset == null || !settings.isBuiltInPresetList) {
                         schedule.removePreset(gPresetUUID);
                     } else {
-                        gPreset.syncedByGlobal = true;
+                        gPreset.setSyncedByGlobal(true);
                         schedule.putPreset(gPresetUUID, gPreset);
                     }
 
                     i++;
                 }
 
-                schedule.presets = globalBuiltinPresetList.presets;
                 saveAppSchedule();
             }
             return new Status.Builder().build();
@@ -115,7 +114,7 @@ public class ScheduleInformatorApp {
         boolean isNext = nextEvent != null;
 
         if (!isNow && !isNext) {
-            if (settings.stopForegroundIsNone) {
+            if (settings.isStopForegroundIsNone) {
                 stopForeground();
             } else {
                 startForeground();
@@ -126,7 +125,7 @@ public class ScheduleInformatorApp {
         }
 
         if (!isNow && nextEvent.remainsUntilStart() > settings.scheduleNotifyBeforeTime) {
-            if (settings.stopForegroundIsNone) {
+            if (settings.isStopForegroundIsNone) {
                 stopForeground();
             } else {
                 startForeground();
@@ -142,15 +141,15 @@ public class ScheduleInformatorApp {
         notificationBuilder.smallIcon = R.drawable.planner_s;
 
         if (isNow) {
-            String title = context.getString(R.string.scheduleInformator_now_title);
-            String message = context.getString(R.string.scheduleInformator_now_next_text);
+            String title = context.getString(R.string.scheduleInformator_notification_now_title);
+            String message = context.getString(R.string.scheduleInformator_notification_now_next_text);
             notificationBuilder.contentTitle = String.format(title, nowEvent.getName(), TimeUtil.convertToHumanTime(nowEvent.remainsUntilEnd(), ConvertMode.hhMMSS));
             if (isNext)
                 notificationBuilder.contentText = String.format(message, nextEvent.getName());
 
         } else {
-            String title = context.getString(R.string.scheduleInformator_next_title);
-            String message = context.getString(R.string.scheduleInformator_next_text);
+            String title = context.getString(R.string.scheduleInformator_notification_next_title);
+            String message = context.getString(R.string.scheduleInformator_notification_next_text);
             notificationBuilder.contentTitle = String.format(title, TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
             notificationBuilder.contentText = String.format(message, nextEvent.getName());
         }
@@ -184,8 +183,8 @@ public class ScheduleInformatorApp {
     }
 
     public Notification getNoneNotification() {
-        String title = context.getString(R.string.scheduleInformator_none_title);
-        String message = context.getString(R.string.scheduleInformator_none_text);
+        String title = context.getString(R.string.scheduleInformator_notification_none_title);
+        String message = context.getString(R.string.scheduleInformator_notification_none_text);
         return new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NONE)
                 .setSmallIcon(R.drawable.planner_s)
                 .setAutoCancel(true)

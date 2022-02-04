@@ -16,9 +16,11 @@ import java.io.File;
 import java.util.List;
 
 import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
 import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
+import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
@@ -155,6 +157,8 @@ public class SchoolGuideApp {
      * @see AutoGlobalUpdateService
      * **/
     private final CallbackStorage<GlobalUpdateListener> globalUpdateCallbacks = new CallbackStorage<>();
+
+    private final CallbackStorage<PresetListUpdateListener> presetListUpdateCallbacks = new CallbackStorage<>();
 
 
     public SchoolGuideApp(Context context) {
@@ -319,5 +323,9 @@ public class SchoolGuideApp {
 
     public CallbackStorage<GlobalUpdateListener> getGlobalUpdateCallbacks() {
         return globalUpdateCallbacks;
+    }
+
+    public CallbackStorage<PresetListUpdateListener> getPresetListUpdateCallbacks() {
+        return presetListUpdateCallbacks;
     }
 }

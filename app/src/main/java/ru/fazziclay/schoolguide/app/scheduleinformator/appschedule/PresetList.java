@@ -44,14 +44,14 @@ public class PresetList {
         UUID[] ids = presets.keySet().toArray(new UUID[0]);
         SortUtil.sort(ids, uuid -> {
             Preset preset = getPreset(uuid);
-            return preset.name;
+            return preset.getName();
         });
         return ids;
     }
 
     public Preset[] getPresets() {
         Preset[] presets = this.presets.values().toArray(new Preset[0]);
-        SortUtil.sort(presets, preset -> preset.name);
+        SortUtil.sort(presets, Preset::getName);
         return presets;
     }
 

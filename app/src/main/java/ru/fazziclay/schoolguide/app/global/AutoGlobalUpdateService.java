@@ -11,11 +11,10 @@ import android.util.Log;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
-import ru.fazziclay.schoolguide.app.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
 
 public class AutoGlobalUpdateService extends Service {
     private SchoolGuideApp app;
-    private CallbackStorage<GlobalUpdateListener> callbacks;
     private Handler handler;
     private Runnable runnable;
 
@@ -29,21 +28,10 @@ public class AutoGlobalUpdateService extends Service {
             stopSelf();
             return;
         }
-        callbacks = app.getGlobalUpdateCallbacks();
 
         handler = new Handler(getMainLooper());
         runnable = () -> {
-            GlobalManager.get(app, new GlobalManager.GlobalManagerInterface() {
-                @Override
-                public void failed(Exception exception) {}
-
-                @Override
-                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
-                    app.setGlobalVersionManifest(versionManifest);
-                    app.setGlobalBuiltinPresetList(builtinSchedule);
-                    callbacks.run((callbackStorage, callback) -> callback.onGlobalUpdate(keys, versionManifest, builtinSchedule));
-                }
-            });
+            update(app);
             handler.postDelayed(runnable, 60 * 60 * 1000);
         };
     }
@@ -57,5 +45,19 @@ public class AutoGlobalUpdateService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public static void update(SchoolGuideApp app) {
+        GlobalManager.get(app, new GlobalManager.GlobalManagerInterface() {
+            @Override
+            public void failed(Exception exception) {}
+
+            @Override
+            public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
+                app.setGlobalVersionManifest(versionManifest);
+                app.setGlobalBuiltinPresetList(builtinSchedule);
+                app.getGlobalUpdateCallbacks().run((callbackStorage, callback) -> callback.onGlobalUpdate(keys, versionManifest, builtinSchedule));
+            }
+        });
     }
 }

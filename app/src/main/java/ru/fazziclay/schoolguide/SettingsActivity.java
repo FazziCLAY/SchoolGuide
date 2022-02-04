@@ -1,32 +1,62 @@
 package ru.fazziclay.schoolguide;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.snackbar.Snackbar;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
-import ru.fazziclay.schoolguide.databinding.SettingsActivityBinding;
+import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
+import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
+import ru.fazziclay.schoolguide.callback.CallbackStorage;
+import ru.fazziclay.schoolguide.callback.Status;
 
 public class SettingsActivity extends AppCompatActivity {
+    private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
+    private static final String KEY_IS_BUILTIN_PRESET_LIST = "isBuiltinPresetList";
+    private static final String KEY_IS_SHOW_EMPTY_NOTIFICATION = "isShowEmptyNotification";
+
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
     }
 
     private SchoolGuideApp app;
     private Settings settings;
-    private SettingsActivityBinding binding;
+
+    private SharedPreferences preferences;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPreferences, key) -> {
+        boolean contains = sharedPreferences.contains(key);
+        if (!contains) return;
+
+        switch (key) {
+            case KEY_IS_DEVELOPER_FEATURES:
+                settings.isDeveloperFeatures = sharedPreferences.getBoolean(key, false);
+                break;
+
+            case KEY_IS_BUILTIN_PRESET_LIST:
+                settings.isBuiltInPresetList = sharedPreferences.getBoolean(key, false);
+                AutoGlobalUpdateService.update(app);
+                break;
+
+            case KEY_IS_SHOW_EMPTY_NOTIFICATION:
+                settings.isStopForegroundIsNone = !sharedPreferences.getBoolean(key, false);
+                break;
+        }
+        app.saveSettings();
+        app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onPresetListUpdate());
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         app = SchoolGuideApp.get(this);
         if (app == null) {
             setContentView(SharedConstrains.getAppNullView(this));
@@ -34,63 +64,40 @@ public class SettingsActivity extends AppCompatActivity {
         }
         settings = app.getSettings();
 
-        binding = SettingsActivityBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_settings);
+        setTitle(R.string.settings_activityTitle);
 
-        setActualState(settings);
-        setCallbacks();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings, new SettingsFragment())
+                    .commit();
+        } else {
+            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit()
+                .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, !settings.isStopForegroundIsNone)
+                .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
+                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltInPresetList)
+                .apply();
+
+        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 
-    private void setActualState(Settings settings) {
-        binding.developerFeatures.setChecked(settings.developerFeatures);
-        binding.stopForegroundIsNone.setChecked(settings.stopForegroundIsNone);
-        binding.isFirstMonday.setChecked(settings.isFirstMonday);
-        binding.syncGlobalPresetList.setChecked(settings.globalPresetListSync);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        preferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
-    private void setCallbacks() {
-        binding.developerFeatures.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            settings.developerFeatures = isChecked;
-            save();
-        });
-
-        binding.stopForegroundIsNone.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            settings.stopForegroundIsNone = isChecked;
-            save();
-        });
-
-        binding.isFirstMonday.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            settings.isFirstMonday = isChecked;
-            save();
-        });
-
-        binding.syncGlobalPresetList.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            settings.globalPresetListSync = isChecked;
-            save();
-        });
-
-        binding.changeScheduleNotifyBeforeTime.setOnClickListener(v -> {
-            EditText editText = new EditText(this);
-            editText.setText(String.valueOf(settings.scheduleNotifyBeforeTime));
-
-            new AlertDialog.Builder(this)
-                    .setView(editText)
-                    .setPositiveButton("APPLY", (ig, ign) -> {
-                        try {
-                            settings.scheduleNotifyBeforeTime = Integer.parseInt(editText.getText().toString());
-                        } catch (Exception e) {
-                            app.getAppTrace().point("changeScheduleNotifyBeforeTimeDialog", e);
-                            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-                        }
-                        save();
-                    })
-                    .show();
-        });
-    }
-
-    private void save() {
-        app.saveSettings();
-        Snackbar snackbar = Snackbar.make(binding.getRoot(), "Saved!", Snackbar.LENGTH_SHORT);
-        snackbar.show();
+    public static class SettingsFragment extends PreferenceFragmentCompat {
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.settings_preferences, rootKey);
+        }
     }
 }

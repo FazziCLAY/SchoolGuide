@@ -87,9 +87,8 @@ public class PresetEditActivity extends AppCompatActivity {
 
         binding = ActivityPresetEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        // TODO: 2022-01-29 return
-        setTitle(String.format("synced=%s deleted=%s", preset.syncedByGlobal, preset.deletedInGlobal));
-        //setTitle(getString(R.string.presetEdit_activityTitle, preset.getName()));
+        //setTitle(String.format("synced=%s deleted=%s", preset.syncedByGlobal, preset.deletedInGlobal));
+        setTitle(getString(R.string.presetEdit_activityTitle, preset.getName()));
 
         updateEventList();
     }

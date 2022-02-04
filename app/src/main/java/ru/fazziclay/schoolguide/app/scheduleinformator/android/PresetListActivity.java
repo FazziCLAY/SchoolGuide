@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.InputFilter;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,8 +38,9 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.SettingsActivity;
 import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.UpdateCenterActivity;
-import ru.fazziclay.schoolguide.app.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.SelectablePresetList;
@@ -46,6 +49,7 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
+import ru.fazziclay.schoolguide.util.ColorUtil;
 
 public class PresetListActivity extends AppCompatActivity {
     public static final int PRESET_NAME_MAX_LENGTH = 25;
@@ -59,10 +63,12 @@ public class PresetListActivity extends AppCompatActivity {
     private ScheduleInformatorApp informatorApp;
     private ActivityPresetListBinding binding;
     private MenuItem openUpdateCenterMenuItem;
+    private MenuItem openDebugItem;
 
     private PresetList presetList;
 
     private GlobalUpdateListener globalUpdateListener;
+    private PresetListUpdateListener presetListUpdateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +95,24 @@ public class PresetListActivity extends AppCompatActivity {
                     .setDeleteCallback(activityClosed)
                     .build();
         };
+
+        presetListUpdateListener = () -> {
+            boolean activityClosed = isFinishing();
+
+            try {
+                if (!activityClosed) {
+                    runOnUiThread(this::updateList);
+                }
+            } catch (Exception ignored) {}
+
+
+            return new Status.Builder()
+                    .setDeleteCallback(activityClosed)
+                    .build();
+        };
+
         app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.LOW, globalUpdateListener);
+        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.LOW, presetListUpdateListener);
 
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -107,19 +130,23 @@ public class PresetListActivity extends AppCompatActivity {
         }
         updateOpenUpdateCenterMenuName();
         updateList();
+        if (openDebugItem != null) {
+            openDebugItem.setVisible(app.getSettings().isDeveloperFeatures);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         app.getGlobalUpdateCallbacks().deleteCallback(globalUpdateListener);
+        app.getPresetListUpdateCallbacks().deleteCallback(presetListUpdateListener);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.openDebugItem).setVisible(app.getSettings().developerFeatures);
         openUpdateCenterMenuItem = menu.findItem(R.id.openUpdateCenterItem);
+        openDebugItem = menu.findItem(R.id.openDebugItem);
         updateOpenUpdateCenterMenuName();
         return true;
     }
@@ -127,7 +154,7 @@ public class PresetListActivity extends AppCompatActivity {
     private void updateOpenUpdateCenterMenuName() {
         if (openUpdateCenterMenuItem == null) return;
         if (app.isUpdateAvailable()) {
-            openUpdateCenterMenuItem.setTitle(String.format("(!) %s", getString(R.string.mainOptionMenu_openUpdateCenter)));
+            openUpdateCenterMenuItem.setTitle(ColorUtil.colorize(getString(R.string.mainOptionMenu_openUpdateCenter_available), Color.RED, Color.TRANSPARENT, Typeface.BOLD));
         } else {
             openUpdateCenterMenuItem.setTitle(R.string.mainOptionMenu_openUpdateCenter);
         }
@@ -147,9 +174,6 @@ public class PresetListActivity extends AppCompatActivity {
 
         } else if (id == R.id.openDebugItem) {
             startActivity(DebugActivity.getLaunchIntent(this));
-
-        } else if (id == R.id.openBuiltInPresetList) {
-            // TODO: 2/1/22 add
 
         }
         return true;
@@ -208,7 +232,7 @@ public class PresetListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.presetList_createNew_create, (dialogInterface, which) -> {
                     String newName = name.getText().toString();
                     if (newName.isEmpty()) {
-                        Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.presetList_exception_presetNameEmpty, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     presetList.addPreset(new Preset(newName));
@@ -285,10 +309,11 @@ public class PresetListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.presetList_copy, (e, e1) -> {
                     String newName = name.getText().toString();
                     if (newName.isEmpty()) {
-                        Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.presetList_exception_presetNameEmpty, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Preset newPreset = preset.clone();
+                    newPreset.setSyncedByGlobal(false);
                     newPreset.setName(newName);
                     presetList.addPreset(newPreset);
                     informatorApp.saveAppSchedule();
@@ -332,7 +357,7 @@ public class PresetListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.presetList_rename, (e, e1) -> {
                     String newName = name.getText().toString();
                     if (newName.isEmpty()) {
-                        Toast.makeText(this, R.string.presetList_presetNameIsEmptyError, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.presetList_exception_presetNameEmpty, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     preset.setName(newName);
@@ -412,6 +437,7 @@ public class PresetListActivity extends AppCompatActivity {
      * Получить View элемента списка
      * **/
     private View getPresetView(UUID presetUUID, Preset preset) {
+        boolean isGlobal = preset.isSyncedByGlobal();
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -430,6 +456,7 @@ public class PresetListActivity extends AppCompatActivity {
         });
 
         TextView textView = new TextView(this);
+        textView.setTextColor(isGlobal ? Color.parseColor("#ffff0000") : Color.parseColor("#ffffffff"));
         PopupMenu popupMenu = new PopupMenu(this, textView);
         popupMenu.inflate(R.menu.menu_preset_list_popup);
         popupMenu.setOnMenuItemClickListener(item -> {
@@ -445,9 +472,17 @@ public class PresetListActivity extends AppCompatActivity {
             informatorApp.saveAppSchedule();
             return true;
         });
-        textView.setText(preset == null ? "(null)" : preset.getName());
+        popupMenu.getMenu().findItem(R.id.delete).setEnabled(!isGlobal);
+        popupMenu.getMenu().findItem(R.id.rename).setEnabled(!isGlobal);
+
+        String textR = preset == null ? "(null)" : preset.getName();
+        SpannableString string = new SpannableString(textR);
+        if (preset != null) {
+            if (isGlobal) string = ColorUtil.colorize(textR, Color.parseColor("#ffaaaaaa"), Color.TRANSPARENT, Typeface.ITALIC);
+        }
+        textView.setText(string);
         textView.setTextSize(30);
-        textView.setTextColor(Color.WHITE);
+        //textView.setTextColor(Color.WHITE);
         textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         textView.setOnClickListener(view -> startActivity(PresetEditActivity.getLaunchIntent(this, presetUUID)));
         textView.setOnLongClickListener(v -> {

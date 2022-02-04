@@ -1,8 +1,8 @@
 {
-  "key": 1,
+  "key": 2,
   "latestVersion": {
-    "code": 37,
-    "name": "0.4 - Rewritten",
+    "code": 36,
+    "name": "0.5 - Rewritten",
     "download": {
       "release": "https://google.com/release",
       "debug": "https://google.com/debug"
