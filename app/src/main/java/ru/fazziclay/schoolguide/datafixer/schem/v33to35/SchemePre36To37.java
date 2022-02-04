@@ -143,6 +143,25 @@ public class SchemePre36To37 extends AbstractScheme {
         if (newSettings != null) {
             FileUtil.write(newSettingsFile, gson.toJson(newSettings, V37Settings.class));
         }
+
+        try {
+            deleteDir(context.getExternalCacheDir());
+        } catch (Exception e) {
+            appTrace.point("datafixer clear cache dir", e);
+        }
+    }
+
+    // move to file util?
+    private void deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String child : children) {
+                deleteDir(new File(dir, child));
+            }
+
+        } else if (dir != null && dir.isFile()) {
+            dir.delete();
+        }
     }
 
     private void fixSchedule() {
