@@ -59,7 +59,7 @@ public class ScheduleInformatorApp {
         saveAppSchedule();
 
         app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
-            if (globalBuiltinPresetList != null && globalBuiltinPresetList.presets != null) {
+            if (globalBuiltinPresetList != null) {
                 boolean change = globalBuiltinPresetList.getPresetsIds().length > 0;
                 int i = 0;
                 while (i < globalBuiltinPresetList.getPresetsIds().length) {
@@ -156,7 +156,7 @@ public class ScheduleInformatorApp {
             notificationBuilder.contentText = String.format(message, nextEvent.getName());
         }
 
-        notification = notificationBuilder.toNotification(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
+        notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
         sendNotify();
         return 1000;
     }
@@ -204,7 +204,7 @@ public class ScheduleInformatorApp {
         public String contentText;
         public String sub;
 
-        public Notification toNotification(Context context, String channelId) {
+        public Notification build(Context context, String channelId) {
             return new NotificationCompat.Builder(context, channelId)
                     .setSmallIcon(smallIcon)
                     .setContentTitle(contentTitle)
