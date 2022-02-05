@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,6 +82,20 @@ public class SettingsActivity extends AppCompatActivity {
                 .apply();
 
         preferences.registerOnSharedPreferenceChangeListener(listener);
+
+        ImageButton shareAppTrace = findViewById(R.id.shareAppTrace);
+        shareAppTrace.setOnClickListener(ignore -> {
+            try {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "SchoolGuide debug appTrace");
+                intent.putExtra(Intent.EXTRA_TEXT, app.getAppTrace().getText());
+                startActivity(Intent.createChooser(intent, "Share to developer!"));
+            } catch (Exception e) {
+                app.getAppTrace().point("Error to share appTrace!", e);
+                Toast.makeText(this, "Error to send appTrace!\n" + e, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

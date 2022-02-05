@@ -126,4 +126,5 @@
     <string name="settings_builtinPresetList_summary">Put built-in presets to preset list</string>
     <string name="settings_developerFeatures_title">Developer features</string>
     <string name="settings_developerFeatures_summary" />
+    <string name="settings_title_shareAppTrace">Share app trace</string>
 </resources>

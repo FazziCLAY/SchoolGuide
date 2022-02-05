@@ -123,4 +123,5 @@
     <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
     <string name="settings_developerFeatures_title">Возможности разработчика</string>
     <string name="settings_developerFeatures_summary">Не рекомендуем вам использовать эту функцию!</string>
+    <string name="settings_title_shareAppTrace">Поделится трейсом приложения</string>
 </resources>
