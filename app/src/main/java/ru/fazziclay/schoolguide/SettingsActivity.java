@@ -15,10 +15,10 @@ import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 
 public class SettingsActivity extends AppCompatActivity {
-    private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
-    private static final String KEY_IS_BUILTIN_PRESET_LIST = "isBuiltinPresetList";
     private static final String KEY_IS_SHOW_EMPTY_NOTIFICATION = "isShowEmptyNotification";
     private static final String KEY_IS_FIRST_MONDAY = "isFirstMonday";
+    private static final String KEY_IS_BUILTIN_PRESET_LIST = "isBuiltinPresetList";
+    private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
 
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -31,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPreferences, key) -> {
         boolean contains = sharedPreferences.contains(key);
-        if (!contains) return;
+        if (!contains || settings == null || app == null) return;
 
         if (KEY_IS_DEVELOPER_FEATURES.equals(key)) {
             settings.isDeveloperFeatures = sharedPreferences.getBoolean(key, false);
@@ -67,7 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
                     .replace(R.id.settings, new SettingsFragment())
                     .commit();
         } else {
-            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error savedInstanceState is null!", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -75,9 +75,9 @@ public class SettingsActivity extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit()
                 .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, !settings.isStopForegroundIsNone)
-                .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
-                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltinPresetList)
                 .putBoolean(KEY_IS_FIRST_MONDAY, settings.isFirstMonday)
+                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltinPresetList)
+                .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
                 .apply();
 
         preferences.registerOnSharedPreferenceChangeListener(listener);
