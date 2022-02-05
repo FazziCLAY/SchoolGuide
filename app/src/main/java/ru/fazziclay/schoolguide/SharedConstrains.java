@@ -1,11 +1,13 @@
 package ru.fazziclay.schoolguide;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
@@ -80,16 +82,28 @@ public class SharedConstrains {
     /**
      * Если {@link SchoolGuideApp#get()} выдал null то ставить setContentView
      * **/
+    @SuppressLint("SetTextI18n")
     public static View getAppNullView(Activity activity) {
-        ErrorAppNullBinding binding = ErrorAppNullBinding.inflate(activity.getLayoutInflater());
+        try {
+            ErrorAppNullBinding binding = ErrorAppNullBinding.inflate(activity.getLayoutInflater());
 
-        binding.errorText.setText(activity.getString(
-                R.string.error_appNull_message,
-                String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE),
-                String.valueOf(ErrorCode.ERROR_APP_GET_RETURN_NULL),
-                activity == null ? "null" : activity.getClass().getName()
-        ));
+            binding.errorText.setText(activity.getString(
+                    R.string.error_appNull_message,
+                    String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE),
+                    String.valueOf(ErrorCode.ERROR_APP_GET_RETURN_NULL),
+                    activity == null ? "null" : activity.getClass().getName()
+            ));
 
-        return binding.getRoot();
+            return binding.getRoot();
+        } catch (Exception e) {
+            try {
+                TextView textView = new TextView(activity);
+                textView.setText("SchoolGuide Error\n"+ e);
+                return textView;
+
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
     }
 }
