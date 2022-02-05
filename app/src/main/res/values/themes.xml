@@ -1,10 +1,6 @@
 <resources>
     <style name="Theme.SchoolGuide" parent="Theme.MaterialComponents.Light">
-        <item name="activityBackground">#FFFFFF</item>
-        <item name="editTextHintColor">#5B5B5B</item>
-        <item name="checkboxTextColor">#121212</item>
-        <item name="textViewButtonTextColor">#000000</item>
-        <item name="textViewButtonBackgroundColor">#96B1B1B1</item>
-        <item name="headTextColor">#000000</item>
+        <item name="activityBackground">#ff000000</item>
+        <item name="dialogBackground">#222222</item>
     </style>
 </resources>

@@ -3,7 +3,50 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/drawable-v21/app_widget_background.xml" value="0.15208333333333332" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_about.xml" value="0.3151041666666667" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_developer_manifest_utils.xml" value="0.25" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_error_school_file_not_found.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_home.xml" value="0.33" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_lesson.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_lesson_edit.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_lesson_info_edit.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_lessons.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_market.xml" value="0.30570652173913043" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_restore_point.xml" value="0.3491847826086957" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_schedule.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_schedule_configurator.xml" value="0.36367753623188404" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_schedule_edit.xml" value="0.33" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_schedule_lesson_edit.xml" value="0.25" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_schedules.xml" value="0.3359375" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_scrolling_test.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_settings.xml" value="0.25" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_teacher.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_teachers.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/activity_update_checker.xml" value="0.33" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/big_notification.xml" value="0.30570652173913043" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/content_scrolling.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/layout/main_widget.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/StudioProjects/SchoolGuide/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3828125" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3828125" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3828125" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_developer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_lessons.xml" value="0.26811594202898553" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_schedule_edit.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_schedule_lesson_edit.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_schedules.xml" value="0.27355072463768115" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_set_developer_schedule.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_settings.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_today_schedule.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_update_checker.xml" value="0.17806484295845998" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.25" />
+        <entry key="..\:/Users/fazziclay/_I_PRO/SchoolGuide/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3828125" />
+        <entry key="..\:/_MOE/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_schedule_lesson_edit.xml" value="0.2545289855072464" />
+        <entry key="..\:/_MOE/_I_PRO/SchoolGuide/app/src/main/res/layout/activity_settings.xml" value="0.5988428158148505" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.3640625" />
+        <entry key="app/src/main/res/layout/main_widget.xml" value="0.3640625" />
       </map>
     </option>
   </component>

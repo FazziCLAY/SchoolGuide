@@ -1,10 +1,6 @@
 <resources>
     <declare-styleable name="SchoolGuide.Main">
         <attr name="activityBackground" format="color" />
-        <attr name="editTextHintColor" format="color" />
-        <attr name="checkboxTextColor" format="color" />
-        <attr name="textViewButtonBackgroundColor" format="color" />
-        <attr name="textViewButtonTextColor" format="color"/>
-        <attr name="headTextColor" format="color" />
+        <attr name="dialogBackground" format="color"/>
     </declare-styleable>
 </resources>

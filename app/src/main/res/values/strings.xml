@@ -1,105 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="application_name" translatable="false">SchoolGuide</string>
-    <string name="application_description" translatable="false">Help shoolboys and schoolgirls!</string>
+    <string name="application_description" translatable="false">Help schoolboys and schoolgirls!</string>
 
-    <string name="abc_loading">Loading</string>
-    <string name="abc_error">Error</string>
-    <string name="abc_unknown">Unknown</string>
-    <string name="abc_cancel">Cancel</string>
-    <string name="abc_lessons">Lessons</string>
-    <string name="abc_schedules">Schedules</string>
-    <string name="abc_settings">Settings</string>
-    <string name="abc_create">Create</string>
-    <string name="abc_delete">Delete</string>
-    <string name="abc_save">Save</string>
-    <string name="abc_install">Install</string>
-    <string name="abc_actionBefore">Warning</string>
-    <string name="abc_fillAllFields">Fill in all the fields!</string>
-    <string name="abc_set">Set</string>
-    <string name="abc_empty">Empty</string>
+    <!-- Rewritten v36 -->
+    <string name="updatecenter_activityTitle">SchoolGuide - Update Center</string>
+    <string name="updatecenter_loading">Loading</string>
+    <string name="updatecenter_error_title">Error :(</string>
+    <string name="updatecenter_error_unknownHost_text">$[-#ff2222]No $[@bold]network$[@reset] connection!</string>
+    <string name="updatecenter_error_unknownHost_reload">Reload</string>
+    <string name="updatecenter_error_fileNotFound_text">"$[@bold;-#ff0000]The service is closed :($[@reset;-reset]\nThe app couldn't find the latest version, $[@bold;-#dddddd]we recommend going to the project page:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
+    <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Unknown error.$[@reset;-reset]\nThe application could not recognize the error, most likely there are technical problems now\nError:$[=#080607;-#cc0000;=#000000] %s</string>
+    <string name="updatecenter_updated_title">Updated</string>
+    <string name="updatecenter_updated_text">$[-#a0a0ff]The $[@bold;-#7070ff]latest version$[@reset;-#a0a0ff] is currently installed</string>
+    <string name="updatecenter_outdated_title">Update available\n%s</string>
+    <string name="updatecenter_outdated_changelogEmpty_text">Change log is null.</string>
+    <string name="updatecenter_outdated_openDownloadLink">Download</string>
+    <string name="updatecenter_outdated_downloadError_activityNotFound">Please install web browser (for example FireFox)</string>
+    <string name="updatecenter_outdated_downloadError_urlNull">Error: URL is null</string>
+    <string name="updatecenter_notification_title">Update Available</string>
+    <string name="updatecenter_notification_text">Please download app update</string>
 
-    <string name="mainNotification_lesson_title">%NOW_LESSON%! Left: %TIME_BEFORE_START_REST%</string>
-    <string name="mainNotification_lesson_title_ending">%NOW_LESSON%! Left: %TIME_BEFORE_START_REST%</string>
-    <string name="mainNotification_lesson_content" translatable="false">-1</string>
-    <string name="mainNotification_lesson_content_ending">Next: %NEXT_LESSON%</string>
-    <string name="mainNotification_rest_title">Rest! Left: %TIME_BEFORE_START_LESSON%</string>
-    <string name="mainNotification_rest_title_ending">Rest! Left: %TIME_BEFORE_START_LESSON% (HURRY UP)</string>
-    <string name="mainNotification_rest_content">Next: %NEXT_LESSON%</string>
-    <string name="mainNotification_rest_content_ending">Next: %NEXT_LESSON%</string>
-    <string name="mainNotification_lesson_sub" translatable="false">-1</string>
-    <string name="mainNotification_lesson_sub_ending" translatable="false">-1</string>
+    <string name="mainOptionMenu_openUpdateCenter">Update center</string>
+    <string name="mainOptionMenu_openUpdateCenter_available">(!) UPDATE AVAILABLE (!)</string>
+    <string name="mainOptionMenu_openMathTreningGame">Game \'MathTrening\'</string>
+    <string name="mainOptionMenu_openSettings">Settings</string>
+    <string name="mainOptionMenu_openDebug">Debug</string>
 
-    <string name="fab_content_lessons">Add lesson</string>
-    <string name="fab_content_schedules">Add schedule</string>
+    <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
+    <string name="mathTreningGame_optionMenu_skip">Skip</string>
+    <string name="mathTreningGame_optionMenu_gameSettings">Game settings</string>
+    <string name="mathTreningGame_statistic">Score: %s</string>
+    <string name="mathTreningGame_resultInput_hint">Result</string>
+    <string name="mathTreningGame_settings_title">Game settings</string>
+    <string name="mathTreningGame_settings_action">Action:</string>
+    <string name="mathTreningGame_settings_generation">Generation:</string>
+    <string name="mathTreningGame_settings_generation_number1">Number 1:</string>
+    <string name="mathTreningGame_settings_generation_number2">Number 2:</string>
+    <string name="mathTreningGame_settings_generation_min">MINimal</string>
+    <string name="mathTreningGame_settings_generation_max">MAXimum</string>
+    <string name="mathTreningGame_settings_cancel">Cancel</string>
+    <string name="mathTreningGame_settings_apply">Apply</string>
+    <string name="mathTreningGame_settings_resetScore">Reset score</string>
+    <string name="mathTreningGame_resetScore_title">Reset score</string>
+    <string name="mathTreningGame_resetScore_message">Do you really want to reset the game score?</string>
+    <string name="mathTreningGame_resetScore_reset">Reset!</string>
+    <string name="mathTreningGame_resetScore_cancel">Cancel</string>
 
-    <string name="lessonName_hint">Lesson name</string>
-    <string name="scheduleName_hint">Schedule name</string>
+    <string name="presetList_addPreset_contentDescription">Add preset</string>
+    <string name="presetList_createNew_nameHint">Enter name</string>
+    <string name="presetList_createNew_title">Create new preset</string>
+    <string name="presetList_createNew_create">Create</string>
+    <string name="presetList_createNew_cancel">Cancel</string>
+    <string name="presetList_delete_title">Delete preset \'%s\'</string>
+    <string name="presetList_delete_message">Do you really want to delete preset?</string>
+    <string name="presetList_delete">Delete</string>
+    <string name="presetList_delete_cancel">Cancel</string>
+    <string name="presetList_copy_nameHint">Enter new name</string>
+    <string name="presetList_copy_title">Copy preset \'%s\'</string>
+    <string name="presetList_copy_message">Do you want to make a copy of the preset?\nYou can enter a name for the new preset</string>
+    <string name="presetList_copy">Copy</string>
+    <string name="presetList_copy_cancel">Cancel</string>
+    <string name="presetList_copy_copyName">Copy of \'%s\'</string>
+    <string name="presetList_exception_presetNameEmpty">The name should not be empty</string>
+    <string name="presetList_rename_nameHint">Enter new name</string>
+    <string name="presetList_rename_title">Rename \'%s\'</string>
+    <string name="presetList_rename_message" />
+    <string name="presetList_rename">Rename</string>
+    <string name="presetList_rename_cancel">Cancel</string>
+    <string name="presetList_emptyMessage_title">No presets</string>
+    <string name="presetList_emptyMessage_message">Click + button or copy from built-in preset list</string>
 
-    <string name="schedule_lesson_startTime">Start time - %s</string>
-    <string name="schedule_lesson_duration">Duration - %s</string>
-    <string name="schedule_lesson_duration_title">Duration</string>
-    <string name="schedule_lesson_startTime_title">Start time</string>
+    <string name="presetMenu_copy">Copy</string>
+    <string name="presetMenu_delete">Delete</string>
+    <string name="presetMenu_colorScheme">Color scheme</string>
+    <string name="presetMenu_rename">Rename</string>
 
-    <string name="notificationChannel_main_name">Main</string>
-    <string name="notificationChannel_main_description">The main notification that notified you</string>
-    <string name="notification_foreground_defaultTitle">The application is active</string>
-    <string name="notification_foreground_defaultText">This is necessary to keep the application open</string>
-    <string name="notification_updatechecker_newVersion_subText" translatable="false">" "</string>
+    <string name="presetEdit_activityTitle">Preset \'%s\'</string>
+    <string name="presetEdit_colorScheme_default">Default</string>
+    <string name="presetEdit_colorScheme_default_description">Default - default colors</string>
+    <string name="presetEdit_colorScheme_yesterday">Previous</string>
+    <string name="presetEdit_colorScheme_yesterday_description">Previous - coloring the event in green if it was not there last day, and if it was, then gray</string>
+    <string name="presetEdit_colorScheme_apply">Apply</string>
+    <string name="presetEdit_colorScheme_title">Color Scheme</string>
+    <string name="presetEdit_colorScheme_message" />
+    <string name="presetEdit_colorScheme_cancel">Cancel</string>
+    <string name="presetEdit_addEvent_contentDescription">Add event</string>
+    <string name="presetEdit_emptyDay"><![CDATA[<Empty>]]></string>
+    <string name="presetEdit_error_presetNotFound">Error: Preset not found</string>
+
+    <string name="notificationChannel_scheduleInformator_scheduleNow_name">Schedule (NOW)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNow_description">Now there is something planned</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNext_name">Schedule (NEXT)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNext_description">Next there is something planned</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_name">Schedule (NONE)</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_description">Now there is nothing planned and soon there is nothing planned</string>
+    <string name="notificationChannel_updateCenter_name">Update Center</string>
+    <string name="notificationChannel_updateCenter_description">New update notification</string>
+
+    <string name="batteryOptimizationDialog_title">Battery optimization</string>
+    <string name="batteryOptimizationDialog_message">We ask you to disable battery optimization</string>
+    <string name="batteryOptimizationDialog_disable">Disable</string>
+    <string name="batteryOptimizationDialog_cancel">Cancel</string>
+
+    <string name="error_appNull_title">ERROR!</string>
+    <string name="error_appNull_message">Initialize error!\nContact to developer!\nVersion: %s\nCode: %s\n\nActivity: %s</string>
+
+    <string name="scheduleInformator_notification_none_title">Application active</string>
+    <string name="scheduleInformator_notification_none_text">There are no events in the near future</string>
+    <string name="scheduleInformator_notification_next_title">Rest! (%s)</string>
+    <string name="scheduleInformator_notification_next_text">Next: %s</string>
+    <string name="scheduleInformator_notification_now_title">%s! (%s)</string>
+    <string name="scheduleInformator_notification_now_next_text">Next: %s</string>
 
 
-
-    <string name="notificationChannel_updatechecker_name">UpdateChecker</string>
-    <string name="notificationChannel_updatechecker_description">Update checker notifications</string>
-
-    <string name="notification_updatechecker_newVersion_title">New version available</string>
-    <string name="notification_updatechecker_newVersion_text">Click to download and install</string>
-
-    <string name="activityTitle_scheduleLessonEdit_edit">Editing lesson for %s</string>
-    <string name="activityTitle_scheduleLessonEdit_create">Creating lesson for %s</string>
-
-    <string name="lessonEdit_delete_title">Are you sure?</string>
-    <string name="scheduleEdit_delete_title">Are you sure?</string>
-    <string name="scheduleLessonEdit_delete_title">Are you sure?</string>
-
-    <string name="lessonEdit_delete_message">Do you really want to delete this lesson?</string>
-    <string name="scheduleLessonEdit_delete_message">Do you really want to delete this lesson?</string>
-    <string name="scheduleEdit_delete_message">Do you really want to delete this schedule?</string>
-
-    <string name="activityTitle_about">About</string>
-    <string name="activityTitle_updateChecker">Update Center</string>
-    <string name="schedules_createNew_title">Creating new schedule</string>
-    <string name="schedules_createNew_empty">Create empty</string>
-    <string name="schedules_createNew_copyOf">Copy of \'%s\'</string>
-    <string name="schedules_createNew_newEmptyName">New empty schedule</string>
-    <string name="schedule_lesson_lessonsNotFound">Lessons not found. Create!</string>
-    <string name="schedules_empty_title">Schedules not found!</string>
-    <string name="schedules_empty_content">Create your schedule + button</string>
-    <string name="scheduleEdit_emptyDay"><![CDATA[<Empty>]]></string>
-    <string name="todaySchedule_todayLessons_title">Today lessons:</string>
-
-    <string name="updateCenter_downloading_title">Downloading</string>
-    <string name="updateCenter_download">Download and Install</string>
-    <string name="updateCenter_title_error">Error</string>
-    <string name="updateCenter_text_error_generic">Unknown error! Code: %s</string>
-    <string name="updateCenter_text_error_noNetworkConnection">No network connection!</string>
-    <string name="updateCenter_title_updateAvailable">Update available</string>
-    <string name="updateCenter_downloading_title_error">Downloading failed!</string>
-    <string name="updateCenter_downloading_title_success">Downloaded!</string>
-    <string name="updateCenter_title_latest">Updated!</string>
-    <string name="updateCenter_text_latest">Client updated!</string>
-    <string name="updateCenter_title_technicalWorks">Technical Works</string>
-    <string name="updateCenter_text_technicalWorks">Technical Works</string>
-
-    <string name="settings_notification_clickAction_fullSchedule">Full Schedule</string>
-    <string name="settings_notification_clickAction_todaySchedule">Today lessons</string>
-    <string name="settings_isSyncDeveloperSchedule" translatable="false">Синхронизизация с расписанием разработчика</string>
-    <string name="settings_notification_clickAction_none">None</string>
-    <string name="settings_selectedLocalSchedule_empty"><![CDATA[<Not schedules>]]></string>
-    <string name="settings_checkUpdate">Check Update</string>
-    <string name="settings_userNotificationSinner">User notification</string>
-    <string name="settings_selectedLocalSchedule">Selected schedule</string>
-    <string name="settings_isVibration">Vibration</string>
-    <string name="settings_notificationStyle_clickAction">Notification Click Action</string>
-    <string name="settings_notifyBeforeTime">Начинать уведомлять за %s до</string>
-    <string name="settings_notifyBeforeTime_title">Начинать уведомлять за столько время до...</string>
+    <string name="settings_activityTitle">SchoolGuide - Settings</string>
+    <string name="settings_title_notification">Notification</string>
+    <string name="settings_showEmptyNotification_title">Show empty notification</string>
+    <string name="settings_showEmptyNotification_summary">When the notification is empty, it will not disappear\n(it helps if the notification no longer appears after disappearing)</string>
+    <string name="settings_title_presetEdit">Preset editor</string>
+    <string name="settings_isFirstMonday_title">First week day</string>
+    <string name="settings_isFirstMonday_summaryOn">Monday</string>
+    <string name="settings_isFirstMonday_summaryOff">Sunday</string>
+    <string name="settings_title_advanced">Advanced</string>
+    <string name="settings_builtinPresetList_title">Built-in presets</string>
+    <string name="settings_builtinPresetList_summary">Put built-in presets to preset list</string>
+    <string name="settings_developerFeatures_title">Developer features</string>
+    <string name="settings_developerFeatures_summary" />
+    <string name="settings_title_shareAppTrace">Share app trace</string>
 </resources>

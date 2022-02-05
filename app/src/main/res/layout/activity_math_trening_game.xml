@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10sp"
+    android:background="?attr/activityBackground">
+
+    <TextView
+        android:id="@+id/statistic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mathTreningGame_statistic"
+        android:textSize="20sp"
+        android:textColor="#F2CC0A"/>
+
+    <TextView
+        android:id="@+id/taskText"
+        android:gravity="center"
+        android:textSize="55sp"
+        tools:text="11 * 22"
+        android:textColor="#2FFF00"
+        android:layout_width="match_parent"
+        android:layout_height="150sp"/>
+
+    <EditText
+        android:id="@+id/resultInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:maxLength="10"
+        android:hint="@string/mathTreningGame_resultInput_hint"
+        android:textColorHint="#5B4A4A"
+        tools:text="242"
+        android:textSize="25sp"
+        android:textColor="#1CD173"
+        android:inputType="numberSigned"
+        android:imeOptions="actionSend"
+        android:importantForAutofill="no"/>
+</LinearLayout>

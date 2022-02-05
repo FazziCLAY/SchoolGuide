@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10sp"
+    android:background="#ff000000"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="41sp"
+        android:gravity="center"
+        android:textColor="#00FF00"
+        android:text="@string/application_name" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="31sp"
+        android:gravity="center"
+        android:textColor="#FF0000"
+        android:text="@string/error_appNull_title" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:gravity="center"
+        android:textColor="#FF0000"
+        android:text="@string/error_appNull_message" />
+</LinearLayout>

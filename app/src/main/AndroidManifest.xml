@@ -1,69 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="ru.fazziclay.schoolguide">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
+        android:description="@string/application_description"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/application_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
-        <activity
-            android:name=".android.activity.developer.DeveloperActivity"
-            android:exported="false" />
-        <activity
-            android:name=".android.activity.schedule.TodayScheduleActivity"
-            android:exported="false"
-            android:showOnLockScreen="true"
-            android:showWhenLocked="true"
-            tools:targetApi="o_mr1" />
-        <activity
-            android:name=".android.activity.UpdateCheckerActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.schedule.ScheduleLessonEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.schedule.ScheduleEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.developer.DeveloperManifestUtilsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.lesson.LessonEditActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.lesson.LessonsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.settings.SettingsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".android.activity.HomeActivity"
-            android:exported="true" />
 
         <service
-            android:name=".android.service.ForegroundService"
+            android:name=".app.global.AutoGlobalUpdateService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".android.activity.MainActivity"
+            android:name=".LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".app.scheduleinformator.android.PresetListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".app.scheduleinformator.android.PresetEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".app.multiplicationtrening.MathTreningGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateCenterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DebugActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".app.SchoolGuideService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".app.scheduleinformator.InformatorService"
+            android:enabled="true"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

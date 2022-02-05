@@ -5,19 +5,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Набор утилит для работы с файлами
+ * **/
 public class FileUtil {
     public static void createDirIfNotExists(String path) {
         File file = new File(fixPathSeparator(path));
         if (!file.exists()) {
-            //noinspection ResultOfMethodCallIgnored
             file.mkdirs();
         }
     }
 
     private static void createNew(String path) {
-        int lastSep = fixPathSeparator(path).lastIndexOf(File.separator);
+        path = fixPathSeparator(path);
+        int lastSep = path.lastIndexOf(File.separator);
         if (lastSep > 0) {
-            String dirPath = fixPathSeparator(path).substring(0, lastSep);
+            String dirPath = path.substring(0, lastSep);
             createDirIfNotExists(dirPath);
             File folder = new File(dirPath);
             folder.mkdirs();
@@ -32,6 +35,14 @@ public class FileUtil {
         }
     }
 
+    public static String read(File file, String defaultValue) {
+        return read(file.getAbsolutePath(), defaultValue);
+    }
+
+    public static String read(File file) {
+        return read(file.getAbsolutePath());
+    }
+
     public static String read(String path, String defaultValue) {
         String content = read(path);
         if (content != null && content.equals("")) {
@@ -41,57 +52,53 @@ public class FileUtil {
     }
 
     public static String read(String path) {
+        path = fixPathSeparator(path);
         try {
-            createNew(fixPathSeparator(path));
+            createNew(path);
 
             StringBuilder stringBuilder = new StringBuilder();
-            FileReader fileReader = null;
+            FileReader fileReader = new FileReader(path);
+
+            char[] buff = new char[1024];
+            int length;
+
+            while ((length = fileReader.read(buff)) > 0) {
+                stringBuilder.append(new String(buff, 0, length));
+            }
 
             try {
-                fileReader = new FileReader(fixPathSeparator(path));
+                fileReader.close();
 
-                char[] buff = new char[1024];
-                int length;
-
-                while ((length = fileReader.read(buff)) > 0) {
-                    stringBuilder.append(new String(buff, 0, length));
-                }
-
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-
-            } finally {
-                if (fileReader != null) {
-                    try {
-                        fileReader.close();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
             }
 
             return stringBuilder.toString();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static boolean write(String path, String content) {
+    public static void write(File file, String content) {
+        write(file.getAbsolutePath(), content);
+    }
+
+    public static void write(String path, String content) {
+        path = fixPathSeparator(path);
         try {
-            createNew(fixPathSeparator(path));
-            FileWriter fileWriter = new FileWriter(fixPathSeparator(path), false);
+            createNew(path);
+            FileWriter fileWriter = new FileWriter(path, false);
             fileWriter.write(content);
             fileWriter.flush();
             fileWriter.close();
-            return true;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
     }
 
     public static boolean isExist(String path) {
-        return new File(path.replace("/", File.separator)).isFile();
+        return new File(fixPathSeparator(path)).isFile();
     }
 
     public static String fixPathSeparator(String path) {
@@ -99,8 +106,21 @@ public class FileUtil {
     }
 
     public static File[] getFilesList(String path) {
-        createDirIfNotExists(path);
-        File file = new File(path);
+        createDirIfNotExists(fixPathSeparator(path));
+        File file = new File(fixPathSeparator(path));
         return file.listFiles();
+    }
+
+    public static void deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String child : children) {
+                deleteDir(new File(dir, child));
+            }
+            dir.delete();
+
+        } else if (dir != null && dir.isFile()) {
+            dir.delete();
+        }
     }
 }

@@ -1,0 +1,15 @@
+{
+  "key": 3,
+  "latestVersion": {
+    "code": 37,
+    "name": "0.4a - Rewritten",
+    "download": {
+      "release": null,
+      "debug": "https://github.com/FazziCLAY/SchoolGuide/releases/download/v37/app-debug_v37.apk"
+    },
+    "changelog": {
+      "default": "NO ENGLISH VERSION",
+      "ru": "Тест центра обновлений, добавлена надпись при запуске\n\nТест цвета $[-#ff0000]fgRED$[-#00ff00]GREEN$[-#0000ff]BLUE\nТест фона $[=#ff0000]bgRED\nStyle $[@bold]BOLD\n$[@reset;-reset;=reset]"
+    }
+  }
+}
