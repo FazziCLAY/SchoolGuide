@@ -55,7 +55,11 @@ public class UpdateCenterActivity extends AppCompatActivity {
         }
         appTrace = app.getAppTrace();
         currentVersionBuildType = SharedConstrains.APPLICATION_BUILD_TYPE;
-        currentLanguage = Locale.getDefault().getLanguage();
+        try {
+            currentLanguage = Locale.getDefault().getLanguage();
+        } catch (Exception e) {
+            appTrace.point("error to set currentLanguage", e);
+        }
 
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -199,11 +203,11 @@ public class UpdateCenterActivity extends AppCompatActivity {
         }
     }
 
-    interface StatusInterface {
+    private interface StatusInterface {
         void run(Status s);
     }
 
-    enum Status {
+    private enum Status {
         ERROR,
         UPDATED,
         OUTDATED;

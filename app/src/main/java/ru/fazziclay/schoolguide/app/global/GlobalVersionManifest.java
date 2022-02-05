@@ -38,6 +38,7 @@ public class GlobalVersionManifest implements GlobalData {
 
         public String getChangelog(String language) {
             if (changelog == null) return null;
+            if (language == null) language = "default";
             if (changelog.containsKey(language)) {
                 return changelog.get(language);
             }
