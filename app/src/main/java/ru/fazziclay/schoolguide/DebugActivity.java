@@ -20,9 +20,9 @@ public class DebugActivity extends AppCompatActivity {
         return new Intent(context, DebugActivity.class);
     }
 
-    private SchoolGuideApp app;
+    /*private*/ SchoolGuideApp app;
     private ActivityDebugBinding binding;
-    private AppTrace appTrace;
+    /*private*/ AppTrace appTrace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
