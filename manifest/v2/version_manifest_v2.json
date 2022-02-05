@@ -1,13 +1,13 @@
 {
-  "key": 4,
+  "key": 5,
   "latestVersion": {
     "code": 39,
     "name": "0.4 - REWRITTEN",
     "download": {
-      "release": ""
+      "release": "https://github.com/FazziCLAY/SchoolGuide/releases/download/v39/schoolguide_v39.apk"
     },
     "changelog": {
-      "default": "FIRST RELEASE USING THIS MANIFEST SYSTEM"
+      "default": "Hello from FazziCLAY!"
     }
   }
 }
