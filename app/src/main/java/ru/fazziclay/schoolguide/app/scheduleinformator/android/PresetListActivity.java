@@ -454,7 +454,6 @@ public class PresetListActivity extends AppCompatActivity {
         });
 
         TextView textView = new TextView(this);
-        textView.setTextColor(isGlobal ? Color.parseColor("#ffff0000") : Color.parseColor("#ffffffff"));
         PopupMenu popupMenu = new PopupMenu(this, textView);
         popupMenu.inflate(R.menu.menu_preset_list_popup);
         popupMenu.setOnMenuItemClickListener(item -> {
@@ -476,11 +475,14 @@ public class PresetListActivity extends AppCompatActivity {
         String textR = preset == null ? "(null)" : preset.getName();
         SpannableString string = new SpannableString(textR);
         if (preset != null) {
-            if (isGlobal) string = ColorUtil.colorize(textR, Color.parseColor("#ffaaaaaa"), Color.TRANSPARENT, Typeface.ITALIC);
+            if (isGlobal) {
+                string = ColorUtil.colorize(textR, Color.parseColor("#ffaaaaaa"), Color.TRANSPARENT, Typeface.ITALIC);
+            } else {
+                string = ColorUtil.colorize(textR, Color.parseColor("#ffffff"), Color.TRANSPARENT, Typeface.NORMAL);
+            }
         }
         textView.setText(string);
         textView.setTextSize(30);
-        //textView.setTextColor(Color.WHITE);
         textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         textView.setOnClickListener(view -> startActivity(PresetEditActivity.getLaunchIntent(this, presetUUID)));
         textView.setOnLongClickListener(v -> {
