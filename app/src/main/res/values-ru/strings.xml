@@ -103,7 +103,7 @@
     <string name="error_appNull_message">Ошибка инициализации!\nСвяжитесь с разработчиком!\nВерсия: %s\nКод: %s\n\nActivity: %s</string>
 
     <string name="scheduleInformator_notification_none_title">Приложение активно</string>
-    <string name="scheduleInformator_notification_none_text">В ближайшее время эвентов нету</string>
+    <string name="scheduleInformator_notification_none_text">В ближайшее время событий нету</string>
     <string name="scheduleInformator_notification_next_title">Отдых! (%s)</string>
     <string name="scheduleInformator_notification_next_text">След.: %s</string>
     <string name="scheduleInformator_notification_now_title">%s! (%s)</string>
