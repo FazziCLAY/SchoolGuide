@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
@@ -53,10 +54,11 @@ public class PresetEditActivity extends AppCompatActivity {
 
     private SchoolGuideApp app;
     private Settings settings;
+    /*private*/ ScheduleInformatorApp informatorApp;
     private ActivityPresetEditBinding binding;
     private DateFormatSymbols dateFormatSymbols;
 
-    private UUID presetUUID;
+    /*private*/ UUID presetUUID;
     private Preset preset;
 
     private boolean isFirstMonday = true;
@@ -65,8 +67,12 @@ public class PresetEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = SchoolGuideApp.get(this);
+        if (app == null) {
+            setContentView(SharedConstrains.getAppNullView(this));
+            return;
+        }
         settings = app.getSettings();
-        ScheduleInformatorApp informatorApp = app.getScheduleInformatorApp();
+        informatorApp = app.getScheduleInformatorApp();
         dateFormatSymbols = new DateFormatSymbols();
 
         isFirstMonday = app.getSettings().isFirstMonday;
@@ -87,7 +93,6 @@ public class PresetEditActivity extends AppCompatActivity {
 
         binding = ActivityPresetEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        //setTitle(String.format("synced=%s deleted=%s", preset.syncedByGlobal, preset.deletedInGlobal));
         setTitle(getString(R.string.presetEdit_activityTitle, preset.getName()));
 
         updateEventList();
