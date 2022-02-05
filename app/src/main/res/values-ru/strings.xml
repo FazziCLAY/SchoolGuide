@@ -116,7 +116,7 @@
     <string name="settings_showEmptyNotification_summary">Когда уведомление пустое, оно не будет изчезать\n(помогает если после изчезновения уведомление больше не появляется)</string>
     <string name="settings_title_presetEdit">Редактор пресета</string>
     <string name="settings_isFirstMonday_title">Первый день недели</string>
-    <string name="settings_isFirstMonday_summaryOn">Понидельник</string>
+    <string name="settings_isFirstMonday_summaryOn">Понедельник</string>
     <string name="settings_isFirstMonday_summaryOff">Воскресенье</string>
     <string name="settings_title_advanced">Дополнительно</string>
     <string name="settings_builtinPresetList_title">Встроенные пресеты</string>
