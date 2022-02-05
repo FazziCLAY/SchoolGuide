@@ -81,7 +81,7 @@ public class PresetEditActivity extends AppCompatActivity {
         preset = informatorApp.getSchedule().getPreset(presetUUID);
 
         if (preset == null) {
-            Toast.makeText(this, "Error: Preset not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.presetEdit_error_presetNotFound, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

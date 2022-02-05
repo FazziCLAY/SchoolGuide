@@ -87,6 +87,7 @@
     <string name="presetEdit_colorScheme_cancel">Cancel</string>
     <string name="presetEdit_addEvent_contentDescription">Add event</string>
     <string name="presetEdit_emptyDay"><![CDATA[<Empty>]]></string>
+    <string name="presetEdit_error_presetNotFound">Error: Preset not found</string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Schedule (NOW)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Now there is something planned</string>
