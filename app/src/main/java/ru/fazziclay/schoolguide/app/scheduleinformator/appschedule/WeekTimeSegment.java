@@ -6,8 +6,8 @@ public class WeekTimeSegment {
     private static final int SECONDS_IN_DAY = 24 * 60 * 60;
     private static final int SECONDS_IN_WEEK = SECONDS_IN_DAY * 7;
 
-    private final int start;
-    private final int end;
+    private int start;
+    private int end;
 
     public WeekTimeSegment(int start, int end) {
         this.start = start;
@@ -46,5 +46,13 @@ public class WeekTimeSegment {
 
     public int getEnd() {
         return end;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
     }
 }
