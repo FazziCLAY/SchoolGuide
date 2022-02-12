@@ -15,7 +15,7 @@
     <string name="updatecenter_outdated_openDownloadLink">Загрузить</string>
     <string name="updatecenter_outdated_downloadError_activityNotFound">Пожалуйста установите web-браузер (например FireFox)</string>
     <string name="updatecenter_outdated_downloadError_urlNull">Ошибка центра обновления: URL-адрес пуст</string>
-    <string name="updatecenter_notification_title">Доступно обновление</string>
+    <string name="updatecenter_notification_title">Доступно обновление SchoolGuide</string>
     <string name="updatecenter_notification_text">Пожалуйста скачайте новое обновление приложения</string>
 
     <string name="mainOptionMenu_openUpdateCenter">Центр обновлений</string>
@@ -34,8 +34,8 @@
     <string name="mathTreningGame_settings_generation">Генерация:</string>
     <string name="mathTreningGame_settings_generation_number1">Число 1:</string>
     <string name="mathTreningGame_settings_generation_number2">Число 2:</string>
-    <string name="mathTreningGame_settings_generation_min">МИНимум</string>
-    <string name="mathTreningGame_settings_generation_max">МАКСимум</string>
+    <string name="mathTreningGame_settings_generation_min">Минимум</string>
+    <string name="mathTreningGame_settings_generation_max">Максимум</string>
     <string name="mathTreningGame_settings_cancel">Отмена</string>
     <string name="mathTreningGame_settings_apply">Применить</string>
     <string name="mathTreningGame_settings_resetScore">Сбросить счёт</string>
@@ -54,11 +54,11 @@
     <string name="presetList_delete">Удалить</string>
     <string name="presetList_delete_cancel">Отмена</string>
     <string name="presetList_copy_nameHint">Введите новое название</string>
-    <string name="presetList_copy_title">Копия пресета \'%s\'</string>
-    <string name="presetList_copy_message">Вы хотите сделать копию пресета?\nВы можете ввести название для нового пресета</string>
+    <string name="presetList_copy_title">Копирование пресета \'%s\'</string>
+    <string name="presetList_copy_message">Вы хотите сделать копию пресета?\nВы можете ввести название для нового пресета ниже</string>
     <string name="presetList_copy">Копировать</string>
     <string name="presetList_copy_cancel">Отмена</string>
-    <string name="presetList_copy_copyName">Копия \'%s\'</string>
+    <string name="presetList_copy_copyPattern">Копия \'%s\'</string>
     <string name="presetList_exception_presetNameEmpty">Название не должно быть пустым</string>
     <string name="presetList_rename_nameHint">Введите новое название</string>
     <string name="presetList_rename_title">Переименованите \'%s\'</string>
@@ -66,7 +66,7 @@
     <string name="presetList_rename">Переименовать</string>
     <string name="presetList_rename_cancel">Отмена</string>
     <string name="presetList_emptyMessage_title">Нету пресетов</string>
-    <string name="presetList_emptyMessage_message">Нажмите кнопку + или включите в настройках приложения встроенное расписание</string>
+    <string name="presetList_emptyMessage_message">Включите в настройках приложения встроенное расписание\nили\nНажмите кнопку + для создания с нуля</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>
@@ -96,8 +96,8 @@
     <string name="notificationChannel_updateCenter_description">Уведомит о новом обновлении приложения</string>
 
     <string name="batteryOptimizationDialog_title">Оптимизация батареи</string>
-    <string name="batteryOptimizationDialog_message">Просим вас отключить оптимизацию батареи для прилжения, так оно лучьше работает</string>
-    <string name="batteryOptimizationDialog_disable">Отключить</string>
+    <string name="batteryOptimizationDialog_message">Просим вас ОТКЛЮЧИТЬ оптимизацию батареи для приложения, так оно лучше работает</string>
+    <string name="batteryOptimizationDialog_disable">ОТКЛЮЧИТЬ</string>
     <string name="batteryOptimizationDialog_cancel">Отмена</string>
 
     <string name="error_appNull_title">ОШИБКА!</string>
@@ -123,6 +123,6 @@
     <string name="settings_builtinPresetList_title">Встроенные пресеты</string>
     <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
     <string name="settings_developerFeatures_title">Возможности разработчика</string>
-    <string name="settings_developerFeatures_summary">Не рекомендуем вам использовать эту функцию!</string>
+    <string name="settings_developerFeatures_summary">Активирует возможности разработчика\n(не рекомендуется для обычного использования)</string>
     <string name="settings_title_shareAppTrace">Поделится трейсом приложения</string>
 </resources>

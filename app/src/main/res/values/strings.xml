@@ -61,7 +61,7 @@
     <string name="presetList_copy_message">Do you want to make a copy of the preset?\nYou can enter a name for the new preset</string>
     <string name="presetList_copy">Copy</string>
     <string name="presetList_copy_cancel">Cancel</string>
-    <string name="presetList_copy_copyName">Copy of \'%s\'</string>
+    <string name="presetList_copy_copyPattern">Copy of \'%s\'</string>
     <string name="presetList_exception_presetNameEmpty">The name should not be empty</string>
     <string name="presetList_rename_nameHint">Enter new name</string>
     <string name="presetList_rename_title">Rename \'%s\'</string>
