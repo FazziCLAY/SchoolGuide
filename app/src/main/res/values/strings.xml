@@ -116,8 +116,10 @@
 
     <string name="settings_activityTitle">SchoolGuide - Settings</string>
     <string name="settings_title_notification">Notification</string>
-    <string name="settings_showEmptyNotification_title">Show empty notification</string>
-    <string name="settings_showEmptyNotification_summary">When the notification is empty, it will not disappear\n(it helps if the notification no longer appears after disappearing)</string>
+    <string name="settings_isNotification_title">Показывать в уведомлении</string> <!-- TODO translate -->
+    <string name="settings_isNotification_summary">Показывать в уведомлении текущий статус по включенному расписанию</string>
+    <string name="settings_showEmptyNotification_title">Hide empty notification</string>
+    <string name="settings_showEmptyNotification_summary">TODO TODO TODO TODO TODO TODO TODO cation no longer appears after disappearing)</string>
     <string name="settings_title_presetEdit">Preset editor</string>
     <string name="settings_isFirstMonday_title">First week day</string>
     <string name="settings_isFirstMonday_summaryOn">Monday</string>

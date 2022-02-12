@@ -18,8 +18,10 @@ import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 public class SettingsActivity extends AppCompatActivity {
     private static final String KEY_IS_SHOW_EMPTY_NOTIFICATION = "isShowEmptyNotification";
     private static final String KEY_IS_FIRST_MONDAY = "isFirstMonday";
+    private static final String KEY_IS_NOTIFICATION= "isNotification";
     private static final String KEY_IS_BUILTIN_PRESET_LIST = "isBuiltinPresetList";
     private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
+    private static final String KEY_NOTIFICATION_STATUS_TIME_BEFORE = "notificationStatusTimeBefore";
 
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -40,9 +42,17 @@ public class SettingsActivity extends AppCompatActivity {
             settings.isBuiltinPresetList = sharedPreferences.getBoolean(key, false);
             AutoGlobalUpdateService.update(app);
         } else if (KEY_IS_SHOW_EMPTY_NOTIFICATION.equals(key)) {
-            settings.isStopForegroundIsNone = !sharedPreferences.getBoolean(key, false);
+            settings.isStopForegroundIsNone = sharedPreferences.getBoolean(key, false);
         } else if (KEY_IS_FIRST_MONDAY.equals(key)) {
             settings.isFirstMonday = sharedPreferences.getBoolean(key, false);
+        } else if (KEY_IS_NOTIFICATION.equals(key)) {
+            settings.isNotification = sharedPreferences.getBoolean(key, false);
+        } else if (KEY_NOTIFICATION_STATUS_TIME_BEFORE.equals(key)) {
+            try {
+                settings.notificationStatusBeforeTime = Integer.parseInt(sharedPreferences.getString(key, "0"));
+            } catch (Exception e) {
+                app.getAppTrace().point("error while parse KEY_NOTIFICATION_STATUS_TIME_BEFORE settings", e);
+            }
         }
         app.saveSettings();
         app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onPresetListUpdate());
@@ -75,10 +85,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit()
-                .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, !settings.isStopForegroundIsNone)
+                .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, settings.isStopForegroundIsNone)
                 .putBoolean(KEY_IS_FIRST_MONDAY, settings.isFirstMonday)
                 .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltinPresetList)
                 .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
+                .putBoolean(KEY_IS_NOTIFICATION, settings.isNotification)
+                .putString(KEY_NOTIFICATION_STATUS_TIME_BEFORE, String.valueOf(settings.notificationStatusBeforeTime))
                 .apply();
 
         preferences.registerOnSharedPreferenceChangeListener(listener);

@@ -6,10 +6,27 @@
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
+            app:key="isNotification"
+            app:title="@string/settings_isNotification_title"
+            app:summary="@string/settings_isNotification_summary"/>
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="isShowEmptyNotification"
+            app:dependency="isNotification"
             app:title="@string/settings_showEmptyNotification_title"
             app:summary="@string/settings_showEmptyNotification_summary"/>
 
+
+        <ListPreference
+            app:iconSpaceReserved="false"
+            app:key="notificationStatusTimeBefore"
+            app:dependency="isNotification"
+            app:title="Показывать статус"
+            app:defaultValue="10800"
+            app:entries="@array/notificationStatusBeforeTime_entries"
+            app:entryValues="@array/notificationStatusBeforeTime_values"
+            app:summary="Показывать статус в уведомлении за N часов до начала следующего события"/>
     </PreferenceCategory>
 
     <PreferenceCategory

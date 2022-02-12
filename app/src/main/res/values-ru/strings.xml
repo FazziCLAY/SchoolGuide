@@ -110,11 +110,12 @@
     <string name="scheduleInformator_notification_now_title">%s! (%s)</string>
     <string name="scheduleInformator_notification_now_next_text">След.: %s</string>
 
-
     <string name="settings_activityTitle">SchoolGuide - Настройки</string>
     <string name="settings_title_notification">Уведомление</string>
-    <string name="settings_showEmptyNotification_title">Показывать пустое уведомление</string>
-    <string name="settings_showEmptyNotification_summary">Когда уведомление пустое, оно не будет изчезать\n(помогает если после изчезновения уведомление больше не появляется)</string>
+    <string name="settings_isNotification_title">Показывать уведомление</string>
+    <string name="settings_isNotification_summary">Показывать в уведомлении текущий статус по включенному расписанию</string>
+    <string name="settings_showEmptyNotification_title">Скрывать уведомление без статуса</string>
+    <string name="settings_showEmptyNotification_summary">Когда уведомление показывает пустоту, оно будет исчезать\n(Отключите, если после исчезновения, уведомление больше не появляется)</string>
     <string name="settings_title_presetEdit">Редактор пресета</string>
     <string name="settings_isFirstMonday_title">Первый день недели</string>
     <string name="settings_isFirstMonday_summaryOn">Понедельник</string>

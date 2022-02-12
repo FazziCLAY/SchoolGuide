@@ -126,7 +126,7 @@ public class ScheduleInformatorApp {
             return 3000;
         }
 
-        if (!isNow && nextEvent.remainsUntilStart() > settings.scheduleNotifyBeforeTime) {
+        if (!isNow && nextEvent.remainsUntilStart() > settings.notificationStatusBeforeTime && 0 < settings.notificationStatusBeforeTime) {
             if (settings.isStopForegroundIsNone) {
                 stopForeground();
             } else {

@@ -1,12 +1,34 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="notificationStatusBeforeTime_entries">
+        <item>1h</item>
+        <item>2h</item>
+        <item>3h</item>
+        <item>4h</item>
+        <item>5h</item>
+        <item>6h</item>
+        <item>7h</item>
+        <item>8h</item>
+        <item>9h</item>
+        <item>10h</item>
+        <item>11h</item>
+        <item>12h</item>
+        <item>Infinity</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="notificationStatusBeforeTime_values">
+        <item>3600</item>
+        <item>7200</item>
+        <item>10800</item>
+        <item>14400</item>
+        <item>18000</item>
+        <item>21600</item>
+        <item>25200</item>
+        <item>28800</item>
+        <item>32400</item>
+        <item>36000</item>
+        <item>39600</item>
+        <item>43200</item>
+        <item>-1</item>
     </string-array>
 </resources>
