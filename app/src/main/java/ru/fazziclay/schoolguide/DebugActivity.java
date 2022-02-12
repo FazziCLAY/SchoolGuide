@@ -49,5 +49,28 @@ public class DebugActivity extends AppCompatActivity {
                 binding.textColorizeResult.setText(ColorUtil.colorize(input, Color.CYAN, Color.RED, Typeface.ITALIC));
             }
         });
+
+        binding.inputFloor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String input = editable.toString();
+                try {
+                    double a = Math.floor(Double.parseDouble(input));
+                    binding.outputFloor.setText(String.valueOf(a));
+                } catch (Exception e) {
+                    binding.outputFloor.setText(e.toString());
+                }
+            }
+        });
     }
 }

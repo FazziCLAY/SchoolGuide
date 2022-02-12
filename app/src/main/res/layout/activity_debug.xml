@@ -13,6 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:text="Colorize text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="#ffffff"
+            tools:ignore="HardcodedText" />
+
         <EditText
             android:id="@+id/textColorizeInput"
             android:layout_width="match_parent"
@@ -29,4 +37,34 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/mathFloor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="i2 = Math.floor(i1)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="#ffffff"
+            tools:ignore="HardcodedText" />
+
+
+        <EditText
+            android:id="@+id/inputFloor"
+            android:hint="i1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <EditText
+            android:id="@+id/outputFloor"
+            android:hint="i2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
 </LinearLayout>
