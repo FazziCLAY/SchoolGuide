@@ -40,7 +40,7 @@ public class SharedConstrains {
     public static final long CRUTCH_INIT_DELAY = 1000 * 6;
 
     /**
-     * Выдаёт каналы которые нужно зарегистрировать
+     * Выдаёт каналы уведомлений которые нужно зарегистрировать
      * @see SchoolGuideApp#registerNotificationChannels(Context)
      * **/
     @RequiresApi(api = Build.VERSION_CODES.O)
