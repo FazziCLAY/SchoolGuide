@@ -1,5 +1,7 @@
 package ru.fazziclay.schoolguide.app.scheduleinformator.appschedule;
 
+import androidx.annotation.NonNull;
+
 import java.util.UUID;
 
 public class CompressedEvent extends WeekTimeSegment {
@@ -23,4 +25,14 @@ public class CompressedEvent extends WeekTimeSegment {
     public UUID getEventInfoUUID() {
         return eventInfoUUID;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "CompressedEvent{" +
+                "name='" + name + '\'' +
+                ", eventInfoUUID=" + eventInfoUUID +
+                '}';
+    }
 }
+
