@@ -16,12 +16,13 @@ import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 
 public class SettingsActivity extends AppCompatActivity {
-    private static final String KEY_IS_SHOW_EMPTY_NOTIFICATION = "isShowEmptyNotification";
+    private static final String KEY_IS_HIDE_EMPTY_NOTIFICATION = "isHideEmptyNotification";
     private static final String KEY_IS_FIRST_MONDAY = "isFirstMonday";
     private static final String KEY_IS_NOTIFICATION= "isNotification";
     private static final String KEY_IS_BUILTIN_PRESET_LIST = "isBuiltinPresetList";
     private static final String KEY_IS_DEVELOPER_FEATURES = "isDeveloperFeatures";
     private static final String KEY_NOTIFICATION_STATUS_TIME_BEFORE = "notificationStatusTimeBefore";
+    private static final String KEY_PRESET_EDIT_NAME_IN_NEXT_LINE = "isPresetEditEventNameInNextLine";
 
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -37,22 +38,24 @@ public class SettingsActivity extends AppCompatActivity {
         if (!contains || settings == null || app == null) return;
 
         if (KEY_IS_DEVELOPER_FEATURES.equals(key)) {
-            settings.isDeveloperFeatures = sharedPreferences.getBoolean(key, false);
+            settings.setDeveloperFeatures(sharedPreferences.getBoolean(key, false));
         } else if (KEY_IS_BUILTIN_PRESET_LIST.equals(key)) {
-            settings.isBuiltinPresetList = sharedPreferences.getBoolean(key, false);
+            settings.setBuiltinPresetList(sharedPreferences.getBoolean(key, false));
             AutoGlobalUpdateService.update(app);
-        } else if (KEY_IS_SHOW_EMPTY_NOTIFICATION.equals(key)) {
-            settings.isStopForegroundIsNone = sharedPreferences.getBoolean(key, false);
+        } else if (KEY_IS_HIDE_EMPTY_NOTIFICATION.equals(key)) {
+            settings.setStopForegroundIsNone(sharedPreferences.getBoolean(key, false));
         } else if (KEY_IS_FIRST_MONDAY.equals(key)) {
-            settings.isFirstMonday = sharedPreferences.getBoolean(key, false);
+            settings.setFirstMonday(sharedPreferences.getBoolean(key, false));
         } else if (KEY_IS_NOTIFICATION.equals(key)) {
-            settings.isNotification = sharedPreferences.getBoolean(key, false);
+            settings.setNotification(sharedPreferences.getBoolean(key, false));
         } else if (KEY_NOTIFICATION_STATUS_TIME_BEFORE.equals(key)) {
             try {
-                settings.notificationStatusBeforeTime = Integer.parseInt(sharedPreferences.getString(key, "0"));
+                settings.setNotificationStatusBeforeTime(Integer.parseInt(sharedPreferences.getString(key, "0")));
             } catch (Exception e) {
                 app.getAppTrace().point("error while parse KEY_NOTIFICATION_STATUS_TIME_BEFORE settings", e);
             }
+        } else if (KEY_PRESET_EDIT_NAME_IN_NEXT_LINE.equals(key)) {
+            settings.setPresetEditEventNameInNextLine(sharedPreferences.getBoolean(key, false));
         }
         app.saveSettings();
         app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onPresetListUpdate());
@@ -85,12 +88,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit()
-                .putBoolean(KEY_IS_SHOW_EMPTY_NOTIFICATION, settings.isStopForegroundIsNone)
-                .putBoolean(KEY_IS_FIRST_MONDAY, settings.isFirstMonday)
-                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltinPresetList)
-                .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures)
-                .putBoolean(KEY_IS_NOTIFICATION, settings.isNotification)
-                .putString(KEY_NOTIFICATION_STATUS_TIME_BEFORE, String.valueOf(settings.notificationStatusBeforeTime))
+                .putBoolean(KEY_IS_HIDE_EMPTY_NOTIFICATION, settings.isStopForegroundIsNone())
+                .putBoolean(KEY_IS_FIRST_MONDAY, settings.isFirstMonday())
+                .putBoolean(KEY_IS_BUILTIN_PRESET_LIST, settings.isBuiltinPresetList())
+                .putBoolean(KEY_IS_DEVELOPER_FEATURES, settings.isDeveloperFeatures())
+                .putBoolean(KEY_IS_NOTIFICATION, settings.isNotification())
+                .putString(KEY_NOTIFICATION_STATUS_TIME_BEFORE, String.valueOf(settings.getNotificationStatusBeforeTime()))
+                .putBoolean(KEY_PRESET_EDIT_NAME_IN_NEXT_LINE, settings.isPresetEditEventNameInNextLine())
                 .apply();
 
         preferences.registerOnSharedPreferenceChangeListener(listener);

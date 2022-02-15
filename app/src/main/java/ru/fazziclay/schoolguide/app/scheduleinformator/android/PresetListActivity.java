@@ -101,7 +101,7 @@ public class PresetListActivity extends AppCompatActivity {
 
             try {
                 if (!activityClosed) {
-                    runOnUiThread(this::updateList);
+                    runOnUiThread(this::setupListAdapter);
                 }
             } catch (Exception ignored) {}
 
@@ -119,7 +119,7 @@ public class PresetListActivity extends AppCompatActivity {
 
         binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
 
-        updateList();
+        setupListAdapter();
     }
 
     @Override
@@ -129,9 +129,9 @@ public class PresetListActivity extends AppCompatActivity {
             showDisableBatteryOptimizationDialog();
         }
         updateOpenUpdateCenterMenuName();
-        updateList();
+        setupListAdapter();
         if (openDebugItem != null) {
-            openDebugItem.setVisible(app.getSettings().isDeveloperFeatures);
+            openDebugItem.setVisible(app.getSettings().isDeveloperFeatures());
         }
     }
 
@@ -235,7 +235,7 @@ public class PresetListActivity extends AppCompatActivity {
                     }
                     presetList.addPreset(new Preset(newName));
                     informatorApp.saveAppSchedule();
-                    updateList();
+                    setupListAdapter();
                 })
                 .setNegativeButton(R.string.presetList_createNew_cancel, null)
                 .create();
@@ -268,7 +268,7 @@ public class PresetListActivity extends AppCompatActivity {
                         presetList.removePreset(uuid);
                     }
                     informatorApp.saveAppSchedule();
-                    updateList();
+                    setupListAdapter();
                 })
                 .setNegativeButton(R.string.presetList_delete_cancel, null)
                 .create();
@@ -315,7 +315,7 @@ public class PresetListActivity extends AppCompatActivity {
                     newPreset.setName(newName);
                     presetList.addPreset(newPreset);
                     informatorApp.saveAppSchedule();
-                    updateList();
+                    setupListAdapter();
                 })
                 .setNegativeButton(R.string.presetList_copy_cancel, null)
                 .create();
@@ -360,7 +360,7 @@ public class PresetListActivity extends AppCompatActivity {
                     }
                     preset.setName(newName);
                     informatorApp.saveAppSchedule();
-                    updateList();
+                    binding.presetList.deferNotifyDataSetChanged();
                 })
                 .setNegativeButton(R.string.presetList_rename_cancel, null)
                 .create();
@@ -371,40 +371,16 @@ public class PresetListActivity extends AppCompatActivity {
     /**
      * Обновить View список
      * **/
-    private void updateList() {
-        UUID[] listPresetsUUIDs = presetList.getPresetsIds();
-        binding.emptyText.setVisibility(View.GONE);
-        if (listPresetsUUIDs.length == 0) {
-            binding.emptyText.setVisibility(View.VISIBLE);
-            binding.presetList.deferNotifyDataSetChanged();
-            binding.presetList.setAdapter(new BaseAdapter() {
-                @Override
-                public int getCount() {
-                    return 0;
-                }
-
-                @Override
-                public Object getItem(int position) {
-                    return null;
-                }
-
-                @Override
-                public long getItemId(int position) {
-                    return position;
-                }
-
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    return null;
-                }
-            });
-            return;
-        }
-        binding.presetList.deferNotifyDataSetChanged();
+    private void setupListAdapter() {
         binding.presetList.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return listPresetsUUIDs.length;
+                if (presetList.getPresetsIds().length > 0) {
+                    binding.emptyText.setVisibility(View.GONE);
+                } else {
+                    binding.emptyText.setVisibility(View.VISIBLE);
+                }
+                return presetList.getPresetsIds().length;
             }
 
             @Override
@@ -419,10 +395,14 @@ public class PresetListActivity extends AppCompatActivity {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                UUID presetUUID = listPresetsUUIDs[position];
+                if (position >= presetList.getPresetsIds().length) {
+                    app.getAppTrace().point("adapter list.len >= position!");
+                    return new Button(PresetListActivity.this);
+                }
+                UUID presetUUID = presetList.getPresetsIds()[position];
                 Preset preset = presetList.getPreset(presetUUID);
                 if (preset == null) {
-                    Log.e("updateList", "get preset is null");
+                    app.getAppTrace().point("adapter get view preset == null!");
                     return new Button(PresetListActivity.this);
                 }
 
@@ -434,7 +414,15 @@ public class PresetListActivity extends AppCompatActivity {
     /**
      * Получить View элемента списка
      * **/
+    private CheckBox previousCheckedCheckbox = null;
     private View getPresetView(UUID presetUUID, Preset preset) {
+        if (presetUUID == null || preset == null) {
+            app.getAppTrace().point("Warning! getPresetView received null args! returned TextView witch text presetList_error_getPresetView_nullArgs\n@presetUUID="+presetUUID + "\n@preset="+preset, new NullPointerException("By fazziclay!"));
+            TextView textView = new TextView(this);
+            textView.setTextColor(Color.RED);
+            textView.setText(R.string.presetList_error_getPresetView_nullArgs);
+            return textView;
+        }
         boolean isGlobal = preset.isSyncedByGlobal();
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -442,15 +430,21 @@ public class PresetListActivity extends AppCompatActivity {
         LinearLayout.LayoutParams checkboxLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         CheckBox checkBox = new CheckBox(this);
         checkBox.setChecked(preset.equals(informatorApp.getSelectedPreset()));
+        if (checkBox.isChecked()) previousCheckedCheckbox = checkBox;
         checkBox.setTextSize(30);
         checkBox.setPadding(5, 5, 10, 5);
         checkBox.setLayoutParams(checkboxLayoutParams);
         checkBox.setOnClickListener(view -> {
+            if (previousCheckedCheckbox == checkBox) {
+                checkBox.setChecked(true);
+                return;
+            }
+            previousCheckedCheckbox.setChecked(false);
+            previousCheckedCheckbox = checkBox;
             view.clearAnimation();
-            checkBox.clearAnimation();
             informatorApp.setSelectedPreset(presetUUID);
             informatorApp.saveAppSchedule();
-            updateList();
+            binding.presetList.deferNotifyDataSetChanged();
         });
 
         TextView textView = new TextView(this);
@@ -466,20 +460,16 @@ public class PresetListActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.rename) {
                 showRenamePresetDialog(presetUUID);
             }
-            informatorApp.saveAppSchedule();
             return true;
         });
         popupMenu.getMenu().findItem(R.id.delete).setEnabled(!isGlobal);
         popupMenu.getMenu().findItem(R.id.rename).setEnabled(!isGlobal);
 
-        String textR = preset == null ? "(null)" : preset.getName();
-        SpannableString string = new SpannableString(textR);
-        if (preset != null) {
-            if (isGlobal) {
-                string = ColorUtil.colorize(textR, Color.parseColor("#ffaaaaaa"), Color.TRANSPARENT, Typeface.ITALIC);
-            } else {
-                string = ColorUtil.colorize(textR, Color.parseColor("#ffffff"), Color.TRANSPARENT, Typeface.NORMAL);
-            }
+        SpannableString string;
+        if (isGlobal) {
+            string = ColorUtil.colorize(preset.getName(), Color.parseColor("#ffaaaaaa"), Color.TRANSPARENT, Typeface.ITALIC);
+        } else {
+            string = ColorUtil.colorize(preset.getName(), Color.parseColor("#ffffff"), Color.TRANSPARENT, Typeface.NORMAL);
         }
         textView.setText(string);
         textView.setTextSize(30);

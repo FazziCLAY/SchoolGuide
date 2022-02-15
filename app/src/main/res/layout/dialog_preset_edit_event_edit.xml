@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="8sp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/dialogBackground">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="500sp"
+        android:layout_height="wrap_content"
+        android:text="@string/presetEdit_eventDialog_title_edit"
+        android:textSize="25sp"
+        android:textColor="#FFFFFF" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4sp"
+        android:padding="5sp"
+        android:background="#2a000000"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:padding="5sp"
+            android:background="#2a000000"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/presetEdit_eventDialog_event_title"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF" />
+
+            <Spinner
+                android:id="@+id/eventInfos"
+                android:layout_width="match_parent"
+                android:layout_height="45sp"/>
+
+            <EditText
+                android:id="@+id/eventInfoName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/presetEdit_eventDialog_event_name_hint"
+                android:importantForAutofill="no" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:padding="5sp"
+            android:background="#2a000000"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/presetEdit_eventDialog_startTime_title"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF" />
+
+            <Spinner
+                android:id="@+id/startTimeWeek"
+                android:layout_width="match_parent"
+                android:layout_height="45sp"/>
+
+            <EditText
+                android:id="@+id/startTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="time"
+                android:importantForAutofill="no" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:padding="5sp"
+            android:background="#2a000000"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/presetEdit_eventDialog_endTime_title"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF" />
+
+            <Spinner
+                android:id="@+id/endTimeWeek"
+                android:layout_width="match_parent"
+                android:layout_height="45sp"/>
+
+            <EditText
+                android:id="@+id/endTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="time"
+                android:importantForAutofill="no" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:padding="1sp"
+            android:orientation="horizontal"
+            android:background="#2a000000">
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/presetEdit_eventDialog_delete"
+                style="?android:attr/buttonStyle" />
+
+            <Button
+                android:id="@+id/deleteApply"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/presetEdit_eventDialog_delete_apply"
+                android:alpha="12"
+                style="?android:attr/buttonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/presetEdit_eventDialog_cancel"
+            style="?android:attr/buttonStyle" />
+
+        <Button
+            android:id="@+id/apply"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/presetEdit_eventDialog_apply"
+            style="?android:attr/buttonStyle" />
+    </LinearLayout>
+</LinearLayout>

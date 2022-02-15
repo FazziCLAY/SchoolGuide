@@ -12,11 +12,10 @@
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isShowEmptyNotification"
+            app:key="isHideEmptyNotification"
             app:dependency="isNotification"
             app:title="@string/settings_showEmptyNotification_title"
             app:summary="@string/settings_showEmptyNotification_summary"/>
-
 
         <ListPreference
             app:iconSpaceReserved="false"
@@ -39,6 +38,13 @@
             app:title="@string/settings_isFirstMonday_title"
             app:summaryOn="@string/settings_isFirstMonday_summaryOn"
             app:summaryOff="@string/settings_isFirstMonday_summaryOff" />
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="isPresetEditEventNameInNextLine"
+            app:title="@string/settings_isPresetEditEventNameInNextLine_title"
+            app:summaryOn="@string/settings_isPresetEditEventNameInNextLine_summaryOn"
+            app:summaryOff="@string/settings_isPresetEditEventNameInNextLine_summaryOff" />
 
     </PreferenceCategory>
 

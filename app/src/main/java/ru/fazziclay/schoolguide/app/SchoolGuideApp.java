@@ -167,6 +167,7 @@ public class SchoolGuideApp {
 
     private final CallbackStorage<PresetListUpdateListener> presetListUpdateCallbacks = new CallbackStorage<>();
 
+    private final PresetEditEventEditDialogStateCache presetEditEventEditDialogStateCache = new PresetEditEventEditDialogStateCache();
 
     public SchoolGuideApp(Context context) {
         if (context == null) {
@@ -374,5 +375,9 @@ public class SchoolGuideApp {
 
     public CallbackStorage<PresetListUpdateListener> getPresetListUpdateCallbacks() {
         return presetListUpdateCallbacks;
+    }
+
+    public PresetEditEventEditDialogStateCache getPresetEditEventEditDialogStateCache() {
+        return presetEditEventEditDialogStateCache;
     }
 }

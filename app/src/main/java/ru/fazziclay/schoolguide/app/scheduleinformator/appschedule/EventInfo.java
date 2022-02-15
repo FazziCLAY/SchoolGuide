@@ -1,7 +1,7 @@
 package ru.fazziclay.schoolguide.app.scheduleinformator.appschedule;
 
 public class EventInfo {
-    private final String name;
+    private String name;
 
     public EventInfo(String name) {
         this.name = name;
@@ -9,5 +9,9 @@ public class EventInfo {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

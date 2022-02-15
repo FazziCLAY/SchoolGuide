@@ -67,6 +67,7 @@
     <string name="presetList_rename_cancel">Отмена</string>
     <string name="presetList_emptyMessage_title">Нету пресетов</string>
     <string name="presetList_emptyMessage_message">Включите в настройках приложения встроенное расписание\nили\nНажмите кнопку + для создания с нуля</string>
+    <string name="presetList_error_getPresetView_nullArgs">Ошибка! null</string>
 
     <string name="presetMenu_copy">Сделать копию</string>
     <string name="presetMenu_delete">Удалить</string>
@@ -85,6 +86,21 @@
     <string name="presetEdit_addEvent_contentDescription">Добавить событие</string>
     <string name="presetEdit_emptyDay"><![CDATA[<Пусто>]]></string>
     <string name="presetEdit_error_presetNotFound">Ошибка: Пресет не найден</string>
+    <string name="presetEdit_eventDialog_title_edit">Редактирование события</string>
+    <string name="presetEdit_eventDialog_title_add">Добавить событие</string>
+    <string name="presetEdit_eventDialog_cancel">Отмена</string>
+    <string name="presetEdit_eventDialog_apply">Применить</string>
+    <string name="presetEdit_eventDialog_eventsInfos_createNew"><![CDATA[<Создать новый>]]></string>
+    <string name="presetEdit_eventDialog_delete">Удалить</string>
+    <string name="presetEdit_eventDialog_delete_cancel">Отмена</string>
+    <string name="presetEdit_eventDialog_delete_apply">ПОДТВЕРДИТЬ УДАЛЕНИЕ!</string>
+    <string name="presetEdit_eventDialog_event_title">Цель события:</string>
+    <string name="presetEdit_eventDialog_event_name_hint">Введите новое название</string>
+    <string name="presetEdit_eventDialog_startTime_title">Время начала:</string>
+    <string name="presetEdit_eventDialog_endTime_title">Время конца:</string>
+    <string name="presetEdit_eventDialog_error_prefix">"Ошибка: "</string>
+    <string name="presetEdit_eventDialog_error_nameEmpty">Новое название события пустое!</string>
+    <string name="presetEdit_eventDialog_error_time">Ошибка формата времени!</string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Расписание (СЕЙЧАС)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Уведомляет когда сейчас есть что то запланированное</string>
@@ -120,6 +136,9 @@
     <string name="settings_isFirstMonday_title">Первый день недели</string>
     <string name="settings_isFirstMonday_summaryOn">Понедельник</string>
     <string name="settings_isFirstMonday_summaryOff">Воскресенье</string>
+    <string name="settings_isPresetEditEventNameInNextLine_title">Название на след. строке</string>
+    <string name="settings_isPresetEditEventNameInNextLine_summaryOn">1 10:00–10:40\n\t\t\tСобытие</string>
+    <string name="settings_isPresetEditEventNameInNextLine_summaryOff">1 10:00–10:40 Событие</string>
     <string name="settings_title_advanced">Дополнительно</string>
     <string name="settings_builtinPresetList_title">Встроенные пресеты</string>
     <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>

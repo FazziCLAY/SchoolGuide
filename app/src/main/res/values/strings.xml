@@ -70,6 +70,7 @@
     <string name="presetList_rename_cancel">Cancel</string>
     <string name="presetList_emptyMessage_title">No presets</string>
     <string name="presetList_emptyMessage_message">Click + button or copy from built-in preset list</string>
+    <string name="presetList_error_getPresetView_nullArgs">Error! null</string>
 
     <string name="presetMenu_copy">Copy</string>
     <string name="presetMenu_delete">Delete</string>
@@ -88,6 +89,21 @@
     <string name="presetEdit_addEvent_contentDescription">Add event</string>
     <string name="presetEdit_emptyDay"><![CDATA[<Empty>]]></string>
     <string name="presetEdit_error_presetNotFound">Error: Preset not found</string>
+    <string name="presetEdit_eventDialog_title_edit">Event Edit</string>
+    <string name="presetEdit_eventDialog_title_add">Add event</string>
+    <string name="presetEdit_eventDialog_cancel">Cancel</string>
+    <string name="presetEdit_eventDialog_apply">Apply</string>
+    <string name="presetEdit_eventDialog_eventsInfos_createNew"><![CDATA[<Create new>]]></string>
+    <string name="presetEdit_eventDialog_delete">Delete</string>
+    <string name="presetEdit_eventDialog_delete_cancel">Cancel</string>
+    <string name="presetEdit_eventDialog_delete_apply">DELETE!</string>
+    <string name="presetEdit_eventDialog_event_title">Event Target:</string>
+    <string name="presetEdit_eventDialog_event_name_hint">Enter new name</string>
+    <string name="presetEdit_eventDialog_startTime_title">Start time:</string>
+    <string name="presetEdit_eventDialog_endTime_title">End time:</string>
+    <string name="presetEdit_eventDialog_error_prefix">"Error: "</string>
+    <string name="presetEdit_eventDialog_error_nameEmpty">New event name is empty!</string>
+    <string name="presetEdit_eventDialog_error_time">Time format error!</string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Schedule (NOW)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Now there is something planned</string>
@@ -116,14 +132,17 @@
 
     <string name="settings_activityTitle">SchoolGuide - Settings</string>
     <string name="settings_title_notification">Notification</string>
-    <string name="settings_isNotification_title">Показывать в уведомлении</string> <!-- TODO translate -->
-    <string name="settings_isNotification_summary">Показывать в уведомлении текущий статус по включенному расписанию</string>
+    <string name="settings_isNotification_title">Show in notification</string>
+    <string name="settings_isNotification_summary">Show status of selected preset in notification</string>
     <string name="settings_showEmptyNotification_title">Hide empty notification</string>
-    <string name="settings_showEmptyNotification_summary">TODO TODO TODO TODO TODO TODO TODO cation no longer appears after disappearing)</string>
+    <string name="settings_showEmptyNotification_summary">Disable if app crash</string>
     <string name="settings_title_presetEdit">Preset editor</string>
     <string name="settings_isFirstMonday_title">First week day</string>
     <string name="settings_isFirstMonday_summaryOn">Monday</string>
     <string name="settings_isFirstMonday_summaryOff">Sunday</string>
+    <string name="settings_isPresetEditEventNameInNextLine_title">Name in next line</string>
+    <string name="settings_isPresetEditEventNameInNextLine_summaryOn">1 10:00–10:40\n\t\t\tEvent</string>
+    <string name="settings_isPresetEditEventNameInNextLine_summaryOff">1 10:00–10:40 Event</string>
     <string name="settings_title_advanced">Advanced</string>
     <string name="settings_builtinPresetList_title">Built-in presets</string>
     <string name="settings_builtinPresetList_summary">Put built-in presets to preset list</string>

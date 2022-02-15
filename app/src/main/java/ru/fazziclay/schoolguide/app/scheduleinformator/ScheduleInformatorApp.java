@@ -66,7 +66,7 @@ public class ScheduleInformatorApp {
                     UUID gPresetUUID = globalBuiltinPresetList.getPresetsIds()[i];
                     Preset gPreset = globalBuiltinPresetList.getPreset(gPresetUUID);
 
-                    if (gPreset == null || !settings.isBuiltinPresetList) {
+                    if (gPreset == null || !settings.isBuiltinPresetList()) {
                         schedule.removePreset(gPresetUUID);
                     } else {
                         gPreset.setSyncedByGlobal(true);
@@ -87,7 +87,7 @@ public class ScheduleInformatorApp {
 
     public void saveAppSchedule() {
         if (schedule == null) {
-            Log.e("saveAppSchedule", "schedule == null!!!!", new NullPointerException("Exception by fazziclay!"));
+            appTrace.point("saveAppSchedule: schedule == null!!!!", new NullPointerException("Exception by fazziclay!"));
         }
         DataUtil.save(scheduleFile, schedule);
     }
@@ -116,7 +116,7 @@ public class ScheduleInformatorApp {
         boolean isNext = nextEvent != null;
 
         if (!isNow && !isNext) {
-            if (settings.isStopForegroundIsNone) {
+            if (settings.isStopForegroundIsNone()) {
                 stopForeground();
             } else {
                 startForeground();
@@ -126,8 +126,8 @@ public class ScheduleInformatorApp {
             return 3000;
         }
 
-        if (!isNow && nextEvent.remainsUntilStart() > settings.notificationStatusBeforeTime && 0 < settings.notificationStatusBeforeTime) {
-            if (settings.isStopForegroundIsNone) {
+        if (!isNow && nextEvent.remainsUntilStart() > settings.getNotificationStatusBeforeTime() && 0 < settings.getNotificationStatusBeforeTime()) {
+            if (settings.isStopForegroundIsNone()) {
                 stopForeground();
             } else {
                 startForeground();
