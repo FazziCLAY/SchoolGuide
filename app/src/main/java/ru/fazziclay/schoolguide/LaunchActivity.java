@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -29,27 +30,25 @@ public class LaunchActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Dark theme only
+        Exception setDarkThemeException = null;
         try {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } catch (Exception e) {
             Log.e("Dark theme", "error to set defaultNightMode to YES", e);
+            setDarkThemeException = e;
         }
-
-        // Loading text
-        TextView loadingTextView = new TextView(this);
-        loadingTextView.setGravity(Gravity.CENTER);
-        loadingTextView.setTextSize(40);
-        loadingTextView.setTextColor(Color.WHITE);
-        loadingTextView.setText(R.string.application_name);
-
-        setContentView(loadingTextView);
 
         // Loading
         SchoolGuideApp app = SchoolGuideApp.get(this);
         if (app == null) {
             setContentView(SharedConstrains.getAppNullView(this));
             return;
+        }
+
+        if (setDarkThemeException != null) {
+            app.getAppTrace().point("Set theme exception!", setDarkThemeException);
         }
 
         startActivity(PresetListActivity.getLaunchIntent(this));

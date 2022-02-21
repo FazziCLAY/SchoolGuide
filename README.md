@@ -1,16 +1,18 @@
 # SchoolGuide
-Приложение для облекчения жизни школьника!
+## Приложение для визуализации распорядка дня.
 
-В приложение можно засунуть своё дневное(школьное) расписание, а оно в замен будет показывать уведомление о том какой урок сейчас, сколько осталось до конца,
-а во время отдыха(перемена) будет показывать сколько осталось до урока и какой урок следующий!
+В приложение можно добавить свой распорядок дня(можно несколько), а приложение будет показывать нужную вам информацию
+* В уведомлении *(опционально)*
+* В виджетах *(опционально)*
+* В самом приложении
 
-Так же приложение будет уведомлять вас, вибрацией, что поможет ориентироватся не доставая телефон из кармана.
+Отображение в уведомлении и виджетах настраивается, но и по умолчанию всё отлично работает!
 
-# Download / Скачать
-* [Latest Version](https://fazziclay.github.io/schoolguide)
+# Скачать (Download)
+* [Project page](https://fazziclay.github.io/schoolguide)
 
-# Screenshots / Скриншоты
-![Screenshot_20211126-115327_SchoolGuide](https://user-images.githubusercontent.com/68351787/143685188-3e015e48-9958-4bde-bb34-2af3d6cf3f18.png)
+# Скриншоты (Screenshots)
+![TODO: перепиши названия](https://user-images.githubusercontent.com/68351787/143685188-3e015e48-9958-4bde-bb34-2af3d6cf3f18.png)
 ![Screenshot_20211126-115331_SchoolGuide](https://user-images.githubusercontent.com/68351787/143685070-c6f011aa-2326-4168-b6e6-178c9958a361.jpg)
 ![Screenshot_20211126-115327_SchoolGuide](https://user-images.githubusercontent.com/68351787/143685073-97b7bc7b-4217-4c07-9c82-168d26ceb634.jpg)
 ![Screenshot_20211126-115345_SchoolGuide](https://user-images.githubusercontent.com/68351787/143685079-1e30edf5-0bd2-4f5b-ae1d-277b0ae16560.jpg)

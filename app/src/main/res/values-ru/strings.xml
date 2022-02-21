@@ -59,7 +59,7 @@
     <string name="presetList_copy">Копировать</string>
     <string name="presetList_copy_cancel">Отмена</string>
     <string name="presetList_copy_copyPattern">Копия \'%s\'</string>
-    <string name="presetList_exception_presetNameEmpty">Название не должно быть пустым</string>
+    <string name="presetList_exception_presetNameEmpty">Название не должно быть пустым!</string>
     <string name="presetList_rename_nameHint">Введите новое название</string>
     <string name="presetList_rename_title">Переименованите \'%s\'</string>
     <string name="presetList_rename_message" />
@@ -86,7 +86,7 @@
     <string name="presetEdit_addEvent_contentDescription">Добавить событие</string>
     <string name="presetEdit_emptyDay"><![CDATA[<Пусто>]]></string>
     <string name="presetEdit_error_presetNotFound">Ошибка: Пресет не найден</string>
-    <string name="presetEdit_eventDialog_title_edit">Редактирование события</string>
+    <string name="presetEdit_eventDialog_title_edit">Редактировать событие</string>
     <string name="presetEdit_eventDialog_title_add">Добавить событие</string>
     <string name="presetEdit_eventDialog_cancel">Отмена</string>
     <string name="presetEdit_eventDialog_apply">Применить</string>
@@ -100,14 +100,14 @@
     <string name="presetEdit_eventDialog_endTime_title">Время конца:</string>
     <string name="presetEdit_eventDialog_error_prefix">"Ошибка: "</string>
     <string name="presetEdit_eventDialog_error_nameEmpty">Новое название события пустое!</string>
-    <string name="presetEdit_eventDialog_error_time">Ошибка формата времени!</string>
+    <string name="presetEdit_eventDialog_error_time">Время указано не верно!</string>
 
     <string name="notificationChannel_scheduleInformator_scheduleNow_name">Расписание (СЕЙЧАС)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNow_description">Уведомляет когда сейчас есть что то запланированное</string>
     <string name="notificationChannel_scheduleInformator_scheduleNext_name">Расписание (СЛЕД.)</string>
     <string name="notificationChannel_scheduleInformator_scheduleNext_description">Уведомляет когда сейчас нету ничего запланированного, но скоро оно появится</string>
     <string name="notificationChannel_scheduleInformator_scheduleNone_name">Расписание (ПУСТО)</string>
-    <string name="notificationChannel_scheduleInformator_scheduleNone_description">Уведомляет когда сейчас нету ничего, и в ближайшее настроенное время ничего и не будет</string>
+    <string name="notificationChannel_scheduleInformator_scheduleNone_description">Уведомляет когда сейчас нету ничего (когда статус пуст)</string>
     <string name="notificationChannel_updateCenter_name">Центр обновлений</string>
     <string name="notificationChannel_updateCenter_description">Уведомит о новом обновлении приложения</string>
 
@@ -137,12 +137,12 @@
     <string name="settings_isFirstMonday_summaryOn">Понедельник</string>
     <string name="settings_isFirstMonday_summaryOff">Воскресенье</string>
     <string name="settings_isPresetEditEventNameInNextLine_title">Название на след. строке</string>
-    <string name="settings_isPresetEditEventNameInNextLine_summaryOn">1 10:00–10:40\n\t\t\tСобытие</string>
-    <string name="settings_isPresetEditEventNameInNextLine_summaryOff">1 10:00–10:40 Событие</string>
+    <string name="settings_isPresetEditEventNameInNextLine_summaryOn">Пример:\n1 10:00–10:40\n\t\t\tСобытие</string>
+    <string name="settings_isPresetEditEventNameInNextLine_summaryOff">Пример:\n1 10:00–10:40 Событие</string>
     <string name="settings_title_advanced">Дополнительно</string>
     <string name="settings_builtinPresetList_title">Встроенные пресеты</string>
-    <string name="settings_builtinPresetList_summary">Поместить встроенный список пресетов в список пресетов приложения</string>
+    <string name="settings_builtinPresetList_summary">Отображать встроенный список пресетов в списке (их названия будут серыми)</string>
     <string name="settings_developerFeatures_title">Возможности разработчика</string>
     <string name="settings_developerFeatures_summary">Активирует возможности разработчика\n(не рекомендуется для обычного использования)</string>
-    <string name="settings_title_shareAppTrace">Поделится трейсом приложения</string>
+    <string name="settings_title_shareAppTrace">Поделиться трейсом приложения</string>
 </resources>

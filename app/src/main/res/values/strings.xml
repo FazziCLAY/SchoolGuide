@@ -3,6 +3,8 @@
     <string name="application_name" translatable="false">SchoolGuide</string>
     <string name="application_description" translatable="false">Help schoolboys and schoolgirls!</string>
 
+    <string name="application_name_dev" translatable="false">SchoolGuide - DEV</string>
+
     <!-- Rewritten v36 -->
     <string name="updatecenter_activityTitle">SchoolGuide - Update Center</string>
     <string name="updatecenter_loading">Loading</string>
