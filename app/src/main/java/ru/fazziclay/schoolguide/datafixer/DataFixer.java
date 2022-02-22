@@ -40,7 +40,7 @@ public class DataFixer {
         this.fixSchemes = fixSchemes;
         this.gson = new Gson();
         this.versionFile = new File(context.getFilesDir(), "version.json");
-        boolean isPre36 = (context.getExternalFilesDir("").list().length > 0 && !versionFile.exists());
+        boolean isPre36 = (context.getExternalFilesDir("").length() > 0 && !versionFile.exists());
         try {
             this.version = gson.fromJson(
                     FileUtil.read(versionFile, "{}"),

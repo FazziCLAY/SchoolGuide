@@ -8,10 +8,11 @@ android {
 
     defaultConfig {
         applicationId "ru.fazziclay.android.schoolguide.dev"
-        minSdkVersion 16
-        targetSdkVersion 32
-        versionCode 41
         versionName "0.8.2 DEV - REWRITTEN"
+        versionCode 41
+        targetSdkVersion 32
+        minSdkVersion 16
+        proguardFiles
     }
 
     buildTypes {
@@ -32,8 +33,8 @@ android {
 }
 
 dependencies {
+    //implementation 'com.github.martin-stone:hsv-alpha-color-picker-android:3.0.1' // Color picker (not used)
     implementation 'com.google.code.gson:gson:2.8.8'
-    //implementation 'com.github.martin-stone:hsv-alpha-color-picker-android:3.0.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'com.google.android.material:material:1.5.0'

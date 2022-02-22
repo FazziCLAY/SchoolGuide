@@ -1,46 +1,55 @@
 package ru.fazziclay.schoolguide.callback;
 
+/**
+ * Статус выполнения Callback'а
+ * @see CallbackStorage
+ * **/
 public class Status {
-    private final boolean deleteCallback;
+    private final boolean isDeleteCallback;
     private final boolean isChangeImportance;
-    private final CallbackImportance changeImportance;
+    private final CallbackImportance newImportance;
 
-    private Status(boolean deleteCallback, boolean isChangeImportance, CallbackImportance changeImportance) {
-        this.deleteCallback = deleteCallback;
+    private Status(boolean isDeleteCallback, boolean isChangeImportance, CallbackImportance newImportance) {
+        this.isDeleteCallback = isDeleteCallback;
         this.isChangeImportance = isChangeImportance;
-        this.changeImportance = changeImportance;
+        this.newImportance = newImportance;
     }
 
     public boolean isDeleteCallback() {
-        return deleteCallback;
+        return isDeleteCallback;
     }
 
     public boolean isChangeImportance() {
         return isChangeImportance;
     }
 
-    public CallbackImportance getChangeImportance() {
-        return changeImportance;
+    public CallbackImportance getNewImportance() {
+        return newImportance;
     }
 
     public static class Builder {
-        private boolean deleteCallback;
+        private boolean isDeleteCallback;
         private boolean isChangeImportance;
-        private CallbackImportance changeImportance;
+        private CallbackImportance newImportance;
 
         public Builder setDeleteCallback(boolean deleteCallback) {
-            this.deleteCallback = deleteCallback;
+            this.isDeleteCallback = deleteCallback;
             return this;
         }
 
+        /**
+         * На что после выполнения изменить Importance этого Callback'а
+         * Если null то не изменять
+         * Если не вызывать то не вызывать
+         * **/
         public Builder setNewImportance(CallbackImportance importance) {
             this.isChangeImportance = importance != null;
-            this.changeImportance = importance;
+            this.newImportance = importance;
             return this;
         }
 
         public Status build() {
-            return new Status(deleteCallback, isChangeImportance, changeImportance);
+            return new Status(isDeleteCallback, isChangeImportance, newImportance);
         }
     }
 }

@@ -6,7 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 public class AppTrace {
@@ -93,7 +93,7 @@ public class AppTrace {
                 nanos);
         points.add(point);
         try {
-            Log.d("POINT", point.format(0));
+            Log.d("POINT", point.format(-1));
         } catch (Exception e) {
             if (!pointDebugLogException) {
                 pointDebugLogException = true;
@@ -102,7 +102,8 @@ public class AppTrace {
         }
         try {
             if (SchoolGuideApp.isInstanceAvailable()) {
-                SchoolGuideApp.get().saveAppTrace();
+                SchoolGuideApp app = SchoolGuideApp.get();
+                if (app != null) app.saveAppTrace();
             }
         } catch (Exception ignored) {}
     }

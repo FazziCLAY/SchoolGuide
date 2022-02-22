@@ -17,56 +17,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
 
-        <service
-            android:name=".app.global.AutoGlobalUpdateService"
-            android:enabled="true"
-            android:exported="false" />
-
         <activity
-            android:name=".LaunchActivity"
+            android:name=".app.LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".SettingsActivity"
+            android:name=".app.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".app.scheduleinformator.android.PresetListActivity"
             android:exported="false" />
+
         <activity
             android:name=".app.scheduleinformator.android.PresetEditActivity"
             android:exported="false" />
+
         <activity
             android:name=".app.multiplicationtrening.MathTreningGameActivity"
             android:exported="false" />
+
         <activity
-            android:name=".UpdateCenterActivity"
+            android:name=".app.UpdateCenterActivity"
             android:exported="false" />
+
         <activity
-            android:name=".DebugActivity"
+            android:name=".app.DebugActivity"
             android:exported="false" />
 
         <service
             android:name=".app.SchoolGuideService"
             android:enabled="true"
             android:exported="false" />
+
         <service
             android:name=".app.scheduleinformator.InformatorService"
             android:enabled="true"
             android:exported="false" />
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/providers_paths" />
-        </provider>
     </application>
-
 </manifest>

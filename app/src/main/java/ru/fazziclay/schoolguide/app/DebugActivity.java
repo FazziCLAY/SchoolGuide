@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.app;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.text.TextWatcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.databinding.ActivityDebugBinding;
 import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.ColorUtil;
@@ -71,6 +70,12 @@ public class DebugActivity extends AppCompatActivity {
                     binding.outputFloor.setText(e.toString());
                 }
             }
+        });
+
+
+        binding.debugCallbackSend.setOnClickListener(ignore -> {
+            String data = binding.debugCallbackData.getText().toString();
+            app.getDebugSignalListenerCallbacks().run(((callbackStorage, callback) -> callback.onDebugSignal(data)));
         });
     }
 }

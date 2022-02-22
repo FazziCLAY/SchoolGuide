@@ -12,6 +12,7 @@
     <string name="updatecenter_error_unknownHost_text">$[-#ff2222]No $[@bold]network$[@reset] connection!</string>
     <string name="updatecenter_error_unknownHost_reload">Reload</string>
     <string name="updatecenter_error_fileNotFound_text">"$[@bold;-#ff0000]The service is closed :($[@reset;-reset]\nThe app couldn't find the latest version, $[@bold;-#dddddd]we recommend going to the project page:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
+    <string name="updatecenter_error_incompatibleVersion_text">"$[@bold;-#ff0000]Update center unavailable in debug-build app :($[@reset;-reset]\n$[@bold;-#dddddd]We recommend going to the project page:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
     <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Unknown error.$[@reset;-reset]\nThe application could not recognize the error, most likely there are technical problems now\nError:$[=#080607;-#cc0000;=#000000] %s</string>
     <string name="updatecenter_updated_title">Updated</string>
     <string name="updatecenter_updated_text">$[-#a0a0ff]The $[@bold;-#7070ff]latest version$[@reset;-#a0a0ff] is currently installed</string>
@@ -133,22 +134,25 @@
 
 
     <string name="settings_activityTitle">SchoolGuide - Settings</string>
-    <string name="settings_title_notification">Notification</string>
-    <string name="settings_isNotification_title">Show in notification</string>
-    <string name="settings_isNotification_summary">Show status of selected preset in notification</string>
-    <string name="settings_showEmptyNotification_title">Hide empty notification</string>
-    <string name="settings_showEmptyNotification_summary">Disable if app crash</string>
-    <string name="settings_title_presetEdit">Preset editor</string>
-    <string name="settings_isFirstMonday_title">First week day</string>
-    <string name="settings_isFirstMonday_summaryOn">Monday</string>
-    <string name="settings_isFirstMonday_summaryOff">Sunday</string>
-    <string name="settings_isPresetEditEventNameInNextLine_title">Name in next line</string>
-    <string name="settings_isPresetEditEventNameInNextLine_summaryOn">1 10:00–10:40\n\t\t\tEvent</string>
-    <string name="settings_isPresetEditEventNameInNextLine_summaryOff">1 10:00–10:40 Event</string>
-    <string name="settings_title_advanced">Advanced</string>
-    <string name="settings_builtinPresetList_title">Built-in presets</string>
-    <string name="settings_builtinPresetList_summary">Put built-in presets to preset list</string>
-    <string name="settings_developerFeatures_title">Developer features</string>
-    <string name="settings_developerFeatures_summary" />
-    <string name="settings_title_shareAppTrace">Share app trace</string>
+    <string name="settings_notification_categoryTitle">Notification</string>
+    <string name="settings_notification_isNotification_title">Show in notification</string>
+    <string name="settings_notification_isNotification_summary">Show status of selected preset in notification</string>
+    <string name="settings_notification_isHideEmptyNotification_title">Hide empty notification</string>
+    <string name="settings_notification_isHideEmptyNotification_summary">Disable if app crash</string>
+    <string name="settings_notification_infoBeforeTime_title">Show information</string>
+    <string name="settings_notification_infoBeforeTime_summary">Show info in notification before N hours units start event</string>
+    <string name="settings_presetEditor_categoryTitle">Preset editor</string>
+    <string name="settings_presetEditor_isFirstMonday_title">First week day</string>
+    <string name="settings_presetEditor_isFirstMonday_summaryOn">Monday</string>
+    <string name="settings_presetEditor_isFirstMonday_summaryOff">Sunday</string>
+    <string name="settings_presetEditor_eventNameInNextLine_title">Name in next line</string>
+    <string name="settings_presetEditor_eventNameInNextLine_summaryOn">Example:\n1 10:00–10:40\n\t\t\tEvent</string>
+    <string name="settings_presetEditor_eventNameInNextLine_summaryOff">Example:\n1 10:00–10:40 Event</string>
+    <string name="settings_advanced_categoryTitle">Advanced</string>
+    <string name="settings_advanced_builtinPresetList_title">Built-in presets</string>
+    <string name="settings_advanced_builtinPresetList_summary">Put built-in presets to preset list</string>
+    <string name="settings_advanced_developerFeatures_title">Developer features</string>
+    <string name="settings_advanced_developerFeatures_summary" />
+    <string name="settings_advanced_shareAppTrace_title">Share debug info</string>
+    <string name="settings_advanced_shareAppTrace_summary">Share AppTrace logs to developer!</string>
 </resources>

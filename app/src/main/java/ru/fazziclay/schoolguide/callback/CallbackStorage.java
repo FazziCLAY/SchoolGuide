@@ -3,16 +3,19 @@ package ru.fazziclay.schoolguide.callback;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Хранилище Callback'ов
+ * **/
 public class CallbackStorage <T extends Callback> {
     private final List<CallbackInternal> callbacks = new ArrayList<>();
 
     public void run(RunCallbackInterface<T> runner) {
         int importanceI = 0;
-        CallbackImportance[] importances = CallbackImportance.values();
+        final CallbackImportance[] importances = CallbackImportance.values();
         while (importanceI < importances.length) {
             CallbackImportance useCallbackImportance = importances[importanceI];
 
-            run(runner, useCallbackImportance.getI());
+            run(runner, useCallbackImportance.getQueuePosition());
 
             importanceI++;
         }
@@ -22,15 +25,16 @@ public class CallbackStorage <T extends Callback> {
         int i = 0;
         while (i < callbacks.size()) {
             CallbackInternal internal = callbacks.get(i);
-            if (importance != internal.importance.getI()) {
+            if (importance != internal.importance.getQueuePosition()) {
                 i++;
                 continue;
             }
 
             Status status = runner.run(this, internal.callback);
-            if (status.isDeleteCallback()) deleteCallback(internal);
-            if (status.isChangeImportance()) internal.importance = status.getChangeImportance();
-
+            if (status != null) {
+                if (status.isDeleteCallback()) deleteCallback(internal);
+                if (status.isChangeImportance()) internal.importance = status.getNewImportance();
+            }
             i++;
         }
     }
@@ -50,6 +54,15 @@ public class CallbackStorage <T extends Callback> {
 
     public void addCallback(CallbackImportance importance, T callback) {
         callbacks.add(new CallbackInternal(callback, importance));
+    }
+
+    public void changeImportance(T callback, CallbackImportance importance) {
+        int i = 0;
+        while (i < callbacks.size()) {
+            CallbackInternal internal = callbacks.get(i);
+            if (internal.callback == callback) internal.importance = importance;
+            i++;
+        }
     }
 
     public interface RunCallbackInterface <T extends Callback> {

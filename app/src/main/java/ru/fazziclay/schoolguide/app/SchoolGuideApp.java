@@ -21,12 +21,14 @@ import java.io.File;
 import java.util.List;
 
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.SharedConstrains;
-import ru.fazziclay.schoolguide.UpdateCenterActivity;
+import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalManager;
+import ru.fazziclay.schoolguide.app.listener.OnDebugSignalListener;
 import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
-import ru.fazziclay.schoolguide.app.global.AutoGlobalUpdateService;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
+import ru.fazziclay.schoolguide.app.listener.OnDeveloperFeaturesStateChangeListener;
+import ru.fazziclay.schoolguide.app.listener.OnUserChangeSettingsListener;
 import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
@@ -142,32 +144,20 @@ public class SchoolGuideApp {
      * **/
     private boolean isUpdateAvailable = false;
 
-
-    /**
-     * Последий манифест версий, обновляется автоматически
-     * @see AutoGlobalUpdateService
-     * @see ru.fazziclay.schoolguide.app.global.GlobalManager
-     * @see GlobalVersionManifest
-     * **/
-    private GlobalVersionManifest globalVersionManifest;
-
-    /**
-     * Последний встроенный список расписаний
-     * @see AutoGlobalUpdateService
-     * @see ru.fazziclay.schoolguide.app.global.GlobalManager
-     * @see GlobalBuiltinPresetList
-     * **/
-    private GlobalBuiltinPresetList globalBuiltinPresetList;
-
     /**
      * Callback хранилеще для авто обновлений глобальных данных
-     * @see AutoGlobalUpdateService
      * **/
     private final CallbackStorage<GlobalUpdateListener> globalUpdateCallbacks = new CallbackStorage<>();
 
     private final CallbackStorage<PresetListUpdateListener> presetListUpdateCallbacks = new CallbackStorage<>();
 
     private final PresetEditEventEditDialogStateCache presetEditEventEditDialogStateCache = new PresetEditEventEditDialogStateCache();
+
+    private final CallbackStorage<OnUserChangeSettingsListener> onUserChangeSettingsCallbacks = new CallbackStorage<>();
+
+    private final CallbackStorage<OnDeveloperFeaturesStateChangeListener> onDeveloperFeaturesStateChangeListenerCallbacks = new CallbackStorage<>();
+
+    private final CallbackStorage<OnDebugSignalListener> debugSignalListenerCallbacks = new CallbackStorage<>();
 
     public SchoolGuideApp(Context context) {
         if (context == null) {
@@ -182,7 +172,7 @@ public class SchoolGuideApp {
             SchoolGuideApp.registerNotificationChannels(androidContext);
         }
 
-        // До этого этапа мы не работали с данными, Он исправил все файлы старых версий и сделает их читаемыми для новой
+        // До этого этапа мы не работали с данными, Он исправил все файлы старых версий и сделает их читаемыми для текущей
         DataFixer dataFixer = new DataFixer(appTrace, androidContext, SharedConstrains.APPLICATION_VERSION_CODE, SharedConstrains.DATA_FIXER_SCHEMES);
         dataFixer.fixIfAvailable();
 
@@ -191,19 +181,19 @@ public class SchoolGuideApp {
 
         settingsFile = new File(filesDir, "settings.json");
         settings = DataUtil.load(settingsFile, Settings.class);
-
         saveSettings();
 
         registerCallbacks();
 
+        pendingUpdateGlobal(true);
+
         androidContext.startService(new Intent(androidContext, SchoolGuideService.class));
-        androidContext.startService(new Intent(androidContext, AutoGlobalUpdateService.class));
 
         scheduleInformatorApp = new ScheduleInformatorApp(this);
     }
 
     private void registerCallbacks() {
-        globalUpdateCallbacks.addCallback(CallbackImportance.MAX, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+        getGlobalUpdateCallbacks().addCallback(CallbackImportance.MAX, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
             setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.latestVersion != null && globalVersionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
 
             return new Status.Builder()
@@ -211,7 +201,7 @@ public class SchoolGuideApp {
                     .build();
         });
 
-        globalUpdateCallbacks.addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+        getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
             if (isUpdateAvailable) {
                 try {
                     sendUpdateNotify();
@@ -220,6 +210,18 @@ public class SchoolGuideApp {
                 }
             }
             
+            return new Status.Builder()
+                    .setDeleteCallback(false)
+                    .build();
+        });
+
+        getOnUserChangeSettingsCallbacks().addCallback(CallbackImportance.DEFAULT, preferenceKey -> {
+            if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_BUILTIN_PRESET_LIST)) {
+                pendingUpdateGlobal();
+            }
+            if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_DEVELOPER_FEATURES)) {
+                getOnDeveloperFeaturesStateChangeListenerCallbacks().run(((callbackStorage, callback) -> callback.onDeveloperFeaturesChange(settings.isDeveloperFeatures())));
+            }
             return new Status.Builder()
                     .setDeleteCallback(false)
                     .build();
@@ -280,6 +282,32 @@ public class SchoolGuideApp {
             FileUtil.write(new File(cacheDir, "latest_app_trace.txt"), appTrace.getText());
         } catch (Exception e) {
             Log.e("saveAppTrace", "error while saving appTrace", e);
+        }
+    }
+
+
+    public void pendingUpdateGlobal() {
+        pendingUpdateGlobal(false);
+    }
+
+    public void pendingUpdateGlobal(boolean startupMode) {
+        GlobalManager.GlobalManagerInterface g = new GlobalManager.GlobalManagerInterface() {
+            @Override
+            public void failed(Exception exception) {
+                Log.e("NO_CRITICAL", "GlobalManager.get(...) return failed!", exception);
+            }
+
+            @Override
+            public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
+                getGlobalUpdateCallbacks().run((callbackStorage, callback) -> callback.onGlobalUpdate(keys, versionManifest, builtinSchedule));
+            }
+        };
+
+        if (startupMode) {
+            GlobalManager.getInCurrentThread(this, false, g);
+
+        } else {
+            GlobalManager.getInExternalThread(this, g);
         }
     }
 
@@ -353,22 +381,6 @@ public class SchoolGuideApp {
         isUpdateAvailable = updateAvailable;
     }
 
-    public GlobalVersionManifest getGlobalVersionManifest() {
-        return globalVersionManifest;
-    }
-
-    public void setGlobalVersionManifest(GlobalVersionManifest globalVersionManifest) {
-        this.globalVersionManifest = globalVersionManifest;
-    }
-
-    public GlobalBuiltinPresetList getGlobalBuiltinPresetList() {
-        return globalBuiltinPresetList;
-    }
-
-    public void setGlobalBuiltinPresetList(GlobalBuiltinPresetList globalBuiltinPresetList) {
-        this.globalBuiltinPresetList = globalBuiltinPresetList;
-    }
-
     public CallbackStorage<GlobalUpdateListener> getGlobalUpdateCallbacks() {
         return globalUpdateCallbacks;
     }
@@ -379,5 +391,17 @@ public class SchoolGuideApp {
 
     public PresetEditEventEditDialogStateCache getPresetEditEventEditDialogStateCache() {
         return presetEditEventEditDialogStateCache;
+    }
+
+    public CallbackStorage<OnUserChangeSettingsListener> getOnUserChangeSettingsCallbacks() {
+        return onUserChangeSettingsCallbacks;
+    }
+
+    public CallbackStorage<OnDeveloperFeaturesStateChangeListener> getOnDeveloperFeaturesStateChangeListenerCallbacks() {
+        return onDeveloperFeaturesStateChangeListenerCallbacks;
+    }
+
+    public CallbackStorage<OnDebugSignalListener> getDebugSignalListenerCallbacks() {
+        return debugSignalListenerCallbacks;
     }
 }

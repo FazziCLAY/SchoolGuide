@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.SharedConstrains;
+import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.PresetEditEventEditDialogStateCache;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
@@ -84,7 +84,7 @@ public class PresetEditActivity extends AppCompatActivity {
         isFirstMonday = app.getSettings().isFirstMonday();
 
         presetUUID = UUID.fromString(getIntent().getExtras().getString(EXTRA_PRESET_UUID));
-        preset = informatorApp.getSchedule().getPreset(presetUUID);
+        preset = informatorApp.getAppPresetList().getPreset(presetUUID);
 
         if (preset == null) {
             Toast.makeText(this, R.string.presetEdit_error_presetNotFound, Toast.LENGTH_SHORT).show();

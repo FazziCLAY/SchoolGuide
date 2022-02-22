@@ -67,4 +67,35 @@
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/debugCallback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="Debug callback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="#ffffff"
+            tools:ignore="HardcodedText" />
+
+
+        <EditText
+            android:id="@+id/debugCallbackData"
+            android:hint="data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/debugCallbackSend"
+            android:text="SEND"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
 </LinearLayout>

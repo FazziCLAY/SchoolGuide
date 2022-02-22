@@ -33,13 +33,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.UUID;
 
-import ru.fazziclay.schoolguide.DebugActivity;
 import ru.fazziclay.schoolguide.R;
-import ru.fazziclay.schoolguide.SettingsActivity;
-import ru.fazziclay.schoolguide.SharedConstrains;
-import ru.fazziclay.schoolguide.UpdateCenterActivity;
-import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.app.DebugActivity;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.app.SettingsActivity;
+import ru.fazziclay.schoolguide.app.SharedConstrains;
+import ru.fazziclay.schoolguide.app.UpdateCenterActivity;
+import ru.fazziclay.schoolguide.app.listener.OnDebugSignalListener;
+import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.app.listener.OnUserChangeSettingsListener;
 import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
@@ -62,13 +64,19 @@ public class PresetListActivity extends AppCompatActivity {
     private SchoolGuideApp app;
     private ScheduleInformatorApp informatorApp;
     private ActivityPresetListBinding binding;
+
+    // Menu
     private MenuItem openUpdateCenterMenuItem;
     private MenuItem openDebugItem;
 
+    // target (always AppPresetList from informatorApp)
     private PresetList presetList;
 
-    private GlobalUpdateListener globalUpdateListener;
+    // Callbacks
     private PresetListUpdateListener presetListUpdateListener;
+    private OnDebugSignalListener onDebugSignalListener;
+    private OnUserChangeSettingsListener onUserChangeSettingsListener;
+    private GlobalUpdateListener globalUpdateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,46 +87,13 @@ public class PresetListActivity extends AppCompatActivity {
             return;
         }
         informatorApp = app.getScheduleInformatorApp();
-        presetList = informatorApp.getSchedule();
-
-        globalUpdateListener = (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
-            boolean activityClosed = isFinishing();
-
-            try {
-                if (!activityClosed) {
-                    runOnUiThread(this::updateOpenUpdateCenterMenuName);
-                }
-            } catch (Exception ignored) {}
-
-
-            return new Status.Builder()
-                    .setDeleteCallback(activityClosed)
-                    .build();
-        };
-
-        presetListUpdateListener = () -> {
-            boolean activityClosed = isFinishing();
-
-            try {
-                if (!activityClosed) {
-                    runOnUiThread(this::setupListAdapter);
-                }
-            } catch (Exception ignored) {}
-
-
-            return new Status.Builder()
-                    .setDeleteCallback(activityClosed)
-                    .build();
-        };
+        presetList = informatorApp.getAppPresetList();
 
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.LOW, globalUpdateListener);
-        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.LOW, presetListUpdateListener);
-
         binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
 
+        registerListeners();
         setupListAdapter();
     }
 
@@ -128,16 +103,17 @@ public class PresetListActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             showDisableBatteryOptimizationDialog();
         }
-        updateOpenUpdateCenterMenuName();
-        setupListAdapter();
-        if (openDebugItem != null) {
-            openDebugItem.setVisible(app.getSettings().isDeveloperFeatures());
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        // Unbind callbacks
+        app.getPresetListUpdateCallbacks().deleteCallback(presetListUpdateListener);
+        app.getDebugSignalListenerCallbacks().deleteCallback(onDebugSignalListener);
+        app.getOnUserChangeSettingsCallbacks().deleteCallback(onUserChangeSettingsListener);
+        app.getGlobalUpdateCallbacks().deleteCallback(globalUpdateListener);
     }
 
     @Override
@@ -146,7 +122,63 @@ public class PresetListActivity extends AppCompatActivity {
         openUpdateCenterMenuItem = menu.findItem(R.id.openUpdateCenterItem);
         openDebugItem = menu.findItem(R.id.openDebugItem);
         updateOpenUpdateCenterMenuName();
+        if (openDebugItem != null) {
+            openDebugItem.setVisible(app.getSettings().isDeveloperFeatures());
+        }
         return true;
+    }
+
+    private void registerListeners() {
+        presetListUpdateListener = () -> {
+            try {
+                if (!isFinishing()) {
+                    runOnUiThread(() -> {
+                        try {
+                            setupListAdapter();
+                        } catch (Exception ignored) {}
+                    });
+                }
+            } catch (Exception ignored) {}
+
+            return new Status.Builder()
+                    .setDeleteCallback(isFinishing())
+                    .build();
+        };
+        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, presetListUpdateListener);
+
+
+        onDebugSignalListener = data -> {
+            runOnUiThread(() -> {
+                TextView textView = new TextView(this);
+                textView.setText(String.format("DEBUG_SIGNAL: %s", data.toString()));
+                binding.notificationContainer.addView(textView);
+            });
+            runOnUiThread(() -> Toast.makeText(this, "Debug signal! " + data.toString(), Toast.LENGTH_SHORT).show());
+            return new Status.Builder()
+                    .build();
+        };
+        app.getDebugSignalListenerCallbacks().addCallback(CallbackImportance.DEFAULT, onDebugSignalListener);
+
+
+        onUserChangeSettingsListener = (preferenceKey) -> {
+            if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_DEVELOPER_FEATURES)) {
+                runOnUiThread(() -> {
+                    if (openDebugItem != null) {
+                        openDebugItem.setVisible(app.getSettings().isDeveloperFeatures());
+                    }
+                });
+            }
+            return new Status.Builder()
+                    .build();
+        };
+        app.getOnUserChangeSettingsCallbacks().addCallback(CallbackImportance.DEFAULT, onUserChangeSettingsListener);
+
+        globalUpdateListener = (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            runOnUiThread(this::updateOpenUpdateCenterMenuName);
+            return new Status.Builder()
+                    .build();
+        };
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, globalUpdateListener);
     }
 
     private void updateOpenUpdateCenterMenuName() {
@@ -172,7 +204,6 @@ public class PresetListActivity extends AppCompatActivity {
 
         } else if (id == R.id.openDebugItem) {
             startActivity(DebugActivity.getLaunchIntent(this));
-
         }
         return true;
     }
@@ -197,8 +228,7 @@ public class PresetListActivity extends AppCompatActivity {
                         intent.setData(Uri.parse("package:" + getPackageName()));
                         startActivity(intent);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        /* don`t puke .__. */
+                        app.getAppTrace().point("failed start DISABLE BATTERY OPTIMIZATION dialog", e);
                     }
                 })
                 .setNegativeButton(R.string.batteryOptimizationDialog_cancel, null);

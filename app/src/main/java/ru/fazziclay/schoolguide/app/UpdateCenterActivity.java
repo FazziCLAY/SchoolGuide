@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.app;
 
 import static android.view.View.GONE;
 
@@ -22,7 +22,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Locale;
 
-import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalKeys;
 import ru.fazziclay.schoolguide.app.global.GlobalManager;
@@ -34,6 +34,9 @@ import ru.fazziclay.schoolguide.util.ColorUtil;
 public class UpdateCenterActivity extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 2000;
     public static final String NOTIFICATION_CHANNEL_ID = "updatecenter";
+    
+    public static final int DEBUG_STATE = 0; // 0 to disable
+    public static final boolean DEBUG_ALLOW_IN_DEBUG_BUILD = false;
 
     private SchoolGuideApp app;
     private ActivityUpdateCenterBinding binding;
@@ -94,6 +97,8 @@ public class UpdateCenterActivity extends AppCompatActivity {
                 });
             } else if (status.exception instanceof FileNotFoundException) {
                 binding.text.setText(R.string.updatecenter_error_fileNotFound_text);
+            } else if (status.exception instanceof IncompatibleVersionException) {
+                binding.text.setText(R.string.updatecenter_error_incompatibleVersion_text);
             } else {
                 binding.text.setText(getString(R.string.updatecenter_error_generic_text, status.exception.toString()));
             }
@@ -149,28 +154,30 @@ public class UpdateCenterActivity extends AppCompatActivity {
     }
 
     public void load(StatusInterface statusInterface) {
-        final int debug = -1;
         try {
-            if (debug != 0) {
-                if (debug == 1) {
-                    statusInterface.run(Status.ERROR.setException(new UnknownHostException()));
-                } else if (debug == 2) {
-                    statusInterface.run(Status.ERROR.setException(new FileNotFoundException()));
-                } else if (debug == 3) {
-                    statusInterface.run(Status.ERROR.setException(new RuntimeException()));
-                } else if (debug == 4) {
-                    statusInterface.run(Status.UPDATED);
-                } else if (debug == 5) {
-                    HashMap<String, String> change = new HashMap<>();
-                    change.put("default", "Пофикшены баги:\nКорова прилипала к стене\n$[-#ff0000]Вылет из за краша$[-reset]\n\nПодпишись: https://youtube.com/\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_");
-                    HashMap<String, String> download = new HashMap<>();
-                    download.put("release", "https://google.com");
-                    download.put("debug", "https://yandex.ru");
-                    GlobalVersionManifest.ManifestVersion v = new GlobalVersionManifest.ManifestVersion(20, "0.6 - ReWriTTen ", change, download);
-                    statusInterface.run(Status.OUTDATED.setLatestVersion(v));
-                }
+            if (!DEBUG_ALLOW_IN_DEBUG_BUILD && currentVersionBuildType.equals("debug")) {
+                statusInterface.run(Status.ERROR.setException(new IncompatibleVersionException()));
+                return;
             }
-            GlobalManager.get(app, new GlobalManager.GlobalManagerInterface() {
+            if (DEBUG_STATE == 1) {
+                statusInterface.run(Status.ERROR.setException(new UnknownHostException()));
+            } else if (DEBUG_STATE == 2) {
+                statusInterface.run(Status.ERROR.setException(new FileNotFoundException()));
+            } else if (DEBUG_STATE == 3) {
+                statusInterface.run(Status.ERROR.setException(new RuntimeException()));
+            } else if (DEBUG_STATE == 4) {
+                statusInterface.run(Status.UPDATED);
+            } else if (DEBUG_STATE == 5) {
+                HashMap<String, String> change = new HashMap<>();
+                change.put("default", "Пофикшены баги:\nКорова прилипала к стене\n$[-#ff0000]Вылет из за краша$[-reset]\n\nПодпишись: https://youtube.com/\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_");
+                HashMap<String, String> download = new HashMap<>();
+                download.put("release", "https://google.com");
+                download.put("debug", "https://yandex.ru");
+                GlobalVersionManifest.ManifestVersion v = new GlobalVersionManifest.ManifestVersion(20, "0.6 - ReWriTTen ", change, download);
+                statusInterface.run(Status.OUTDATED.setLatestVersion(v));
+            }
+            if (DEBUG_STATE != 0) return;
+            GlobalManager.getInExternalThread(app, new GlobalManager.GlobalManagerInterface() {
                 @Override
                 public void failed(Exception exception) {
                     appTrace.point("failed, getGlobalManager. PROCESSED CORRECTLY!", exception);
@@ -224,5 +231,9 @@ public class UpdateCenterActivity extends AppCompatActivity {
             this.latestVersion = s;
             return this;
         }
+    }
+    
+    public static class IncompatibleVersionException extends Exception {
+        
     }
 }

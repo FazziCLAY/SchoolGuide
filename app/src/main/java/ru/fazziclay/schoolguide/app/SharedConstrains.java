@@ -1,4 +1,4 @@
-package ru.fazziclay.schoolguide;
+package ru.fazziclay.schoolguide.app;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,7 +14,8 @@ import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.fazziclay.schoolguide.app.SchoolGuideApp;
+import ru.fazziclay.schoolguide.BuildConfig;
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.databinding.ErrorAppNullBinding;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
@@ -90,7 +91,7 @@ public class SharedConstrains {
                     R.string.error_appNull_message,
                     String.valueOf(SharedConstrains.APPLICATION_VERSION_CODE),
                     String.valueOf(ErrorCode.ERROR_APP_GET_RETURN_NULL),
-                    activity == null ? "null" : activity.getClass().getName()
+                    activity.getClass().getName()
             ));
 
             return binding.getRoot();

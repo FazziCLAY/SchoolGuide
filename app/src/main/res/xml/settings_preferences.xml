@@ -1,67 +1,74 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        app:title="@string/settings_title_notification"
+        app:title="@string/settings_notification_categoryTitle"
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isNotification"
-            app:title="@string/settings_isNotification_title"
-            app:summary="@string/settings_isNotification_summary"/>
+            app:key="notification_isNotification"
+            app:title="@string/settings_notification_isNotification_title"
+            app:summary="@string/settings_notification_isNotification_summary" />
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isHideEmptyNotification"
-            app:dependency="isNotification"
-            app:title="@string/settings_showEmptyNotification_title"
-            app:summary="@string/settings_showEmptyNotification_summary"/>
+            app:key="notification_isHideEmptyNotification"
+            app:dependency="notification_isNotification"
+            app:title="@string/settings_notification_isHideEmptyNotification_title"
+            app:summary="@string/settings_notification_isHideEmptyNotification_summary" />
 
         <ListPreference
             app:iconSpaceReserved="false"
-            app:key="notificationStatusTimeBefore"
-            app:dependency="isNotification"
-            app:title="Показывать статус"
+            app:key="notification_infoBeforeTime"
+            app:dependency="notification_isNotification"
+            app:title="@string/settings_notification_infoBeforeTime_title"
+            app:summary="@string/settings_notification_infoBeforeTime_summary"
             app:defaultValue="10800"
             app:entries="@array/notificationStatusBeforeTime_entries"
-            app:entryValues="@array/notificationStatusBeforeTime_values"
-            app:summary="Показывать статус в уведомлении за N часов до начала следующего события"/>
+            app:entryValues="@array/notificationStatusBeforeTime_values" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="@string/settings_title_presetEdit"
+        app:title="@string/settings_presetEditor_categoryTitle"
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isFirstMonday"
-            app:title="@string/settings_isFirstMonday_title"
-            app:summaryOn="@string/settings_isFirstMonday_summaryOn"
-            app:summaryOff="@string/settings_isFirstMonday_summaryOff" />
+            app:key="presetEditor_isFirstMonday"
+            app:title="@string/settings_presetEditor_isFirstMonday_title"
+            app:summaryOn="@string/settings_presetEditor_isFirstMonday_summaryOn"
+            app:summaryOff="@string/settings_presetEditor_isFirstMonday_summaryOff" />
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isPresetEditEventNameInNextLine"
-            app:title="@string/settings_isPresetEditEventNameInNextLine_title"
-            app:summaryOn="@string/settings_isPresetEditEventNameInNextLine_summaryOn"
-            app:summaryOff="@string/settings_isPresetEditEventNameInNextLine_summaryOff" />
-
+            app:key="presetEditor_eventNameInNextLine"
+            app:title="@string/settings_presetEditor_eventNameInNextLine_title"
+            app:summaryOn="@string/settings_presetEditor_eventNameInNextLine_summaryOn"
+            app:summaryOff="@string/settings_presetEditor_eventNameInNextLine_summaryOff" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="@string/settings_title_advanced"
+        app:title="@string/settings_advanced_categoryTitle"
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isBuiltinPresetList"
-            app:title="@string/settings_builtinPresetList_title"
-            app:summary="@string/settings_builtinPresetList_summary"/>
+            app:key="advanced_isBuiltinPresetList"
+            app:title="@string/settings_advanced_builtinPresetList_title"
+            app:summary="@string/settings_advanced_builtinPresetList_summary" />
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="isDeveloperFeatures"
-            app:title="@string/settings_developerFeatures_title"
-            app:summary="@string/settings_developerFeatures_summary"/>
+            app:key="advanced_isDeveloperFeatures"
+            app:title="@string/settings_advanced_developerFeatures_title"
+            app:summary="@string/settings_advanced_developerFeatures_summary" />
+
+        <Preference
+            app:key="advanced_shareAppTrace"
+            app:icon="@android:drawable/ic_menu_share"
+            app:title="@string/settings_advanced_shareAppTrace_title"
+            app:summary="@string/settings_advanced_shareAppTrace_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

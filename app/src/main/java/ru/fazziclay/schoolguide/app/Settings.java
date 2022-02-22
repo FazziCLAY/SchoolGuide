@@ -81,14 +81,14 @@ public class Settings {
     /**
      * @see Settings#isStopForegroundIsNone
      * **/
-    public boolean isStopForegroundIsNone() {
+    public boolean isHideEmptyNotification() {
         return isStopForegroundIsNone;
     }
 
     /**
      * @see Settings#isStopForegroundIsNone
      * **/
-    public void setStopForegroundIsNone(boolean stopForegroundIsNone) {
+    public void setIsHideEmptyNotification(boolean stopForegroundIsNone) {
         isStopForegroundIsNone = stopForegroundIsNone;
     }
 

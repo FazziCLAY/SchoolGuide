@@ -3,7 +3,6 @@ package ru.fazziclay.schoolguide.app.scheduleinformator;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -39,7 +38,7 @@ public class ScheduleInformatorApp {
     private final NotificationManagerCompat notificationManagerCompat;
 
     private final File scheduleFile;
-    private final AppPresetList schedule;
+    private final AppPresetList appPresetList;
 
     private InformatorService informatorService = null;
     private boolean isServiceForeground = false;
@@ -55,7 +54,7 @@ public class ScheduleInformatorApp {
         this.notification = getNoneNotification();
 
         scheduleFile = new File(app.getFilesDir(), "scheduleinformator.schedule.json");
-        schedule = DataUtil.load(scheduleFile, AppPresetList.class);
+        appPresetList = DataUtil.load(scheduleFile, AppPresetList.class);
         saveAppSchedule();
 
         app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
@@ -67,10 +66,10 @@ public class ScheduleInformatorApp {
                     Preset gPreset = globalBuiltinPresetList.getPreset(gPresetUUID);
 
                     if (gPreset == null || !settings.isBuiltinPresetList()) {
-                        schedule.removePreset(gPresetUUID);
+                        appPresetList.removePreset(gPresetUUID);
                     } else {
                         gPreset.setSyncedByGlobal(true);
-                        schedule.putPreset(gPresetUUID, gPreset);
+                        appPresetList.putPreset(gPresetUUID, gPreset);
                     }
 
                     i++;
@@ -86,10 +85,10 @@ public class ScheduleInformatorApp {
     }
 
     public void saveAppSchedule() {
-        if (schedule == null) {
+        if (appPresetList == null) {
             appTrace.point("saveAppSchedule: schedule == null!!!!", new NullPointerException("Exception by fazziclay!"));
         }
-        DataUtil.save(scheduleFile, schedule);
+        DataUtil.save(scheduleFile, appPresetList);
     }
 
     public void serviceStop() {
@@ -101,11 +100,11 @@ public class ScheduleInformatorApp {
     }
 
     public Preset getSelectedPreset() {
-        return schedule.getSelectedPreset();
+        return appPresetList.getSelectedPreset();
     }
 
     public void setSelectedPreset(UUID preset) {
-        schedule.setSelectedPreset(preset);
+        appPresetList.setSelectedPreset(preset);
         saveAppSchedule();
     }
 
@@ -116,7 +115,7 @@ public class ScheduleInformatorApp {
         boolean isNext = nextEvent != null;
 
         if (!isNow && !isNext) {
-            if (settings.isStopForegroundIsNone()) {
+            if (settings.isHideEmptyNotification()) {
                 stopForeground();
             } else {
                 startForeground();
@@ -127,7 +126,7 @@ public class ScheduleInformatorApp {
         }
 
         if (!isNow && nextEvent.remainsUntilStart() > settings.getNotificationStatusBeforeTime() && 0 < settings.getNotificationStatusBeforeTime()) {
-            if (settings.isStopForegroundIsNone()) {
+            if (settings.isHideEmptyNotification()) {
                 stopForeground();
             } else {
                 startForeground();
@@ -140,7 +139,7 @@ public class ScheduleInformatorApp {
         startForeground();
 
         ScheduleInformatorNotification notificationBuilder = new ScheduleInformatorNotification();
-        notificationBuilder.smallIcon = R.drawable.planner_s;
+        notificationBuilder.smallIcon = R.mipmap.ic_launcher;
 
         if (isNow) {
             String title = context.getString(R.string.scheduleInformator_notification_now_title);
@@ -188,7 +187,7 @@ public class ScheduleInformatorApp {
         String title = context.getString(R.string.scheduleInformator_notification_none_title);
         String message = context.getString(R.string.scheduleInformator_notification_none_text);
         return new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NONE)
-                .setSmallIcon(R.drawable.planner_s)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
                 .setContentTitle(title.isEmpty() ? null : title)
                 .setContentText(message.isEmpty() ? null : message)
@@ -221,7 +220,7 @@ public class ScheduleInformatorApp {
         return scheduleFile;
     }
 
-    public AppPresetList getSchedule() {
-        return schedule;
+    public AppPresetList getAppPresetList() {
+        return appPresetList;
     }
 }

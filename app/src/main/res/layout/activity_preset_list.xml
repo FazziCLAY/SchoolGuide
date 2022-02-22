@@ -5,6 +5,14 @@
     android:padding="10sp"
     android:background="?attr/activityBackground">
 
+    <LinearLayout
+        android:id="@+id/notification_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/presetList"
         android:layout_width="match_parent"

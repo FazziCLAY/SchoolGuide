@@ -7,6 +7,7 @@
     <string name="updatecenter_error_unknownHost_text">$[-#ff2222]Отсутствует подключение к $[@bold]интернету$[@reset]!</string>
     <string name="updatecenter_error_unknownHost_reload">Перезагрузить</string>
     <string name="updatecenter_error_fileNotFound_text">$[@bold;-#ff0000]Сервис закрыт :($[@reset;-reset]\nПриложение не смогло найти последнюю версию, $[@bold;-#dddddd]очень рекомендуем зайти на страницу проекта:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide</string>
+    <string name="updatecenter_error_incompatibleVersion_text">"$[@bold;-#ff0000]Центр обновлений недоступен в отладочных сборках приложения :($[@reset;-reset]\n$[@bold;-#dddddd]Очень рекомендуем зайти на страницу проекта:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
     <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Неизвестная ошибка.$[@reset;-reset]\nПриложение не смогло распознать ошибку, скорее всего сейчас технические неполадки\nОшибка: $[=#080607;-#cc0000;=#000000]%s</string>
     <string name="updatecenter_updated_title">Обновлено!</string>
     <string name="updatecenter_updated_text">$[-#a0a0ff]Сейчас у вас установлена $[@bold;-#7070ff]самая последняя$[@reset;-#a0a0ff] версия, так держать!</string>
@@ -127,22 +128,25 @@
     <string name="scheduleInformator_notification_now_next_text">След.: %s</string>
 
     <string name="settings_activityTitle">SchoolGuide - Настройки</string>
-    <string name="settings_title_notification">Уведомление</string>
-    <string name="settings_isNotification_title">Показывать уведомление</string>
-    <string name="settings_isNotification_summary">Показывать в уведомлении текущий статус по включенному расписанию</string>
-    <string name="settings_showEmptyNotification_title">Скрывать уведомление без статуса</string>
-    <string name="settings_showEmptyNotification_summary">Когда уведомление показывает пустоту, оно будет исчезать\n(Отключите, если после исчезновения, уведомление больше не появляется)</string>
-    <string name="settings_title_presetEdit">Редактор пресета</string>
-    <string name="settings_isFirstMonday_title">Первый день недели</string>
-    <string name="settings_isFirstMonday_summaryOn">Понедельник</string>
-    <string name="settings_isFirstMonday_summaryOff">Воскресенье</string>
-    <string name="settings_isPresetEditEventNameInNextLine_title">Название на след. строке</string>
-    <string name="settings_isPresetEditEventNameInNextLine_summaryOn">Пример:\n1 10:00–10:40\n\t\t\tСобытие</string>
-    <string name="settings_isPresetEditEventNameInNextLine_summaryOff">Пример:\n1 10:00–10:40 Событие</string>
-    <string name="settings_title_advanced">Дополнительно</string>
-    <string name="settings_builtinPresetList_title">Встроенные пресеты</string>
-    <string name="settings_builtinPresetList_summary">Отображать встроенный список пресетов в списке (их названия будут серыми)</string>
-    <string name="settings_developerFeatures_title">Возможности разработчика</string>
-    <string name="settings_developerFeatures_summary">Активирует возможности разработчика\n(не рекомендуется для обычного использования)</string>
-    <string name="settings_title_shareAppTrace">Поделиться трейсом приложения</string>
+    <string name="settings_notification_categoryTitle">Уведомление</string>
+    <string name="settings_notification_isNotification_title">Показывать уведомление</string>
+    <string name="settings_notification_isNotification_summary">Показывать в уведомлении текущий статус по включенному расписанию</string>
+    <string name="settings_notification_isHideEmptyNotification_title">Скрывать уведомление без статуса</string>
+    <string name="settings_notification_isHideEmptyNotification_summary">Когда уведомление показывает пустоту, оно будет исчезать\n(Отключите, если после исчезновения, уведомление больше не появляется)</string>
+    <string name="settings_notification_infoBeforeTime_title">Показывать информацию</string>
+    <string name="settings_notification_infoBeforeTime_summary">Показывать информацию за N часов до начала события</string>
+    <string name="settings_presetEditor_categoryTitle">Редактор пресета</string>
+    <string name="settings_presetEditor_isFirstMonday_title">Первый день недели</string>
+    <string name="settings_presetEditor_isFirstMonday_summaryOn">Понедельник</string>
+    <string name="settings_presetEditor_isFirstMonday_summaryOff">Воскресенье</string>
+    <string name="settings_presetEditor_eventNameInNextLine_title">Название на след. строке</string>
+    <string name="settings_presetEditor_eventNameInNextLine_summaryOn">Пример:\n1 10:00–10:40\n\t\t\tСобытие</string>
+    <string name="settings_presetEditor_eventNameInNextLine_summaryOff">Пример:\n1 10:00–10:40 Событие</string>
+    <string name="settings_advanced_categoryTitle">Дополнительно</string>
+    <string name="settings_advanced_builtinPresetList_title">Встроенные пресеты</string>
+    <string name="settings_advanced_builtinPresetList_summary">Отображать встроенный список пресетов в списке (их названия будут серыми)</string>
+    <string name="settings_advanced_developerFeatures_title">Возможности разработчика</string>
+    <string name="settings_advanced_developerFeatures_summary">Активирует возможности разработчика\n(не рекомендуется для обычного использования)</string>
+    <string name="settings_advanced_shareAppTrace_title">Поделиться отладочной информацией</string>
+    <string name="settings_advanced_shareAppTrace_summary">Пришлите AppTrace-логи разработчику!</string>
 </resources>
