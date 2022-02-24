@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.PresetEditEventEditDialogStateCache;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
@@ -68,6 +69,9 @@ public class PresetEditActivity extends AppCompatActivity {
     private Preset preset;
 
     private boolean isFirstMonday = true;
+
+    private MenuItem enableOneDayModeItem;
+    private boolean isOneDayMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +108,11 @@ public class PresetEditActivity extends AppCompatActivity {
             binding.addEvent.setOnClickListener(ignore -> showEventDialog(null));
         }
         setTitle(getString(R.string.presetEdit_activityTitle, preset.getName()));
-
+        isOneDayMode = preset.isOneDayMode();
+        if (isOneDayMode) {
+            _cloneSundayToAll();
+            isFirstMonday = false;
+        }
         updateEventList();
     }
 
@@ -117,6 +125,8 @@ public class PresetEditActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_preset_edit, menu);
+        enableOneDayModeItem = menu.findItem(R.id.onDayMode);
+        enableOneDayModeItem.setVisible(!isOneDayMode && settings.isDeveloperFeatures() && !preset.isSyncedByGlobal());
         return true;
     }
 
@@ -124,6 +134,10 @@ public class PresetEditActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.colorScheme) {
             showColorSchemeDialog();
+
+            // CRUTCH
+        } else if (item.getItemId() == R.id.onDayMode) {
+            showEnableOneDayCrutchDialog();
 
         } else {
             return super.onOptionsItemSelected(item);
@@ -162,6 +176,14 @@ public class PresetEditActivity extends AppCompatActivity {
             event1 = new Event(null, cache.latestStartSelected, cache.latestEndSelected);
         }
         Event event = event1;
+
+        // CRUTCH
+        if (isOneDayMode && event.getStart() >= (24*60*60) && !create) {
+            Toast.makeText(this, "NoNoNo use sunday!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_preset_edit_event_edit);
         Button cancelButton = dialog.findViewById(R.id.cancel);
@@ -223,8 +245,10 @@ public class PresetEditActivity extends AppCompatActivity {
                 int startWeek = timeWeekValues[startTimeWeekSpinner.getSelectedItemPosition()];
                 int endWeek = timeWeekValues[endTimeWeekSpinner.getSelectedItemPosition()];
 
-                start += (startWeek-1) * SECONDS_IN_DAY;
-                end += (endWeek-1) * SECONDS_IN_DAY;
+                if (!isOneDayMode) {
+                    start += (startWeek - 1) * SECONDS_IN_DAY;
+                    end += (endWeek - 1) * SECONDS_IN_DAY;
+                }
 
                 String newInfoName = eventInfoNameInput.getText().toString();
                 if (newInfoName.isEmpty()) {
@@ -247,6 +271,10 @@ public class PresetEditActivity extends AppCompatActivity {
 
                 if (create) {
                     preset.eventsPositions.add(event);
+                }
+
+                if (isOneDayMode) {
+                    _cloneSundayToAll();
                 }
 
                 informatorApp.saveAppSchedule();
@@ -293,7 +321,26 @@ public class PresetEditActivity extends AppCompatActivity {
         endTimeInput.setText(TimeUtil.convertToHumanTime(event.getEnd() - (SECONDS_IN_DAY * endCoff), ConvertMode.HHMMSS));
         endTimeWeekSpinner.setSelection(selectedEnd);
 
+        if (isOneDayMode) {
+            startTimeWeekSpinner.setVisibility(View.GONE);
+            endTimeWeekSpinner.setVisibility(View.GONE);
+        }
+
         dialog.show();
+    }
+
+    private void showEnableOneDayCrutchDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("ОЧЕНЬ ВАЖНО!")
+                .setMessage("Это не обратимое действие!\nВаше расписание станет однодневным! Это значит что каждый день будет с ондим и тем же положением событий и их временем. За основу будет взято воскресенье")
+                .setNegativeButton(R.string.presetEdit_colorScheme_cancel, null)
+                .setPositiveButton(R.string.presetEdit_colorScheme_apply, (i, e) -> {
+                    preset.setOneDayMode(true);
+                    informatorApp.saveAppSchedule();
+                    startActivity(getLaunchIntent(this, presetUUID));
+                    finish();
+                })
+        .show();
     }
 
     private SpinnerSetup<UUID> applyEventInfosToSpinner(Spinner eventsInfos, Event event) {
@@ -451,7 +498,7 @@ public class PresetEditActivity extends AppCompatActivity {
         return new BaseExpandableListAdapter() {
             @Override
             public int getGroupCount() {
-                return 7;
+                return isOneDayMode ? 1 : 7;
             }
 
             @Override
@@ -614,6 +661,8 @@ public class PresetEditActivity extends AppCompatActivity {
         localeWeekName = localeWeekName.substring(1);
         localeWeekName = firstChar + localeWeekName;
 
+        if (isOneDayMode) localeWeekName = "Everyday";
+
         TextView textView = new TextView(this);
         textView.setTextSize(33);
         textView.setTextColor(Color.WHITE);
@@ -639,5 +688,59 @@ public class PresetEditActivity extends AppCompatActivity {
     public enum ColorScheme {
         DEFAULT,
         YESTERDAY
+    }
+
+
+    // CRUTCH ZONE
+    private void _cleanupAllNoSunday() {
+        if (!isOneDayMode) {
+            MilkLog.g("WARN вызов функции при выключеном режиме костыля");
+            return;
+        }
+
+        List<Event> noDel = new ArrayList<>();
+        // search > SUNDAY
+        for (Event e : preset.eventsPositions) {
+            if (e.getStart() <= ((24 * 60 * 60)-10)) {
+                noDel.add(e);
+                MilkLog.g("wow! noDel "+ e);
+            }
+        }
+
+        // delete
+        preset.eventsPositions = new ArrayList<>();
+        preset.eventsPositions.addAll(noDel);
+        informatorApp.saveAppSchedule();
+    }
+
+    /**
+     * удаляет все что после воскресения (пн. вт ср. чт. пт. сб)
+     * и копирует в каждый день данные из воскресенья
+     * **/
+    private void _cloneSundayToAll() {
+        if (!isOneDayMode) {
+            MilkLog.g("WARN вызов функции при выключеном режиме костыля");
+            return;
+        }
+        _cleanupAllNoSunday();
+
+        final int SECONDS_IN_DAY = 24 * 60 * 60;
+        final int[] coefficients = {
+                SECONDS_IN_DAY, // понидельник
+                SECONDS_IN_DAY * 2,
+                SECONDS_IN_DAY * 3,
+                SECONDS_IN_DAY * 4,
+                SECONDS_IN_DAY * 5,
+                SECONDS_IN_DAY * 6
+        };
+
+        List<Event> temp = new ArrayList<>(preset.eventsPositions);
+        for (Event e : temp) {
+            for (int coff : coefficients) {
+                preset.eventsPositions.add(new Event(e.getEventInfo(), e.getStart() + coff, e.getEnd() + coff));
+            }
+        }
+
+        informatorApp.saveAppSchedule();
     }
 }

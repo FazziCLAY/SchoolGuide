@@ -157,4 +157,5 @@
     <string name="settings_advanced_developerFeatures_summary" />
     <string name="settings_advanced_shareAppTrace_title">Share debug info</string>
     <string name="settings_advanced_shareAppTrace_summary">Share AppTrace logs to developer!</string>
+    <string name="presetMenu_oneDayMode">One day mode (INDEV)</string>
 </resources>
