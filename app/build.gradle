@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "ru.fazziclay.android.schoolguide.dev"
-        versionName "0.8.2 DEV - REWRITTEN"
-        versionCode 41
+        versionName "0.9.0.0 Code_TARZAN"
+        versionCode 50
         targetSdkVersion 32
         minSdkVersion 16
         proguardFiles
