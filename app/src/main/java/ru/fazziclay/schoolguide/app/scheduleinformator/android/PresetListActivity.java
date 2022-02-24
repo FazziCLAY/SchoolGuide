@@ -429,7 +429,7 @@ public class PresetListActivity extends AppCompatActivity {
                     MilkLog.g("adapter list.len >= position!");
                     return new Button(PresetListActivity.this);
                 }
-                UUID presetUUID = presetList.getPresetsIds()[position];
+                UUID presetUUID = presetList.getPresetsIds(true)[position];
                 Preset preset = presetList.getPreset(presetUUID);
                 if (preset == null) {
                     MilkLog.g("adapter get view preset == null!");
