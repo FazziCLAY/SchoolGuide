@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,38 +18,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.databinding.ActivityMathTreningGameBinding;
 import ru.fazziclay.schoolguide.util.DataUtil;
+import ru.fazziclay.schoolguide.util.MathUtil;
 
 
 public class MathTreningGameActivity extends AppCompatActivity {
+    private static final String GAME_DATA_FILE = "math_trening_game.json";
+
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, MathTreningGameActivity.class);
     }
+    // UI
+    private ActivityMathTreningGameBinding binding;
 
+    // Data
     private File gameDataFile;
     private MathTreningGameData gameData;
 
-    ActivityMathTreningGameBinding binding;
-    Random random = new Random();
-
-    private static final int SPEED_ITEMS = 15;
-
-    private double maxSpeed = 0;
-    private double averageDuration = 0;
-    private int i = 0;
-    private long start;
-    private final long[] durations = new long[SPEED_ITEMS];
-
-    private float n1;
-    private float n2;
+    private float number1;
+    private float number2;
     private float result;
-
-    Handler timeUpdateHandler;
-    Runnable timeUpdateRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,78 +51,26 @@ public class MathTreningGameActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setTitle(R.string.mathTreningGame_activityTitle);
 
+        // Load files
+        gameDataFile = new File(getExternalFilesDir(null), GAME_DATA_FILE);
+        gameData = DataUtil.load(gameDataFile, MathTreningGameData.class);
+        gameData.getFirstNumberGenerator().fixIsAvailable();
+        gameData.getLatestNumberGenerator().fixIsAvailable();
+        if (gameData.getAction() == null) gameData.setAction("*");
+        saveAll();
+
+        clearInput();
         binding.resultInput.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                onEnter();
+                onKeyboardEnterKey();
                 return true;
             }
             return false;
         });
 
-        binding.resultInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int cursor = binding.resultInput.getSelectionStart();
-                if (cursor < 0) return;
-                String text = binding.resultInput.getText().toString();
-                int number = toInt(text);
-                if (!text.equals("-") && !text.equals(String.valueOf(number)) && number != Integer.MAX_VALUE) {
-                    binding.resultInput.setText(String.valueOf(number));
-                    binding.resultInput.setSelection(cursor - 1);
-                }
-            }
-        });
-
-        gameDataFile = new File(getExternalFilesDir(null), "math_trening_game.json");
-        gameData = DataUtil.load(gameDataFile, MathTreningGameData.class);
-        fixGenerationRange();
-        saveAll();
-
-        start = System.currentTimeMillis();
-
-        clearInput();
+        regenerateNumbers();
+        updateTaskText();
         updateStatisticText();
-        regenerate();
-
-        timeUpdateHandler = new Handler(getMainLooper());
-        timeUpdateRunnable = () -> {
-            updateStatisticText();
-            timeUpdateHandler.postDelayed(timeUpdateRunnable, 20);
-        };
-        timeUpdateHandler.post(timeUpdateRunnable);
-    }
-
-    private void fixGenerationRange() {
-        if (gameData.n1RangeMin > gameData.n1RangeMax) {
-            int min = gameData.n1RangeMin;
-            gameData.n1RangeMin = gameData.n1RangeMax;
-            gameData.n1RangeMax = min;
-        }
-        if (gameData.n2RangeMin > gameData.n2RangeMax) {
-            int min = gameData.n2RangeMin;
-            gameData.n2RangeMin = gameData.n2RangeMax;
-            gameData.n2RangeMax = min;
-        }
-    }
-
-    private void nextDuration() {
-        i++;
-        if (i > SPEED_ITEMS-1) {
-            i = 0;
-        }
-        start = System.currentTimeMillis();
-    }
-
-    private void updateDurations() {
-        if (start > 0) {
-            durations[i] = System.currentTimeMillis() - start;
-        }
     }
 
     @Override
@@ -146,8 +84,8 @@ public class MathTreningGameActivity extends AppCompatActivity {
         super.onResume();
 
         clearInput();
-        regenerate();
-        updateStatisticText();
+        regenerateNumbers();
+        updateTaskText();
     }
 
     @Override
@@ -159,24 +97,23 @@ public class MathTreningGameActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.skip) {
-            gameData.score -= 1;
+            gameData.setScore(gameData.getScore() - 1);
+            regenerateNumbers();
+            updateTaskText();
+            updateStatisticText();
             saveAll();
-            regenerate();
 
         } else if (item.getItemId() == R.id.gameSettings) {
             showSettingsDialog();
-
-        } else {
-            return super.onOptionsItemSelected(item);
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void showSettingsDialog() {
         String[] actions = new String[]{"+", "-", "*", "/", "^"};
         int selected = 0;
         for (String s : actions) {
-            if (gameData.action.equals(s)) break;
+            if (s.equals(gameData.getAction())) break;
             selected++;
         }
 
@@ -188,13 +125,13 @@ public class MathTreningGameActivity extends AppCompatActivity {
         spinner.setSelection(selected);
 
         EditText n1min = dialog.findViewById(R.id.n1min);
-        n1min.setText(String.valueOf(gameData.n1RangeMin));
+        n1min.setText(String.valueOf(gameData.getFirstNumberGenerator().getMinimum()));
         EditText n1max = dialog.findViewById(R.id.n1max);
-        n1max.setText(String.valueOf(gameData.n1RangeMax));
+        n1max.setText(String.valueOf(gameData.getFirstNumberGenerator().getMaximum()));
         EditText n2min = dialog.findViewById(R.id.n2min);
-        n2min.setText(String.valueOf(gameData.n2RangeMin));
+        n2min.setText(String.valueOf(gameData.getLatestNumberGenerator().getMinimum()));
         EditText n2max = dialog.findViewById(R.id.n2max);
-        n2max.setText(String.valueOf(gameData.n2RangeMax));
+        n2max.setText(String.valueOf(gameData.getLatestNumberGenerator().getMaximum()));
 
         Button cancel = dialog.findViewById(R.id.cancel);
         Button save = dialog.findViewById(R.id.save);
@@ -206,31 +143,26 @@ public class MathTreningGameActivity extends AppCompatActivity {
             showResetScoreDialog();
         });
 
-        cancel.setOnClickListener(ignore -> {
-            start = System.currentTimeMillis();
-            dialog.cancel();
-        });
+        cancel.setOnClickListener(ignore -> dialog.cancel());
 
         save.setOnClickListener(ignore -> {
-            String newAction = actions[spinner.getSelectedItemPosition()];
-            int newN1min = toInt(n1min.getText().toString());
-            int newN1max = toInt(n1max.getText().toString());
-            int newN2min = toInt(n2min.getText().toString());
-            int newN2max = toInt(n2max.getText().toString());
-            if (newN1max == Integer.MAX_VALUE || newN2max == Integer.MAX_VALUE || newN1min == Integer.MAX_VALUE || newN2min == Integer.MAX_VALUE) {
-                Toast.makeText(this, "Number error!", Toast.LENGTH_SHORT).show();
-                return;
+            gameData.setAction(actions[spinner.getSelectedItemPosition()]);
+            try {
+                gameData.getFirstNumberGenerator().setMinimum(Integer.parseInt(n1min.getText().toString()));
+                gameData.getFirstNumberGenerator().setMaximum(Integer.parseInt(n1max.getText().toString()));
+                gameData.getLatestNumberGenerator().setMinimum(Integer.parseInt(n2min.getText().toString()));
+                gameData.getLatestNumberGenerator().setMaximum(Integer.parseInt(n2max.getText().toString()));
+
+                gameData.getFirstNumberGenerator().fixIsAvailable();
+                gameData.getLatestNumberGenerator().fixIsAvailable();
+                saveAll();
+            } catch (Exception e) {
+                Toast.makeText(this, R.string.mathTreningGame_settings_exception_number, Toast.LENGTH_SHORT).show();
             }
 
-            gameData.action = newAction;
-            gameData.n1RangeMin = newN1min;
-            gameData.n1RangeMax = newN1max;
-            gameData.n2RangeMin = newN2min;
-            gameData.n2RangeMax = newN2max;
-            fixGenerationRange();
-            saveAll();
-
-            regenerate();
+            regenerateNumbers();
+            updateTaskText();
+            updateStatisticText();
             dialog.cancel();
         });
 
@@ -242,11 +174,16 @@ public class MathTreningGameActivity extends AppCompatActivity {
                 .setTitle(R.string.mathTreningGame_resetScore_title)
                 .setMessage(R.string.mathTreningGame_resetScore_message)
                 .setPositiveButton(R.string.mathTreningGame_resetScore_reset, (dialog, which) -> {
-                    gameData.score = 0;
-                    saveAll();
+                    boolean easterEgg = gameData.getScore() < 0;
+                    gameData.setScore(0);
+                    regenerateNumbers();
+                    updateTaskText();
+                    updateStatisticText();
                     dialog.cancel();
-                    startActivity(getLaunchIntent(this));
-                    finish();
+                    if (easterEgg) {
+                        Toast.makeText(this, R.string.mathTreningGame_resetScore_easterEgg1, Toast.LENGTH_LONG).show();
+                    }
+                    saveAll();
                 })
                 .setNegativeButton(R.string.mathTreningGame_resetScore_cancel ,null)
                 .show();
@@ -256,107 +193,66 @@ public class MathTreningGameActivity extends AppCompatActivity {
         binding.resultInput.setText("");
     }
 
-    private int toInt(String s) {
-        try {
-            return Integer.parseInt(s);
-        } catch (Exception ignored) {
-            return Integer.MAX_VALUE;
-        }
-    }
-
-    private void onEnter() {
+    private void onKeyboardEnterKey() {
         String userInput = binding.resultInput.getText().toString();
         if (userInput.isEmpty()) return;
-        int userResult = toInt(userInput);
+        try {
+            int userResult = Integer.parseInt(userInput);
+            if (userResult == result) {
+                regenerateNumbers();
+                updateTaskText();
+                gameData.setScore(gameData.getScore() + 1);
+            } else {
+                gameData.setScore(gameData.getScore() - 1);
+            }
+            updateStatisticText();
+        } catch (Exception ignored) {}
         clearInput();
-        if (userResult == result) {
-            regenerate();
-            gameData.score++;
-            nextDuration();
-
-        } else if (userResult != Integer.MAX_VALUE) {
-            gameData.score--;
-        }
-        updateStatisticText();
         saveAll();
     }
 
-    private void regenerate() {
-        float oldN1 = n1, oldN2 = n2;
-
-        n1 = random(1);
-        n2 = random(2);
-
-        if ((oldN1 == n1 && oldN2 == n2)) {
-            random = new Random();
-            n1 = random(1);
-            n2 = random(2);
-        }
-
-        result = calculate(gameData.action, n1, n2);
-        binding.taskText.setText(createTaskText());
+    private void regenerateNumbers() {
+        SecureRandom random = new SecureRandom();
+        number1 = MathUtil.random(random, gameData.getFirstNumberGenerator().getMinimum(), gameData.getFirstNumberGenerator().getMaximum());
+        number2 = MathUtil.random(random, gameData.getLatestNumberGenerator().getMinimum(), gameData.getLatestNumberGenerator().getMaximum());
+        result = calculate(gameData.getAction(), number1, number2);
     }
 
     private float calculate(String action, float n1, float n2) {
-        if ("*".equals(action)) {
-            return n1 * n2;
-        } else if ("-".equals(action)) {
-            return n1 - n2;
-        } else if ("/".equals(action)) {
-            return Math.round(n1 / n2);
-        } else if ("+".equals(action)) {
-            return n1 + n2;
-        } else if ("^".equals(action)) {
-            return (float) Math.pow(n1, n2);
+        switch (action) {
+            case "*":
+                return n1 * n2;
+            case "-":
+                return n1 - n2;
+            case "/":
+                return Math.round(n1 / n2);
+            case "+":
+                return n1 + n2;
+            case "^":
+                return Math.round(Math.pow(n1, n2));
         }
+        MilkLog.g("WARN! MathTreningGameActivity.calculate action not supported!\nreturn 0.0f");
         return 0.0f;
     }
 
     private String createTaskText() {
-        if ("^".equals(gameData.action)) {
-            return String.format("%s^(%s)", Math.round(n1), Math.round(n2));
+        if ("^".equals(gameData.getAction())) {
+            return String.format("%s^(%s)", Math.round(number1), Math.round(number2));
         }
-        return String.format("%s %s %s", Math.round(n1), gameData.action, Math.round(n2));
+        return String.format("%s %s %s", Math.round(number1), gameData.getAction(), Math.round(number2));
     }
 
-    private double average(long[] d) {
-        long sum = 0;
-        int len = 0;
-        for (long dd : d) {
-            if (dd == 0) continue;
-            sum += dd;
-            len++;
-        }
-
-        double a = ((double) sum) / ((double)len);
-        return sum == 0 ? 0 : a;
+    private void updateTaskText() {
+        binding.taskText.setText(createTaskText());
     }
 
     private void updateStatisticText() {
-        updateDurations();
-        averageDuration = average(durations);
-        double speed = 1000 / averageDuration;
-        if (speed > maxSpeed) {
-            maxSpeed = 1000 / averageDuration;
-        }
-
-        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.score)));
+        binding.statistic.setText(getString(R.string.mathTreningGame_statistic, String.valueOf(gameData.getScore())));
     }
 
-    public static double round(double d, int numbers) {
-        double f = Math.pow(10, numbers);
-        return Math.round(d * f) / f;
-    }
-
-    private int random(int position) {
-        int rangeMax = gameData.n1RangeMax, rangeMin = gameData.n1RangeMin;
-        if (position == 2)  {
-            rangeMax = gameData.n2RangeMax;
-            rangeMin = gameData.n2RangeMin;
-        }
-        return random.nextInt(rangeMax + 1 - rangeMin) + rangeMin;
-    }
-
+    /**
+     * Сохранить все данные
+     * **/
     private void saveAll() {
         DataUtil.save(gameDataFile, gameData);
     }

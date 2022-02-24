@@ -19,6 +19,7 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.databinding.ErrorAppNullBinding;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
+import ru.fazziclay.schoolguide.datafixer.schem.Scheme37To50;
 import ru.fazziclay.schoolguide.datafixer.schem.v33to35.SchemePre36To37;
 
 public class SharedConstrains {
@@ -36,7 +37,8 @@ public class SharedConstrains {
      * @see ru.fazziclay.schoolguide.datafixer.DataFixer
      * **/
     public static final AbstractScheme[] DATA_FIXER_SCHEMES = {
-            new SchemePre36To37()
+            new SchemePre36To37(),
+            new Scheme37To50()
     };
     public static final long CRUTCH_INIT_DELAY = 1000 * 6;
 
