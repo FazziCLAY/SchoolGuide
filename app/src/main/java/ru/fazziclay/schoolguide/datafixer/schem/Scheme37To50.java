@@ -34,10 +34,10 @@ public class Scheme37To50 extends AbstractScheme {
                 updated.latestNumberGenerator.minimum = outdated.n2RangeMin;
                 updated.latestNumberGenerator.maximum = outdated.n2RangeMax;
                 FileUtil.write(mathTreningFile, dataFixer.getGson().toJson(updated, V50MathTreningGameData.class));
-                MilkLog.g("Math trening gameData converted!");
+                dataFixer.getAppTrace().point("Math trening gameData converted!");
             }
         } catch (Exception e) {
-            MilkLog.g("Exception while converting v37 mathTrening to v50 mathTrening!", e);
+            dataFixer.getAppTrace().point("Exception while converting v37 mathTrening to v50 mathTrening!", e);
         }
 
         version.setLatestVersion(50);
