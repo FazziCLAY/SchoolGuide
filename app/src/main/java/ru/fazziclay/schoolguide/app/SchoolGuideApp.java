@@ -24,12 +24,12 @@ import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.global.GlobalKeys;
 import ru.fazziclay.schoolguide.app.global.GlobalManager;
 import ru.fazziclay.schoolguide.app.listener.OnDebugSignalListener;
-import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
+import ru.fazziclay.schoolguide.app.listener.OnGlobalUpdatedListener;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.listener.OnDeveloperFeaturesStateChangeListener;
-import ru.fazziclay.schoolguide.app.listener.OnUserChangeSettingsListener;
-import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
+import ru.fazziclay.schoolguide.app.listener.OnUserSettingsChangeListener;
+import ru.fazziclay.schoolguide.app.listener.PresetListUpdateSignalListener;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.CallbackStorage;
@@ -147,13 +147,13 @@ public class SchoolGuideApp {
     /**
      * Callback хранилеще для авто обновлений глобальных данных
      * **/
-    private final CallbackStorage<GlobalUpdateListener> globalUpdateCallbacks = new CallbackStorage<>();
+    private final CallbackStorage<OnGlobalUpdatedListener> globalUpdateCallbacks = new CallbackStorage<>();
 
-    private final CallbackStorage<PresetListUpdateListener> presetListUpdateCallbacks = new CallbackStorage<>();
+    private final CallbackStorage<PresetListUpdateSignalListener> presetListUpdateCallbacks = new CallbackStorage<>();
 
     private final PresetEditEventEditDialogStateCache presetEditEventEditDialogStateCache = new PresetEditEventEditDialogStateCache();
 
-    private final CallbackStorage<OnUserChangeSettingsListener> onUserChangeSettingsCallbacks = new CallbackStorage<>();
+    private final CallbackStorage<OnUserSettingsChangeListener> onUserChangeSettingsCallbacks = new CallbackStorage<>();
 
     private final CallbackStorage<OnDeveloperFeaturesStateChangeListener> onDeveloperFeaturesStateChangeListenerCallbacks = new CallbackStorage<>();
 
@@ -220,7 +220,7 @@ public class SchoolGuideApp {
                 pendingUpdateGlobal();
             }
             if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_DEVELOPER_FEATURES)) {
-                getOnDeveloperFeaturesStateChangeListenerCallbacks().run(((callbackStorage, callback) -> callback.onDeveloperFeaturesChange(settings.isDeveloperFeatures())));
+                getOnDeveloperFeaturesStateChangeListenerCallbacks().run(((callbackStorage, callback) -> callback.run(settings.isDeveloperFeatures())));
             }
             return new Status.Builder()
                     .setDeleteCallback(false)
@@ -299,7 +299,7 @@ public class SchoolGuideApp {
 
             @Override
             public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
-                getGlobalUpdateCallbacks().run((callbackStorage, callback) -> callback.onGlobalUpdate(keys, versionManifest, builtinSchedule));
+                getGlobalUpdateCallbacks().run((callbackStorage, callback) -> callback.run(keys, versionManifest, builtinSchedule));
             }
         };
 
@@ -381,11 +381,11 @@ public class SchoolGuideApp {
         isUpdateAvailable = updateAvailable;
     }
 
-    public CallbackStorage<GlobalUpdateListener> getGlobalUpdateCallbacks() {
+    public CallbackStorage<OnGlobalUpdatedListener> getGlobalUpdateCallbacks() {
         return globalUpdateCallbacks;
     }
 
-    public CallbackStorage<PresetListUpdateListener> getPresetListUpdateCallbacks() {
+    public CallbackStorage<PresetListUpdateSignalListener> getPresetListUpdateCallbacks() {
         return presetListUpdateCallbacks;
     }
 
@@ -393,7 +393,7 @@ public class SchoolGuideApp {
         return presetEditEventEditDialogStateCache;
     }
 
-    public CallbackStorage<OnUserChangeSettingsListener> getOnUserChangeSettingsCallbacks() {
+    public CallbackStorage<OnUserSettingsChangeListener> getOnUserChangeSettingsCallbacks() {
         return onUserChangeSettingsCallbacks;
     }
 

@@ -76,7 +76,7 @@ public class ScheduleInformatorApp {
                 }
 
                 saveAppSchedule();
-                if (change) app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onPresetListUpdate());
+                if (change) app.getPresetListUpdateCallbacks().run((callbackStorage, callback) -> callback.onSignal());
             }
             return new Status.Builder().build();
         });

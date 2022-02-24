@@ -111,7 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
                     app.getAppTrace().point("Unknown settings key!\nkey="+key);
                     break;
             }
-            app.getOnUserChangeSettingsCallbacks().run((callbackStorage, callback) -> callback.onSettingsChanged(key));
+            app.getOnUserChangeSettingsCallbacks().run((callbackStorage, callback) -> callback.run(key));
             app.saveSettings();
         };
         preferences.registerOnSharedPreferenceChangeListener(changeListener);

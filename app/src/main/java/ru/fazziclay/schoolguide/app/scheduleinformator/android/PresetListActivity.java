@@ -40,9 +40,9 @@ import ru.fazziclay.schoolguide.app.SettingsActivity;
 import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.UpdateCenterActivity;
 import ru.fazziclay.schoolguide.app.listener.OnDebugSignalListener;
-import ru.fazziclay.schoolguide.app.listener.GlobalUpdateListener;
-import ru.fazziclay.schoolguide.app.listener.OnUserChangeSettingsListener;
-import ru.fazziclay.schoolguide.app.listener.PresetListUpdateListener;
+import ru.fazziclay.schoolguide.app.listener.OnGlobalUpdatedListener;
+import ru.fazziclay.schoolguide.app.listener.OnUserSettingsChangeListener;
+import ru.fazziclay.schoolguide.app.listener.PresetListUpdateSignalListener;
 import ru.fazziclay.schoolguide.app.multiplicationtrening.MathTreningGameActivity;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.SelectablePresetList;
@@ -73,10 +73,10 @@ public class PresetListActivity extends AppCompatActivity {
     private PresetList presetList;
 
     // Callbacks
-    private PresetListUpdateListener presetListUpdateListener;
+    private PresetListUpdateSignalListener presetListUpdateSignalListener;
     private OnDebugSignalListener onDebugSignalListener;
-    private OnUserChangeSettingsListener onUserChangeSettingsListener;
-    private GlobalUpdateListener globalUpdateListener;
+    private OnUserSettingsChangeListener onUserSettingsChangeListener;
+    private OnGlobalUpdatedListener onGlobalUpdatedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +110,10 @@ public class PresetListActivity extends AppCompatActivity {
         super.onDestroy();
 
         // Unbind callbacks
-        app.getPresetListUpdateCallbacks().deleteCallback(presetListUpdateListener);
+        app.getPresetListUpdateCallbacks().deleteCallback(presetListUpdateSignalListener);
         app.getDebugSignalListenerCallbacks().deleteCallback(onDebugSignalListener);
-        app.getOnUserChangeSettingsCallbacks().deleteCallback(onUserChangeSettingsListener);
-        app.getGlobalUpdateCallbacks().deleteCallback(globalUpdateListener);
+        app.getOnUserChangeSettingsCallbacks().deleteCallback(onUserSettingsChangeListener);
+        app.getGlobalUpdateCallbacks().deleteCallback(onGlobalUpdatedListener);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class PresetListActivity extends AppCompatActivity {
     }
 
     private void registerListeners() {
-        presetListUpdateListener = () -> {
+        presetListUpdateSignalListener = () -> {
             try {
                 if (!isFinishing()) {
                     runOnUiThread(() -> {
@@ -144,23 +144,23 @@ public class PresetListActivity extends AppCompatActivity {
                     .setDeleteCallback(isFinishing())
                     .build();
         };
-        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, presetListUpdateListener);
+        app.getPresetListUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, presetListUpdateSignalListener);
 
 
         onDebugSignalListener = data -> {
             runOnUiThread(() -> {
                 TextView textView = new TextView(this);
-                textView.setText(String.format("DEBUG_SIGNAL: %s", data.toString()));
+                textView.setText(String.format("DEBUG_SIGNAL: %s", data));
                 binding.notificationContainer.addView(textView);
             });
-            runOnUiThread(() -> Toast.makeText(this, "Debug signal! " + data.toString(), Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(this, "Debug signal! " + data, Toast.LENGTH_SHORT).show());
             return new Status.Builder()
                     .build();
         };
         app.getDebugSignalListenerCallbacks().addCallback(CallbackImportance.DEFAULT, onDebugSignalListener);
 
 
-        onUserChangeSettingsListener = (preferenceKey) -> {
+        onUserSettingsChangeListener = (preferenceKey) -> {
             if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_DEVELOPER_FEATURES)) {
                 runOnUiThread(() -> {
                     if (openDebugItem != null) {
@@ -171,14 +171,14 @@ public class PresetListActivity extends AppCompatActivity {
             return new Status.Builder()
                     .build();
         };
-        app.getOnUserChangeSettingsCallbacks().addCallback(CallbackImportance.DEFAULT, onUserChangeSettingsListener);
+        app.getOnUserChangeSettingsCallbacks().addCallback(CallbackImportance.DEFAULT, onUserSettingsChangeListener);
 
-        globalUpdateListener = (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+        onGlobalUpdatedListener = (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
             runOnUiThread(this::updateOpenUpdateCenterMenuName);
             return new Status.Builder()
                     .build();
         };
-        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, globalUpdateListener);
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, onGlobalUpdatedListener);
     }
 
     private void updateOpenUpdateCenterMenuName() {

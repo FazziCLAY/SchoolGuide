@@ -75,7 +75,7 @@ public class DebugActivity extends AppCompatActivity {
 
         binding.debugCallbackSend.setOnClickListener(ignore -> {
             String data = binding.debugCallbackData.getText().toString();
-            app.getDebugSignalListenerCallbacks().run(((callbackStorage, callback) -> callback.onDebugSignal(data)));
+            app.getDebugSignalListenerCallbacks().run(((callbackStorage, callback) -> callback.run(data)));
         });
     }
 }
