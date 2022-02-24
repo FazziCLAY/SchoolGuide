@@ -1,101 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="10sp"
     android:background="?attr/activityBackground">
 
     <LinearLayout
-        android:id="@+id/textColorizeGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:text="Colorize text"
+        <LinearLayout
+            android:id="@+id/textColorizeGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:textColor="#ffffff"
-            tools:ignore="HardcodedText" />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/textColorizeInput"
+            <TextView
+                android:text="Colorize text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/textColorizeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <TextView
+                tools:text="Hello from ru"
+                android:id="@+id/textColorizeResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mathFloor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:minHeight="48dp" />
+            android:orientation="vertical">
 
-        <TextView
-            tools:text="Hello from ru"
-            android:id="@+id/textColorizeResult"
+            <TextView
+                android:text="i2 = Math.floor(i1)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+
+
+            <EditText
+                android:id="@+id/inputFloor"
+                android:hint="i1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+
+            <EditText
+                android:id="@+id/outputFloor"
+                android:hint="i2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/debugCallback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp" />
+            android:orientation="vertical">
 
+            <TextView
+                android:text="Debug callback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+
+
+            <EditText
+                android:id="@+id/debugCallbackData"
+                android:hint="data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+
+            <Button
+                android:id="@+id/debugCallbackSend"
+                android:text="SEND"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="app.pendingUpdateGlobal(x);"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+
+
+            <CheckBox
+                android:id="@+id/pendingUpdateGlobalStartupMode"
+                android:layout_width="match_parent"
+                android:text="startupMode"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/pendingUpdateGlobalSend"
+                android:text="SEND"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="MilkLog.g(logText);"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+
+
+            <EditText
+                android:id="@+id/milkLogText"
+                android:layout_width="match_parent"
+                android:hint="logText"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/milkLogSend"
+                android:text="SEND"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/mathFloor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:text="i2 = Math.floor(i1)"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:textColor="#ffffff"
-            tools:ignore="HardcodedText" />
-
-
-        <EditText
-            android:id="@+id/inputFloor"
-            android:hint="i1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
-        <EditText
-            android:id="@+id/outputFloor"
-            android:hint="i2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/debugCallback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:text="Debug callback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:textColor="#ffffff"
-            tools:ignore="HardcodedText" />
-
-
-        <EditText
-            android:id="@+id/debugCallbackData"
-            android:hint="data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
-        <Button
-            android:id="@+id/debugCallbackSend"
-            android:text="SEND"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
-    </LinearLayout>
-</LinearLayout>
+</ScrollView>

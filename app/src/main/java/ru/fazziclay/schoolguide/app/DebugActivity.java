@@ -77,5 +77,14 @@ public class DebugActivity extends AppCompatActivity {
             String data = binding.debugCallbackData.getText().toString();
             app.getDebugSignalListenerCallbacks().run(((callbackStorage, callback) -> callback.run(data)));
         });
+
+
+        binding.pendingUpdateGlobalSend.setOnClickListener(ignore -> {
+            boolean startupMode = binding.pendingUpdateGlobalStartupMode.isChecked();
+            app.pendingUpdateGlobal(startupMode);
+        });
+
+
+        binding.milkLogSend.setOnClickListener(ignore -> MilkLog.g(binding.milkLogText.getText().toString()));
     }
 }
