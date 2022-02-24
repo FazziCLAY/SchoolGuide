@@ -177,7 +177,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
                 statusInterface.run(Status.OUTDATED.setLatestVersion(v));
             }
             if (DEBUG_STATE != 0) return;
-            GlobalManager.getInExternalThread(app, new GlobalManager.GlobalManagerInterface() {
+            GlobalManager.getInExternalThread(app, new GlobalManager.ResponseInterface() {
                 @Override
                 public void failed(Exception exception) {
                     appTrace.point("failed, getGlobalManager. PROCESSED CORRECTLY!", exception);
@@ -186,18 +186,18 @@ public class UpdateCenterActivity extends AppCompatActivity {
 
                 @Override
                 public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
-                    if (versionManifest.latestVersion == null) {
+                    if (versionManifest.getLatestVersion() == null) {
                         statusInterface.run(Status.ERROR.setException(new NullPointerException("latestVersion is null")));
                         return;
                     }
-                    if (versionManifest.latestVersion.getDownloadUrl(currentVersionBuildType) == null) {
+                    if (versionManifest.getLatestVersion().getDownloadUrl(currentVersionBuildType) == null) {
                         statusInterface.run(Status.ERROR.setException(new NullPointerException("download url is null")));
                         return;
                     }
 
-                    if (versionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE) {
+                    if (versionManifest.getLatestVersion().getCode() > SharedConstrains.APPLICATION_VERSION_CODE) {
                         statusInterface.run(Status.OUTDATED
-                                .setLatestVersion(versionManifest.latestVersion));
+                                .setLatestVersion(versionManifest.getLatestVersion()));
                     } else {
                         statusInterface.run(Status.UPDATED);
                     }
