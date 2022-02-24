@@ -8,7 +8,6 @@ import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -16,10 +15,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.fazziclay.schoolguide.app.MilkLog;
+
 /**
  * Набор утилит длоя работы с цветами
  * **/
 public class ColorUtil {
+    private static final boolean DEBUG_COLORIZE = false;
+
     /**
      * Конвертирует цвет в виде int в #AARRGGBB
      * **/
@@ -68,7 +71,7 @@ public class ColorUtil {
         int oi = 0; // курсор по chars
         int ni = 0; // курсор по новой строке
         while (oi < chars.length) {
-            log.append("startWhile oi=").append(oi).append("; ni=").append(ni).append("; cfg=").append(currentForegroundSpan).append("; cbg=").append(currentBackgroundSpan).append("; cs=").append(currentStyleSpan).append("\n");
+            log.append("startWhile char=").append(chars[oi]).append(" oi=").append(oi).append("; ni=").append(ni).append("; cfg=").append(currentForegroundSpan).append("; cbg=").append(currentBackgroundSpan).append("; cs=").append(currentStyleSpan).append("\n");
             boolean appendOld = true;
             boolean appendNew = true;
             String toAppend = "";
@@ -147,7 +150,7 @@ public class ColorUtil {
 
             if (oi >= chars.length) continue;
             SpanText latestSpan = ListUtil.getLatestElement(spanTextList);
-            if (spanTextList.size() > 0 && latestSpan != null & latestSpan.spanEquals(currentForegroundSpan, currentBackgroundSpan, currentStyleSpan)) {
+            if (spanTextList.size() > 0 && latestSpan != null && latestSpan.spanEquals(currentForegroundSpan, currentBackgroundSpan, currentStyleSpan)) {
                 latestSpan.appendText(toAppend);
             } else {
                 int latestStart = ni;
@@ -182,10 +185,8 @@ public class ColorUtil {
             spannableText.setSpan(new StyleSpan(spanText.style), start, end, Spanned.SPAN_COMPOSING);
             i++;
         }
-        if (true) {
-            try {
-                Log.d("colorUtil.colorize()", log.toString());
-            } catch (Exception ignored) {}
+        if (DEBUG_COLORIZE) {
+            MilkLog.g(log.toString());
         }
         return spannableText;
     }
