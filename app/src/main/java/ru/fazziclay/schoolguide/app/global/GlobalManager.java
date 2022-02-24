@@ -1,7 +1,5 @@
 package ru.fazziclay.schoolguide.app.global;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -84,8 +82,8 @@ public class GlobalManager {
 
             responseInterface.success(globalKeys, versionManifest, builtinSchedule);
         } catch (Exception e) {
-            responseInterface.failed(e);
             MilkLog.g("GlobalManager: failed! (processed by interface!)", e);
+            responseInterface.failed(e);
         }
     }
 
