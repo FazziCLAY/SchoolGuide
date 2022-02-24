@@ -1,11 +1,12 @@
 package ru.fazziclay.schoolguide.util;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
 import java.io.File;
 
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 /**
@@ -13,6 +14,7 @@ import ru.fazziclay.schoolguide.app.SchoolGuideApp;
  * @apiNote Use GSON
  * **/
 public class DataUtil {
+    @NonNull
     public static <T> T load(Gson gson, File file, Class<T> clazz) {
         T data = gson.fromJson("{}", clazz);
 
@@ -29,19 +31,14 @@ public class DataUtil {
         return data;
     }
 
+    @NonNull
     public static <T> T load(File file, Class<T> clazz) {
         return load(getGson(), file, clazz);
     }
 
     public static void save(Gson gson, File file, Object obj) {
         if (obj == null) {
-            Log.e("Save", "save object is null!");
-            if (SchoolGuideApp.isInstanceAvailable()) {
-                SchoolGuideApp app = SchoolGuideApp.get();
-                if (app != null) {
-                    app.getAppTrace().point("save object is null!", new NullPointerException("Exception by fazziclay!"));
-                }
-            }
+            MilkLog.g("object null", new NullPointerException("save object is null!"));
             return;
         }
         FileUtil.write(file, gson.toJson(obj, obj.getClass()));
@@ -53,8 +50,10 @@ public class DataUtil {
 
     private static Gson getGson() {
         if (SchoolGuideApp.isInstanceAvailable()) {
-            return SchoolGuideApp.get().getGson();
+            SchoolGuideApp app = SchoolGuideApp.get();
+            if (app != null) return app.getGson();
         }
+        MilkLog.g("DataUtil.getGson: SchoolGuide instance not available!");
         return new Gson();
     }
 }
