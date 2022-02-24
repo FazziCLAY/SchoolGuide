@@ -169,11 +169,11 @@ public class UpdateCenterActivity extends AppCompatActivity {
                 statusInterface.run(Status.UPDATED);
             } else if (DEBUG_STATE == 5) {
                 HashMap<String, String> change = new HashMap<>();
-                change.put("default", "Пофикшены баги:\nКорова прилипала к стене\n$[-#ff0000]Вылет из за краша$[-reset]\n\nПодпишись: https://youtube.com/\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_");
+                change.put("default", "Пофикшены баги:\n * Корова прилипала к стене\n$[-#ff0000] * Вылет из-за краша$[-reset]\n$[-#ff0000] * Краш из-за вылета$[-reset]\n\nПодпишись: https://youtube.com\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_ $[@reset;-reset;=reset]& $[-#00aaff]@fyozaku");
                 HashMap<String, String> download = new HashMap<>();
                 download.put("release", "https://google.com");
                 download.put("debug", "https://yandex.ru");
-                GlobalVersionManifest.ManifestVersion v = new GlobalVersionManifest.ManifestVersion(20, "0.6 - ReWriTTen ", change, download);
+                GlobalVersionManifest.ManifestVersion v = new GlobalVersionManifest.ManifestVersion(20, "0.6 - ReWriTTen", change, download);
                 statusInterface.run(Status.OUTDATED.setLatestVersion(v));
             }
             if (DEBUG_STATE != 0) return;
