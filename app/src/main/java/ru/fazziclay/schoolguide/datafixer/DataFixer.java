@@ -1,14 +1,14 @@
 package ru.fazziclay.schoolguide.datafixer;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.File;
 
-import ru.fazziclay.schoolguide.util.AppTrace;
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.datafixer.schem.AbstractScheme;
+import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.FileUtil;
 
 /**
@@ -76,7 +76,7 @@ public class DataFixer {
         int i = 0;
         int o = fixSchemes.length;
         while (i < o) {
-            Log.d("DataFixer", "fixIfAvailable(); while i="+i+" o="+o);
+            MilkLog.g("DataFixer: fixIfAvailable(); while i="+i+" o="+o);
             AbstractScheme fixScheme = fixSchemes[i];
 
             try {
