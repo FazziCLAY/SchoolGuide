@@ -31,7 +31,7 @@ public class LaunchActivity extends Activity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } catch (Exception e) {
             setDarkThemeException = e;
-            Log.e("Dark theme", "error to set defaultNightMode to YES", e);
+            MilkLog.g("error to set setDefaultNightMode to MODE_NIGHT_YES", e);
         }
 
         // Loading
@@ -42,7 +42,7 @@ public class LaunchActivity extends Activity {
         }
 
         if (setDarkThemeException != null) {
-            app.getAppTrace().point("Set theme exception!", setDarkThemeException);
+            MilkLog.g("error to set setDefaultNightMode to MODE_NIGHT_YES (exception pre App initialize (maybe doubled in Android.LOG))", setDarkThemeException);
         }
 
         app.pendingUpdateGlobal(false);
