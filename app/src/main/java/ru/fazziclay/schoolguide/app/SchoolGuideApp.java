@@ -194,7 +194,7 @@ public class SchoolGuideApp {
 
     private void registerCallbacks() {
         getGlobalUpdateCallbacks().addCallback(CallbackImportance.MAX, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
-            setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.latestVersion != null && globalVersionManifest.latestVersion.getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
+            setUpdateAvailable(globalVersionManifest != null && globalVersionManifest.getLatestVersion() != null && globalVersionManifest.getLatestVersion().getCode() > SharedConstrains.APPLICATION_VERSION_CODE);
 
             return new Status.Builder()
                     .setDeleteCallback(false)
@@ -291,7 +291,7 @@ public class SchoolGuideApp {
     }
 
     public void pendingUpdateGlobal(boolean startupMode) {
-        GlobalManager.GlobalManagerInterface g = new GlobalManager.GlobalManagerInterface() {
+        GlobalManager.ResponseInterface g = new GlobalManager.ResponseInterface() {
             @Override
             public void failed(Exception exception) {
                 Log.e("NO_CRITICAL", "GlobalManager.get(...) return failed!", exception);
