@@ -294,7 +294,7 @@ public class SchoolGuideApp {
         GlobalManager.ResponseInterface g = new GlobalManager.ResponseInterface() {
             @Override
             public void failed(Exception exception) {
-                Log.e("NO_CRITICAL", "GlobalManager.get(...) return failed!", exception);
+                MilkLog.g("SchoolGuideApp.pendingUpdateGlobal received failed!", exception);
             }
 
             @Override
