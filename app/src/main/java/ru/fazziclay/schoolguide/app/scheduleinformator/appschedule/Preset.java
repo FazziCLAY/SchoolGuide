@@ -13,6 +13,7 @@ public class Preset implements Cloneable {
     private String name;
     private String author;
 
+    private boolean oneDayMode = false;
     private boolean syncedByGlobal = false;
 
     public HashMap<UUID, EventInfo> eventsInfos = new HashMap<>();
@@ -99,5 +100,13 @@ public class Preset implements Cloneable {
 
     public void setSyncedByGlobal(boolean syncedByGlobal) {
         this.syncedByGlobal = syncedByGlobal;
+    }
+
+    public boolean isOneDayMode() {
+        return oneDayMode;
+    }
+
+    public void setOneDayMode(boolean oneDayMode) {
+        this.oneDayMode = oneDayMode;
     }
 }
