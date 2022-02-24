@@ -16,14 +16,14 @@ public class GlobalVersionManifest implements IGlobalData {
      * @see IGlobalData
      * **/
     @SerializedName("key")
-    private final int key = 0;
+    private int key = 0;
 
     /**
      * <h1>Последняя версия приложения</h1>
      * Name "latestVersion" since pre v50
      * **/
     @SerializedName("latestVersion")
-    private final ManifestVersion latestVersion = null;
+    private ManifestVersion latestVersion = null;
 
     @Override
     public int getGlobalKey() {

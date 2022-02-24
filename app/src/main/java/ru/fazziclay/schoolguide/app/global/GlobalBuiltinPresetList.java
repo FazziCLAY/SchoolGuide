@@ -16,7 +16,7 @@ public class GlobalBuiltinPresetList extends PresetList implements IGlobalData {
      * @see IGlobalData
      * **/
     @SerializedName("key")
-    private final int key = 0;
+    private int key = 0;
 
     @Override
     public int getGlobalKey() {

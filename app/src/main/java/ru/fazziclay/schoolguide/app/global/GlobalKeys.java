@@ -12,14 +12,14 @@ public class GlobalKeys {
      * Name "versionManifest" since pre v50
      * **/
     @SerializedName("versionManifest")
-    private final int versionManifest = 0;
+    private int versionManifest = 0;
 
     /**
      * <h1>Ключ встроенного списка пресетов({@link GlobalBuiltinPresetList})</h1>
      * Name "builtinSchedule" since pre v50
      * **/
     @SerializedName("builtinSchedule")
-    private final int builtinSchedule = 0;
+    private int builtinSchedule = 0;
 
     /**
      * @see GlobalKeys#versionManifest
