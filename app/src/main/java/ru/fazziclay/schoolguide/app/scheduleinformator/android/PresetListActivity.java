@@ -459,8 +459,9 @@ public class PresetListActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams checkboxLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         CheckBox checkBox = new CheckBox(this);
-        checkBox.setChecked(preset.equals(informatorApp.getSelectedPreset()));
-        if (checkBox.isChecked()) previousCheckedCheckbox = checkBox;
+        boolean b = preset.equals(informatorApp.getSelectedPreset());
+        checkBox.setChecked(b);
+        if (b) previousCheckedCheckbox = checkBox;
         checkBox.setTextSize(30);
         checkBox.setPadding(5, 5, 10, 5);
         checkBox.setLayoutParams(checkboxLayoutParams);
@@ -469,7 +470,7 @@ public class PresetListActivity extends AppCompatActivity {
                 checkBox.setChecked(true);
                 return;
             }
-            previousCheckedCheckbox.setChecked(false);
+            if (previousCheckedCheckbox != null) previousCheckedCheckbox.setChecked(false);
             previousCheckedCheckbox = checkBox;
             view.clearAnimation();
             informatorApp.setSelectedPreset(presetUUID);
