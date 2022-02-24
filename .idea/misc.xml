@@ -55,6 +55,7 @@
         <entry key="app/src/main/res/layout/dialog_preset_edit_event_edit.xml" value="0.3016304347826087" />
         <entry key="app/src/main/res/layout/dialog_time_picker.xml" value="0.3016304347826087" />
         <entry key="app/src/main/res/layout/main_widget.xml" value="0.3640625" />
+        <entry key="app/src/main/res/menu/menu_preset_edit.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/xml/settings_preferences.xml" value="0.33" />
       </map>
     </option>
