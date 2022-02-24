@@ -11,5 +11,5 @@ public interface SelectablePresetList {
 
     UUID getSelectedPresetId();
 
-    UUID selectFirst();
+    UUID selectFirstByDisplayName();
 }

@@ -15,7 +15,7 @@ public class AppPresetList extends PresetList implements SelectablePresetList {
     public Preset getSelectedPreset() {
         Preset preset = getPreset(selectedPresetUUID);
         if (preset == null) {
-            preset = getPreset(selectFirst());
+            preset = getPreset(selectFirstByDisplayName());
             if (preset != null) return preset;
             preset = new Preset();
             preset.setName("Undefined Preset");
@@ -35,9 +35,9 @@ public class AppPresetList extends PresetList implements SelectablePresetList {
     }
 
     @Override
-    public UUID selectFirst() {
+    public UUID selectFirstByDisplayName() {
         if (getPresetsIds().length > 0) {
-            setSelectedPreset(getPresetsIds()[0]);
+            setSelectedPreset(getPresetsIds(true)[0]);
             return getSelectedPresetId();
         }
         return null;

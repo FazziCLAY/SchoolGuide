@@ -293,7 +293,7 @@ public class PresetListActivity extends AppCompatActivity {
                         SelectablePresetList selectablePresetList = (SelectablePresetList) presetList;
                         boolean selected = selectablePresetList.getSelectedPreset() == preset;
                         presetList.removePreset(uuid);
-                        if (selected) selectablePresetList.selectFirst();
+                        if (selected) selectablePresetList.selectFirstByDisplayName();
                     } else {
                         presetList.removePreset(uuid);
                     }
