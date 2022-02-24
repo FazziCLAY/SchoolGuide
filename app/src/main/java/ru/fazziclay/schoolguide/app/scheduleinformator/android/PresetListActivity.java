@@ -12,7 +12,6 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +34,7 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.DebugActivity;
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.SettingsActivity;
 import ru.fazziclay.schoolguide.app.SharedConstrains;
@@ -228,7 +228,7 @@ public class PresetListActivity extends AppCompatActivity {
                         intent.setData(Uri.parse("package:" + getPackageName()));
                         startActivity(intent);
                     } catch (Exception e) {
-                        app.getAppTrace().point("failed start DISABLE BATTERY OPTIMIZATION dialog", e);
+                        MilkLog.g("failed start DISABLE BATTERY OPTIMIZATION dialog", e);
                     }
                 })
                 .setNegativeButton(R.string.batteryOptimizationDialog_cancel, null);
@@ -281,7 +281,7 @@ public class PresetListActivity extends AppCompatActivity {
     private void showDeletePresetDialog(UUID uuid) {
         Preset preset = presetList.getPreset(uuid);
         if (preset == null) {
-            Log.e("showDeletePresetDialog", "preset null in schedule; uuid="+uuid.toString());
+            MilkLog.g("showDeletePresetDialog: preset null by uuid; uuid=" + uuid.toString());
             return;
         }
 
@@ -313,7 +313,7 @@ public class PresetListActivity extends AppCompatActivity {
     private void showCopyPresetDialog(UUID uuid) {
         Preset preset = presetList.getPreset(uuid);
         if (preset == null) {
-            Log.e("showCopyPresetDialog", "preset null in schedule; uuid="+uuid.toString());
+            MilkLog.g("showCopyPresetDialog: preset null by uuid; uuid=" + uuid.toString());
             return;
         }
 
@@ -360,7 +360,7 @@ public class PresetListActivity extends AppCompatActivity {
     private void showRenamePresetDialog(UUID uuid) {
         Preset preset = presetList.getPreset(uuid);
         if (preset == null) {
-            Log.e("showRenamePresetDialog", "preset null in schedule; uuid="+uuid.toString());
+            MilkLog.g("showRenamePresetDialog: preset null by uuid; uuid=" + uuid.toString());
             return;
         }
 
@@ -426,13 +426,13 @@ public class PresetListActivity extends AppCompatActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (position >= presetList.getPresetsIds().length) {
-                    app.getAppTrace().point("adapter list.len >= position!");
+                    MilkLog.g("adapter list.len >= position!");
                     return new Button(PresetListActivity.this);
                 }
                 UUID presetUUID = presetList.getPresetsIds()[position];
                 Preset preset = presetList.getPreset(presetUUID);
                 if (preset == null) {
-                    app.getAppTrace().point("adapter get view preset == null!");
+                    MilkLog.g("adapter get view preset == null!");
                     return new Button(PresetListActivity.this);
                 }
 
@@ -447,7 +447,7 @@ public class PresetListActivity extends AppCompatActivity {
     private CheckBox previousCheckedCheckbox = null;
     private View getPresetView(UUID presetUUID, Preset preset) {
         if (presetUUID == null || preset == null) {
-            app.getAppTrace().point("Warning! getPresetView received null args! returned TextView witch text presetList_error_getPresetView_nullArgs\n@presetUUID="+presetUUID + "\n@preset="+preset, new NullPointerException("By fazziclay!"));
+            MilkLog.g("Warning! getPresetView received null args! returned TextView witch text presetList_error_getPresetView_nullArgs\n@presetUUID="+presetUUID + "\n@preset="+preset, new NullPointerException("By fazziclay!"));
             TextView textView = new TextView(this);
             textView.setTextColor(Color.RED);
             textView.setText(R.string.presetList_error_getPresetView_nullArgs);
