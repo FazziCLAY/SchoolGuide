@@ -17,34 +17,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
 
+        <receiver
+            android:name=".app.MainWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/main_widget_info" />
+        </receiver>
+        <activity
+            android:name=".app.MainWidgetConfigureActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".app.LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".app.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".app.scheduleinformator.android.PresetListActivity"
             android:exported="false" />
-
         <activity
             android:name=".app.scheduleinformator.android.PresetEditActivity"
             android:exported="false" />
-
         <activity
             android:name=".app.multiplicationtrening.MathTreningGameActivity"
             android:exported="false" />
-
         <activity
             android:name=".app.UpdateCenterActivity"
             android:exported="false" />
-
         <activity
             android:name=".app.DebugActivity"
             android:exported="false" />
@@ -53,11 +66,10 @@
             android:name=".app.SchoolGuideService"
             android:enabled="true"
             android:exported="false" />
-
         <service
             android:name=".app.scheduleinformator.InformatorService"
             android:enabled="true"
             android:exported="false" />
-
     </application>
+
 </manifest>

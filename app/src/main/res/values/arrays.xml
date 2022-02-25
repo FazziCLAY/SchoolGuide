@@ -16,7 +16,7 @@
         <item>@string/duration_infinity</item>
     </string-array>
 
-    <integer-array name="notificationStatusBeforeTime_values">
+    <string-array name="notificationStatusBeforeTime_values">
         <item>3600</item>
         <item>7200</item>
         <item>10800</item>
@@ -30,5 +30,5 @@
         <item>39600</item>
         <item>43200</item>
         <item>-1</item>
-    </integer-array>
+    </string-array>
 </resources>

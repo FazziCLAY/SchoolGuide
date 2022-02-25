@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SchoolGuide" parent="Theme.MaterialComponents.Light">
+        <item name="activityBackground">#ff000000</item>
+        <item name="dialogBackground">#222222</item>
+    </style>
+</resources>

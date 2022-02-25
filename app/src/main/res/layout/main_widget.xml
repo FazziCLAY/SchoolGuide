@@ -1,0 +1,27 @@
+<LinearLayout
+    android:id="@+id/background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10sp"
+    android:background="#5A2D2D2D"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/infoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Hello world"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Hello world"
+        android:textColor="#ffffff"
+        android:textSize="19sp" />
+</LinearLayout>

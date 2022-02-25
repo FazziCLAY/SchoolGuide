@@ -166,4 +166,6 @@
     <string name="duration_39600">11Ч</string>
     <string name="duration_43200">12Ч</string>
     <string name="duration_infinity">Всегда</string>
+
+    <string name="mainWidget_description">Главный виджет приложения</string>
 </resources>

@@ -33,6 +33,11 @@ public class SharedConstrains {
     public static final String BUILTIN_SCHEDULE_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/main/manifest/v2/builtin_schedule_v2.json";
 
     /**
+     * @since v50
+     * **/
+    public static final String APP_WIDGETS_LIST_FILE = "android_widgets_list.json";
+
+    /**
      * Схемы востановления DataFixer`a
      * @see ru.fazziclay.schoolguide.datafixer.DataFixer
      * **/

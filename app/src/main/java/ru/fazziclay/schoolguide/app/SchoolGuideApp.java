@@ -29,6 +29,7 @@ import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.listener.OnUpdatePresetListBuiltinSignalListener;
 import ru.fazziclay.schoolguide.app.listener.OnUserSettingsChangeListener;
+import ru.fazziclay.schoolguide.app.listener.OnWidgetsEnableStatusChangeListener;
 import ru.fazziclay.schoolguide.app.listener.PresetListUpdateSignalListener;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
@@ -139,6 +140,9 @@ public class SchoolGuideApp {
      * **/
     private final Settings settings;
 
+    private final File appWidgetsListFile;
+    private final AppWidgetsList appWidgetsList;
+
     /**
      * Приложение "Информатор Расписания"
      * Там находится всё то что отвечает за распорядок дня так сказать
@@ -162,6 +166,7 @@ public class SchoolGuideApp {
     private final CallbackStorage<OnUserSettingsChangeListener> onUserChangeSettingsCallbacks = new CallbackStorage<>();
     private final CallbackStorage<OnDebugSignalListener> debugSignalListenerCallbacks = new CallbackStorage<>();
     private final CallbackStorage<OnUpdatePresetListBuiltinSignalListener> updatePresetListBuiltinSignalListenerCallbacks = new CallbackStorage<>();
+    private final CallbackStorage<OnWidgetsEnableStatusChangeListener> widgetsEnableStatusChangeListenerCallbacks = new CallbackStorage<>();
 
     public SchoolGuideApp(Context context) {
         if (context == null) {
@@ -186,6 +191,10 @@ public class SchoolGuideApp {
         settingsFile = new File(filesDir, "settings.json");
         settings = DataUtil.load(settingsFile, Settings.class);
         saveSettings();
+
+        appWidgetsListFile = new File(filesDir, SharedConstrains.APP_WIDGETS_LIST_FILE);
+        appWidgetsList = DataUtil.load(appWidgetsListFile, AppWidgetsList.class);
+        saveAppWidgetsList();
 
         registerCallbacks();
 
@@ -286,6 +295,9 @@ public class SchoolGuideApp {
         }
     }
 
+    public void saveAppWidgetsList() {
+        DataUtil.save(appWidgetsListFile, appWidgetsList);
+    }
 
     public void pendingUpdateGlobal() {
         pendingUpdateGlobal(false);
@@ -404,5 +416,17 @@ public class SchoolGuideApp {
 
     public CallbackStorage<OnUpdatePresetListBuiltinSignalListener> getUpdatePresetListBuiltinSignalListenerCallbacks() {
         return updatePresetListBuiltinSignalListenerCallbacks;
+    }
+
+    public File getAppWidgetsListFile() {
+        return appWidgetsListFile;
+    }
+
+    public AppWidgetsList getAppWidgetsList() {
+        return appWidgetsList;
+    }
+
+    public CallbackStorage<OnWidgetsEnableStatusChangeListener> getWidgetsEnableStatusChangeListenerCallbacks() {
+        return widgetsEnableStatusChangeListenerCallbacks;
     }
 }

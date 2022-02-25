@@ -1,8 +1,10 @@
 package ru.fazziclay.schoolguide.app.scheduleinformator;
 
 import android.app.Notification;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -187,6 +189,16 @@ public class ScheduleInformatorApp {
 
         notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
         sendNotify();
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        for (Integer appWidgetId : app.getAppWidgetsList().getWidgetsIds()) {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
+            views.setTextViewText(R.id.infoTitle, notificationBuilder.contentTitle);
+            views.setTextViewText(R.id.infoText, notificationBuilder.contentText);
+
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
+
         return 1000;
     }
 
