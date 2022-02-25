@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "ru.fazziclay.android.schoolguide"
         versionName "0.9.0.0 TarZAN"
-        versionCode 50
+        versionCode 51
         targetSdkVersion 32
         minSdkVersion 16
         proguardFiles
