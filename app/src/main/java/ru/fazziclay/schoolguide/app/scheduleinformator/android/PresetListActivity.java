@@ -54,6 +54,7 @@ import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
 import ru.fazziclay.schoolguide.util.AfterTextWatcher;
 import ru.fazziclay.schoolguide.util.ColorUtil;
+import ru.fazziclay.schoolguide.util.SortUtil;
 
 public class PresetListActivity extends AppCompatActivity {
     public static final int PRESET_NAME_MAX_LENGTH = 25;
@@ -456,7 +457,14 @@ public class PresetListActivity extends AppCompatActivity {
                     MilkLog.g("adapter list.len >= position!");
                     return new Button(PresetListActivity.this);
                 }
-                UUID presetUUID = presetList.getPresetsIds(true)[position];
+                // synced by global place to end
+                UUID[] list = presetList.getPresetsIds(true);
+                SortUtil.sort(list, o -> {
+                    Preset preset = presetList.getPreset(o);
+                    return (preset.isSyncedByGlobal() ? "2" : "1") + preset.getName();
+                });
+                UUID presetUUID = list[position];
+                // end
                 Preset preset = presetList.getPreset(presetUUID);
                 if (preset == null) {
                     MilkLog.g("adapter get view preset == null!");
