@@ -27,7 +27,7 @@ import ru.fazziclay.schoolguide.app.listener.OnDebugSignalListener;
 import ru.fazziclay.schoolguide.app.listener.OnGlobalUpdatedListener;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
 import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
-import ru.fazziclay.schoolguide.app.listener.OnDeveloperFeaturesStateChangeListener;
+import ru.fazziclay.schoolguide.app.listener.OnUpdatePresetListBuiltinSignalListener;
 import ru.fazziclay.schoolguide.app.listener.OnUserSettingsChangeListener;
 import ru.fazziclay.schoolguide.app.listener.PresetListUpdateSignalListener;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
@@ -74,7 +74,7 @@ public class SchoolGuideApp {
             try {
                 instance = new SchoolGuideApp(context);
             } catch (Exception e) {
-                Log.e("SchoolGuideApp#get()", "При создании обьекта приложения, он выдат ошибку", e);
+                MilkLog.g("SchoolGuideApp.get: При создании объекта приложения, он выдат ошибку", e);
                 return null;
             }
         }
@@ -99,36 +99,43 @@ public class SchoolGuideApp {
     /**
      * Контекст андроид приложения
      * нужен для всяких андроид штук
+     * @see Context
      * **/
     private final Context androidContext;
 
     /**
      * <p>Дерриктория файлов программы, находится обычно в .../Android/data/(package)/files/</p>
      * <p>Тут нужно хранить ценные "Влажные" файлы</p>
+     * @see File
      * **/
     private final File filesDir;
 
     /**
      * <p>Дерриктория кеша программы, находится обычно в .../Android/data/(package)/cache/</p>
      * <p>Тут можно хранить временные файлы, ну файлы кеша кароче</p>
+     * @see File
      * **/
     private final File cacheDir;
 
     /**
      * <p>Файл настроек, наследник {@link SchoolGuideApp#filesDir}</p>
      * <p>Должен быть settings.json</p>
+     * @see File
      * **/
     private final File settingsFile;
 
     /**
      * <p>Gson для работы с json, очень желательно везде где он нужен, брать его именно от сюда</p>
      * <p>И оперативы меньше, и если надо PrettyPrint то изи будет сделать</p>
+     * @see Gson
      * **/
     private final Gson gson;
 
     /**
-     * Настройки приложения, из можно менять через этот обьект, а сохранять их на случай перезагрузки
+     * Настройки приложения, их можно менять через этот обьект, а сохранять их на случай перезагрузки
      * надо функциец {@link SchoolGuideApp#saveSettings()}
+     * @see Settings
+     * @see SchoolGuideApp#settingsFile
      * **/
     private final Settings settings;
 
@@ -145,19 +152,16 @@ public class SchoolGuideApp {
     private boolean isUpdateAvailable = false;
 
     /**
-     * Callback хранилеще для авто обновлений глобальных данных
+     * Кеш редактора пресета
      * **/
-    private final CallbackStorage<OnGlobalUpdatedListener> globalUpdateCallbacks = new CallbackStorage<>();
-
-    private final CallbackStorage<PresetListUpdateSignalListener> presetListUpdateCallbacks = new CallbackStorage<>();
-
     private final PresetEditEventEditDialogStateCache presetEditEventEditDialogStateCache = new PresetEditEventEditDialogStateCache();
 
+    // CALLBACKS
+    private final CallbackStorage<OnGlobalUpdatedListener> globalUpdateCallbacks = new CallbackStorage<>();
+    private final CallbackStorage<PresetListUpdateSignalListener> presetListUpdateCallbacks = new CallbackStorage<>();
     private final CallbackStorage<OnUserSettingsChangeListener> onUserChangeSettingsCallbacks = new CallbackStorage<>();
-
-    private final CallbackStorage<OnDeveloperFeaturesStateChangeListener> onDeveloperFeaturesStateChangeListenerCallbacks = new CallbackStorage<>();
-
     private final CallbackStorage<OnDebugSignalListener> debugSignalListenerCallbacks = new CallbackStorage<>();
+    private final CallbackStorage<OnUpdatePresetListBuiltinSignalListener> updatePresetListBuiltinSignalListenerCallbacks = new CallbackStorage<>();
 
     public SchoolGuideApp(Context context) {
         if (context == null) {
@@ -206,7 +210,7 @@ public class SchoolGuideApp {
                 try {
                     sendUpdateNotify();
                 } catch (Exception e) {
-                    appTrace.point("update available! error while app.sendUpdateNotify();", e);
+                    MilkLog.g("update available! error while app.sendUpdateNotify();", e);
                 }
             }
             
@@ -218,9 +222,6 @@ public class SchoolGuideApp {
         getOnUserChangeSettingsCallbacks().addCallback(CallbackImportance.DEFAULT, preferenceKey -> {
             if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_BUILTIN_PRESET_LIST)) {
                 pendingUpdateGlobal();
-            }
-            if (preferenceKey.equals(SettingsActivity.KEY_ADVANCED_IS_DEVELOPER_FEATURES)) {
-                getOnDeveloperFeaturesStateChangeListenerCallbacks().run(((callbackStorage, callback) -> callback.run(settings.isDeveloperFeatures())));
             }
             return new Status.Builder()
                     .setDeleteCallback(false)
@@ -397,11 +398,11 @@ public class SchoolGuideApp {
         return onUserChangeSettingsCallbacks;
     }
 
-    public CallbackStorage<OnDeveloperFeaturesStateChangeListener> getOnDeveloperFeaturesStateChangeListenerCallbacks() {
-        return onDeveloperFeaturesStateChangeListenerCallbacks;
-    }
-
     public CallbackStorage<OnDebugSignalListener> getDebugSignalListenerCallbacks() {
         return debugSignalListenerCallbacks;
+    }
+
+    public CallbackStorage<OnUpdatePresetListBuiltinSignalListener> getUpdatePresetListBuiltinSignalListenerCallbacks() {
+        return updatePresetListBuiltinSignalListenerCallbacks;
     }
 }

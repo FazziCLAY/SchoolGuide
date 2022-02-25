@@ -11,8 +11,14 @@ import java.io.File;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
+import ru.fazziclay.schoolguide.app.SettingsActivity;
+import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
+import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalManager;
+import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
@@ -57,7 +63,7 @@ public class ScheduleInformatorApp {
         appPresetList = DataUtil.load(scheduleFile, AppPresetList.class);
         saveAppSchedule();
 
-        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, (globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+        app.getUpdatePresetListBuiltinSignalListenerCallbacks().addCallback(CallbackImportance.DEFAULT, (globalBuiltinPresetList, status) -> {
             if (globalBuiltinPresetList != null) {
                 boolean change = globalBuiltinPresetList.getPresetsIds().length > 0;
                 int i = 0;
@@ -65,7 +71,7 @@ public class ScheduleInformatorApp {
                     UUID gPresetUUID = globalBuiltinPresetList.getPresetsIds()[i];
                     Preset gPreset = globalBuiltinPresetList.getPreset(gPresetUUID);
 
-                    if (gPreset == null || !settings.isBuiltinPresetList()) {
+                    if (gPreset == null || !status) {
                         appPresetList.removePreset(gPresetUUID);
                     } else {
                         gPreset.setSyncedByGlobal(true);
@@ -80,6 +86,30 @@ public class ScheduleInformatorApp {
             }
             return new Status.Builder().build();
         });
+
+        app.getGlobalUpdateCallbacks().addCallback(CallbackImportance.DEFAULT, ((globalKeys, globalVersionManifest, globalBuiltinPresetList) -> {
+            app.getUpdatePresetListBuiltinSignalListenerCallbacks().run((callbackStorage, callback) -> callback.onSignal(globalBuiltinPresetList, settings.isBuiltinPresetList()));
+            return new Status.Builder()
+                    .build();
+        }));
+
+        app.getOnUserChangeSettingsCallbacks().addCallback(CallbackImportance.DEFAULT, ((key) -> {
+            if (key.equals(SettingsActivity.KEY_ADVANCED_IS_BUILTIN_PRESET_LIST)) {
+                GlobalManager.getInCurrentThread(app, false, new GlobalManager.ResponseInterface() {
+                    @Override
+                    public void failed(Exception exception) {
+                        MilkLog.g("ошибка при получении глобала в текущем потоке без интернета", exception);
+                    }
+
+                    @Override
+                    public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
+                        app.getUpdatePresetListBuiltinSignalListenerCallbacks().run((callbackStorage, callback) -> callback.onSignal(builtinSchedule, settings.isBuiltinPresetList()));
+                    }
+                });
+            }
+            return new Status.Builder()
+                    .build();
+        }));
 
         serviceStart();
     }
