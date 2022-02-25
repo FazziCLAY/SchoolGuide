@@ -31,10 +31,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
 
             <TextView
-                tools:text="Hello from ru"
+                tools:text="HELLO WORLD"
                 android:id="@+id/textColorizeResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +64,9 @@
                 android:hint="i1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:importantForAutofill="no"
+                android:inputType="text" />
 
 
             <EditText
@@ -70,7 +74,8 @@
                 android:hint="i2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText,TextFields"
+                android:importantForAutofill="no" />
 
 
         </LinearLayout>
@@ -95,7 +100,9 @@
                 android:hint="data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:importantForAutofill="no"
+                android:inputType="text" />
 
 
             <Button
@@ -154,7 +161,9 @@
                 android:layout_width="match_parent"
                 android:hint="logText"
                 android:layout_height="wrap_content"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:importantForAutofill="no"
+                android:inputType="text" />
 
             <Button
                 android:id="@+id/milkLogSend"
