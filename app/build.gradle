@@ -7,8 +7,8 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "ru.fazziclay.android.schoolguide.dev"
-        versionName "0.9.0.0 Code_TARZAN"
+        applicationId "ru.fazziclay.android.schoolguide"
+        versionName "0.9.0.0 TarZAN"
         versionCode 50
         targetSdkVersion 32
         minSdkVersion 16
