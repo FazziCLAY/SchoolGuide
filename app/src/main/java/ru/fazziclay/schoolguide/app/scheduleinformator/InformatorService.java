@@ -8,14 +8,18 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
+import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
 public class InformatorService extends Service {
+    private static final int MAX_REPORTS_ERRORS = 10;
+
     private ScheduleInformatorApp scheduleInformatorApp;
 
     private Handler handler;
     private Runnable runnable;
+    private int reportedErrors = 0;
 
     @Override
     public void onCreate() {
@@ -29,7 +33,17 @@ public class InformatorService extends Service {
         scheduleInformatorApp.registerService(this);
 
         handler = new Handler(Looper.myLooper());
-        runnable = () -> handler.postDelayed(runnable, scheduleInformatorApp.tick());
+        runnable = () -> {
+            try {
+                handler.postDelayed(runnable, scheduleInformatorApp.tick());
+            } catch (Exception e) {
+                if (reportedErrors <= MAX_REPORTS_ERRORS) {
+                    MilkLog.g("Exception while run scheduleInformatorApp.tick()", e);
+                    app.sendErrorNotification();
+                }
+                reportedErrors++;
+            }
+        };
     }
 
     @Override

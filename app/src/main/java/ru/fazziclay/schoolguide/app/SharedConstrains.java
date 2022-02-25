@@ -83,6 +83,13 @@ public class SharedConstrains {
         updateCenter.setDescription(context.getString(R.string.notificationChannel_updateCenter_description));
         notificationChannels.add(updateCenter);
 
+        NotificationChannel errors = new NotificationChannel(
+                "errors",
+                "errors",
+                NotificationManager.IMPORTANCE_DEFAULT);
+        updateCenter.setDescription("errors :/");
+        notificationChannels.add(errors);
+
         return notificationChannels;
     }
 

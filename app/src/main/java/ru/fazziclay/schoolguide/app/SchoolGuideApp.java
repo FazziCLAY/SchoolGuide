@@ -264,6 +264,23 @@ public class SchoolGuideApp {
         managerCompat.notify(NOTIFICATION_ID, notification);
     }
 
+    public void sendErrorNotification() {
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(androidContext);
+        final int NOTIFICATION_ID = 10000;
+        final String NOTIFICATION_CHANNEL_ID = "errors";
+
+        Notification notification = new NotificationCompat.Builder(androidContext, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSound(null)
+                .setOnlyAlertOnce(true)
+                .setSilent(true)
+                .setContentTitle("App error!")
+                .setContentText("Напишите разработчику!\nContact to developer!")
+                .build();
+
+        managerCompat.notify(NOTIFICATION_ID, notification);
+    }
+
     /**
      * Регистрирует каналы уведомлений согласно схеме в {@link SharedConstrains}
      * @apiNote android >= Build.VERSION_CODES.O
