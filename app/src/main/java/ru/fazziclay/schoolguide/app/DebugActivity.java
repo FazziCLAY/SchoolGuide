@@ -9,6 +9,7 @@ import android.text.Editable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.databinding.ActivityDebugBinding;
 import ru.fazziclay.schoolguide.util.AfterTextWatcher;
 import ru.fazziclay.schoolguide.util.ColorUtil;
@@ -31,6 +32,7 @@ public class DebugActivity extends AppCompatActivity {
         }
         binding = ActivityDebugBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setTitle(R.string.debug_activityTitle);
 
         // ColorUtil.colorize
         binding.textColorizeInput.addTextChangedListener(new AfterTextWatcher() {

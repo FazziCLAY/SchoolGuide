@@ -168,4 +168,6 @@
     <string name="duration_infinity">Всегда</string>
 
     <string name="mainWidget_description">Главный виджет приложения</string>
+
+    <string name="debug_activityTitle">Инструменты разработчика</string>
 </resources>

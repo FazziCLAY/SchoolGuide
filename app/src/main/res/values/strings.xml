@@ -174,4 +174,6 @@
     <string name="duration_infinity">Always</string>
 
     <string name="mainWidget_description">Main app widget</string>
+
+    <string name="debug_activityTitle">Developer tools</string>
 </resources>
