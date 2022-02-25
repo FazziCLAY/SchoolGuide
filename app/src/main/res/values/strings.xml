@@ -52,6 +52,7 @@
     <string name="mathTreningGame_resetScore_cancel">Cancel</string>
     <string name="mathTreningGame_resetScore_easterEgg1">EASTER EGG: A lovko ti eto pridumal, ya daze snashala ne ponal (RU)</string>
 
+    <string name="presetList_activityTitle">SchoolGuide - Presets list</string>
     <string name="presetList_addPreset_contentDescription">Add preset</string>
     <string name="presetList_createNew_nameHint">Enter name</string>
     <string name="presetList_createNew_title">Create new preset</string>

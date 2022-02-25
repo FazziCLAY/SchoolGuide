@@ -47,6 +47,7 @@
     <string name="mathTreningGame_resetScore_cancel">Отмена</string>
     <string name="mathTreningGame_resetScore_easterEgg1">А ловко ты это придумал, я даже сначала не понял, молодец!</string>
 
+    <string name="presetList_activityTitle">SchoolGuide - Список пресетов</string>
     <string name="presetList_addPreset_contentDescription">Добавить пресет</string>
     <string name="presetList_createNew_nameHint">Введите название</string>
     <string name="presetList_createNew_title">Создать новый пресет</string>

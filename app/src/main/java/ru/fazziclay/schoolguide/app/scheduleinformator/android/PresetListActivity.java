@@ -91,6 +91,8 @@ public class PresetListActivity extends AppCompatActivity {
 
         binding = ActivityPresetListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setTitle(R.string.presetEdit_activityTitle);
+
         binding.addPreset.setOnClickListener(ignore -> showCreateNewPresetDialog());
 
         registerListeners();
