@@ -81,6 +81,7 @@
     <string name="presetMenu_delete">Delete</string>
     <string name="presetMenu_colorScheme">Color scheme</string>
     <string name="presetMenu_rename">Rename</string>
+    <string name="presetMenu_oneDayMode">One day mode (INDEV)</string>
 
     <string name="presetEdit_activityTitle">Preset \'%s\'</string>
     <string name="presetEdit_colorScheme_default">Default</string>
@@ -157,5 +158,18 @@
     <string name="settings_advanced_developerFeatures_summary" />
     <string name="settings_advanced_shareAppTrace_title">Share debug info</string>
     <string name="settings_advanced_shareAppTrace_summary">Share AppTrace logs to developer!</string>
-    <string name="presetMenu_oneDayMode">One day mode (INDEV)</string>
+
+    <string name="duration_3600">1H</string>
+    <string name="duration_7200">2H</string>
+    <string name="duration_10800">3H</string>
+    <string name="duration_14400">4H</string>
+    <string name="duration_18000">5H</string>
+    <string name="duration_21600">6H</string>
+    <string name="duration_25200">7H</string>
+    <string name="duration_28800">8H</string>
+    <string name="duration_32400">9H</string>
+    <string name="duration_36000">10H</string>
+    <string name="duration_39600">11H</string>
+    <string name="duration_43200">12H</string>
+    <string name="duration_infinity">Always</string>
 </resources>

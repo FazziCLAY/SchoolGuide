@@ -76,6 +76,7 @@
     <string name="presetMenu_delete">Удалить</string>
     <string name="presetMenu_colorScheme">Цветовая схема</string>
     <string name="presetMenu_rename">Переименовать</string>
+    <string name="presetMenu_oneDayMode">Режим одного дня (DEV)</string>
 
     <string name="presetEdit_activityTitle">Пресет \'%s\'</string>
     <string name="presetEdit_colorScheme_default">Стандатный</string>
@@ -151,4 +152,18 @@
     <string name="settings_advanced_developerFeatures_summary">Активирует возможности разработчика\n(не рекомендуется для обычного использования)</string>
     <string name="settings_advanced_shareAppTrace_title">Поделиться отладочной информацией</string>
     <string name="settings_advanced_shareAppTrace_summary">Пришлите AppTrace-логи разработчику!</string>
+
+    <string name="duration_3600">1Ч</string>
+    <string name="duration_7200">2Ч</string>
+    <string name="duration_10800">3Ч</string>
+    <string name="duration_14400">4Ч</string>
+    <string name="duration_18000">5Ч</string>
+    <string name="duration_21600">6Ч</string>
+    <string name="duration_25200">7Ч</string>
+    <string name="duration_28800">8Ч</string>
+    <string name="duration_32400">9Ч</string>
+    <string name="duration_36000">10Ч</string>
+    <string name="duration_39600">11Ч</string>
+    <string name="duration_43200">12Ч</string>
+    <string name="duration_infinity">Всегда</string>
 </resources>
