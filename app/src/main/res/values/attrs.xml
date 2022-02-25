@@ -1,6 +1,6 @@
 <resources>
     <declare-styleable name="SchoolGuide.Main">
         <attr name="activityBackground" format="color" />
-        <attr name="dialogBackground" format="color"/>
+        <attr name="dialogBackground" format="color" />
     </declare-styleable>
 </resources>
