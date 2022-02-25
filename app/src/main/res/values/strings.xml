@@ -12,7 +12,7 @@
     <string name="updatecenter_error_unknownHost_text">$[-#ff2222]No $[@bold]network$[@reset] connection!</string>
     <string name="updatecenter_error_unknownHost_reload">Reload</string>
     <string name="updatecenter_error_fileNotFound_text">"$[@bold;-#ff0000]The service is closed :($[@reset;-reset]\nThe app couldn't find the latest version, $[@bold;-#dddddd]we recommend going to the project page:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
-    <string name="updatecenter_error_incompatibleVersion_text">"$[@bold;-#ff0000]Update center unavailable in debug-build app :($[@reset;-reset]\n$[@bold;-#dddddd]We recommend going to the project page:$[@reset;-reset]\nhttps://github.com/FazziCLAY/SchoolGuide"</string>
+    <string name="updatecenter_error_incompatibleVersion_text">"$[@bold;-#ff0000]Update center unavailable in debug-build app!$[@reset;-reset]\n\n$[@bold;-#dddddd]Download latest stable version:$[@reset;-reset]\nhttps://fazziclay.github.io/schoolguide"</string>
     <string name="updatecenter_error_generic_text">$[-#ffffff;@bold]Unknown error.$[@reset;-reset]\nThe application could not recognize the error, most likely there are technical problems now\nError:$[=#080607;-#cc0000;=#000000] %s</string>
     <string name="updatecenter_updated_title">Updated</string>
     <string name="updatecenter_updated_text">$[-#a0a0ff]The $[@bold;-#7070ff]latest version$[@reset;-#a0a0ff] is currently installed</string>
