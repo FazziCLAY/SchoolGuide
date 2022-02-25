@@ -173,10 +173,11 @@ public class ScheduleInformatorApp {
 
             } else if (!isNow && nextEvent.remainsUntilStart() > settings.getNotificationStatusBeforeTime() && 0 < settings.getNotificationStatusBeforeTime()) {
                 _isHideNotifyManipulation();
+            } else {
+                notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
+                startForeground();
+                sendNotify();
             }
-            notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
-            startForeground();
-            sendNotify();
         } else {
             _isHideNotifyManipulation();
         }
