@@ -44,6 +44,7 @@ public class ScheduleInformatorApp {
     private final Settings settings;
 
     private final NotificationManagerCompat notificationManagerCompat;
+    private final AppWidgetManager appWidgetManager;
 
     private final File scheduleFile;
     private final AppPresetList appPresetList;
@@ -58,6 +59,7 @@ public class ScheduleInformatorApp {
         this.settings = app.getSettings();
 
         this.notificationManagerCompat = NotificationManagerCompat.from(context);
+        this.appWidgetManager = AppWidgetManager.getInstance(context);
 
         this.notification = getNoneNotification();
 
@@ -146,30 +148,6 @@ public class ScheduleInformatorApp {
         boolean isNow = nowEvent != null;
         boolean isNext = nextEvent != null;
 
-        if (!isNow && !isNext) {
-            if (settings.isHideEmptyNotification()) {
-                stopForeground();
-            } else {
-                startForeground();
-                this.notification = getNoneNotification();
-                sendNotify();
-            }
-            return 3000;
-        }
-
-        if (!isNow && nextEvent.remainsUntilStart() > settings.getNotificationStatusBeforeTime() && 0 < settings.getNotificationStatusBeforeTime()) {
-            if (settings.isHideEmptyNotification()) {
-                stopForeground();
-            } else {
-                startForeground();
-                this.notification = getNoneNotification();
-                sendNotify();
-            }
-            return 2000;
-        }
-
-        startForeground();
-
         ScheduleInformatorNotification notificationBuilder = new ScheduleInformatorNotification();
         notificationBuilder.smallIcon = R.mipmap.ic_launcher;
 
@@ -180,17 +158,30 @@ public class ScheduleInformatorApp {
             if (isNext)
                 notificationBuilder.contentText = String.format(message, nextEvent.getName());
 
-        } else {
+        } else if (isNext) {
             String title = context.getString(R.string.scheduleInformator_notification_next_title);
             String message = context.getString(R.string.scheduleInformator_notification_next_text);
             notificationBuilder.contentTitle = String.format(title, TimeUtil.convertToHumanTime(nextEvent.remainsUntilStart(), ConvertMode.hhMMSS));
             notificationBuilder.contentText = String.format(message, nextEvent.getName());
         }
 
-        notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
-        sendNotify();
 
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        // NOTIFY
+        if (settings.isNotification()) {
+            if (!isNow && !isNext) {
+                _isHideNotifyManipulation();
+
+            } else if (!isNow && nextEvent.remainsUntilStart() > settings.getNotificationStatusBeforeTime() && 0 < settings.getNotificationStatusBeforeTime()) {
+                _isHideNotifyManipulation();
+            }
+            notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
+            startForeground();
+            sendNotify();
+        } else {
+            _isHideNotifyManipulation();
+        }
+        // NOTIFY
+        
         for (Integer appWidgetId : app.getAppWidgetsList().getWidgetsIds()) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
             views.setTextViewText(R.id.infoTitle, notificationBuilder.contentTitle);
@@ -200,6 +191,16 @@ public class ScheduleInformatorApp {
         }
 
         return 1000;
+    }
+
+    private void _isHideNotifyManipulation() {
+        if (settings.isHideEmptyNotification()) {
+            stopForeground();
+        } else {
+            startForeground();
+            this.notification = getNoneNotification();
+            sendNotify();
+        }
     }
 
     public void onServiceDestroy() {

@@ -15,7 +15,6 @@
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
             app:key="notification_isHideEmptyNotification"
-            app:dependency="notification_isNotification"
             app:title="@string/settings_notification_isHideEmptyNotification_title"
             app:summary="@string/settings_notification_isHideEmptyNotification_summary" />
 
