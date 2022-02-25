@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.view.Menu;
@@ -51,6 +52,7 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
 import ru.fazziclay.schoolguide.callback.Status;
 import ru.fazziclay.schoolguide.databinding.ActivityPresetListBinding;
+import ru.fazziclay.schoolguide.util.AfterTextWatcher;
 import ru.fazziclay.schoolguide.util.ColorUtil;
 
 public class PresetListActivity extends AppCompatActivity {
@@ -244,16 +246,39 @@ public class PresetListActivity extends AppCompatActivity {
      * @see PresetListActivity#PRESET_NAME_MAX_LENGTH
      * **/
     private void showCreateNewPresetDialog() {
+        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(10, 10, 10, 10);
+
         LinearLayout layout = new LinearLayout(this);
+        layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.VERTICAL);
 
+        TextView errorText = new TextView(this);
+        errorText.setTextColor(Color.RED);
+        errorText.setTextSize(17);
+        errorText.setPadding(10, 10, 10, 10);
+
+        errorText.setText(R.string.presetList_exception_presetNameEmpty);
+        errorText.setVisibility(View.VISIBLE);
+
         EditText name = new EditText(this);
-        name.setPadding(13, 10, 13, 10);
         name.setHint(R.string.presetList_createNew_nameHint);
         name.setMaxLines(PRESET_NAME_MAX_LINES);
         name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(PRESET_NAME_MAX_LENGTH)});
         name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        name.addTextChangedListener(new AfterTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.toString().isEmpty()) {
+                    errorText.setText(R.string.presetList_exception_presetNameEmpty);
+                    errorText.setVisibility(View.VISIBLE);
+                } else {
+                    errorText.setVisibility(View.GONE);
+                }
+            }
+        });
 
+        layout.addView(errorText);
         layout.addView(name);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
