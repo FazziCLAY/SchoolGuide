@@ -42,6 +42,7 @@ public class InformatorService extends Service {
                     app.sendErrorNotification();
                 }
                 reportedErrors++;
+                handler.postDelayed(runnable, 3000);
             }
         };
     }

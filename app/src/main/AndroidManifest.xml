@@ -12,7 +12,7 @@
         android:allowBackup="true"
         android:description="@string/application_description"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/application_name_dev"
+        android:label="@string/application_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolGuide">
