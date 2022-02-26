@@ -306,7 +306,7 @@ public class SchoolGuideApp {
 
     public void saveAppTrace() {
         try {
-            FileUtil.write(new File(cacheDir, "latest_app_trace.txt"), appTrace.getText());
+            FileUtil.write(new File(cacheDir, SharedConstrains.LATEST_APP_TRACE_FILE), appTrace.getText());
         } catch (Exception e) {
             Log.e("saveAppTrace", "error while saving appTrace", e);
         }

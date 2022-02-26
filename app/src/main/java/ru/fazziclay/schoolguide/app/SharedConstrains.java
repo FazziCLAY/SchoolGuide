@@ -37,6 +37,8 @@ public class SharedConstrains {
      * **/
     public static final String APP_WIDGETS_LIST_FILE = "android_widgets_list.json";
 
+    public static final String LATEST_APP_TRACE_FILE = "latest_app_trace.txt";
+
     /**
      * Схемы востановления DataFixer`a
      * @see ru.fazziclay.schoolguide.datafixer.DataFixer
