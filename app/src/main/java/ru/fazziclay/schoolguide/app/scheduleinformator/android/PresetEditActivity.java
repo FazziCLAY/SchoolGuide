@@ -127,6 +127,8 @@ public class PresetEditActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_preset_edit, menu);
         enableOneDayModeItem = menu.findItem(R.id.onDayMode);
         enableOneDayModeItem.setVisible(!isOneDayMode && settings.isDeveloperFeatures() && !preset.isSyncedByGlobal());
+        MenuItem colorSchemeMenu = menu.findItem(R.id.colorScheme);
+        colorSchemeMenu.setVisible(!isOneDayMode);
         return true;
     }
 
@@ -179,7 +181,7 @@ public class PresetEditActivity extends AppCompatActivity {
 
         // CRUTCH
         if (isOneDayMode && event.getStart() >= (24*60*60) && !create) {
-            Toast.makeText(this, "NoNoNo use sunday!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error: Use sunday!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -478,7 +480,6 @@ public class PresetEditActivity extends AppCompatActivity {
             if (week == w) {
                 e.add(event);
             }
-            Log.d("getEventsInWeek", "eventName="+preset.eventsInfos.get(event.getEventInfo()).getName()+"; w="+w);
         }
         return e.toArray(new Event[0]);
     }
@@ -495,6 +496,7 @@ public class PresetEditActivity extends AppCompatActivity {
      * Выдаёт адаптер списка
      * **/
     private BaseExpandableListAdapter getListAdapter() {
+        _sortPositions();
         return new BaseExpandableListAdapter() {
             @Override
             public int getGroupCount() {
@@ -594,6 +596,7 @@ public class PresetEditActivity extends AppCompatActivity {
         // text color
         int textColor = Color.RED;
         ColorScheme colorScheme = settings.getPresetEditColorScheme();
+        if (isOneDayMode) colorScheme = ColorScheme.DEFAULT;
         if (colorScheme == ColorScheme.DEFAULT || colorScheme == null) {
             textColor = Color.GREEN;
 
@@ -701,9 +704,8 @@ public class PresetEditActivity extends AppCompatActivity {
         List<Event> noDel = new ArrayList<>();
         // search > SUNDAY
         for (Event e : preset.eventsPositions) {
-            if (e.getStart() <= ((24 * 60 * 60)-10)) {
+            if (e.getStart() <= ((24 * 60 * 60))) {
                 noDel.add(e);
-                MilkLog.g("wow! noDel "+ e);
             }
         }
 
@@ -742,5 +744,28 @@ public class PresetEditActivity extends AppCompatActivity {
         }
 
         informatorApp.saveAppSchedule();
+    }
+
+    /**
+     * Пересортировать список положений событий по времени их начала
+     * **/
+    private void _sortPositions() {
+        List<Event> list = preset.eventsPositions;
+
+        int n = list.size();
+        Event temp;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                Event oI = list.get(i);
+                Event oJ = list.get(j);
+
+                if (oI.getStart() > oJ.getStart()) {
+                    temp = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, temp);
+                }
+            }
+        }
     }
 }
