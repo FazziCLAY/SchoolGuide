@@ -17,7 +17,7 @@ public class SortUtil {
                 String s2 = stringConsumer.get(oJ);
                 if (s1 == null) s1 = "";
 
-                if (s1.compareTo(s2) > 0){
+                if (s1.compareTo(s2) > 0) {
                     temp = list[i];
                     list[i] = list[j];
                     list[j] = temp;
