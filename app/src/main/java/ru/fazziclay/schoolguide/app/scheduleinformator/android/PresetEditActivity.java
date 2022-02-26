@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,10 +35,10 @@ import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.MilkLog;
-import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.PresetEditEventEditDialogStateCache;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
+import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.scheduleinformator.ScheduleInformatorApp;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Event;
@@ -642,7 +642,12 @@ public class PresetEditActivity extends AppCompatActivity {
         textView.setTextSize(21);
         textView.setTextColor(textColor);
         if (!preset.isSyncedByGlobal()) {
-            textView.setOnClickListener(ignore -> showEventDialog(event));
+            textView.setOnClickListener(ignore -> {
+                textView.setBackgroundColor(Color.GRAY);
+                Handler handler = new Handler(getMainLooper());
+                handler.postDelayed(() -> textView.setBackgroundColor(Color.TRANSPARENT), 200);
+                showEventDialog(event);
+            });
         }
         return textView;
     }
