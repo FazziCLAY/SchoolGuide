@@ -18,4 +18,5 @@ PresetEditor: убрано логирование при костыльной о
 PresetEditor: исправлена неточность в 10 секунд в костыльной отчистке событий не в sunday
 PresetEditor/getEventsInWeek: delete android log
 PresetEditor: перед открытием диолога события делаем фон текста серым, а через 200мс возвращаем на прозрачный
+AboutActivity: добавил собственно экран 'О приложении'
 ~ TODO: new date
