@@ -24,6 +24,7 @@
     <string name="mainOptionMenu_openMathTreningGame">Игра \'MathTrening\'</string>
     <string name="mainOptionMenu_openSettings">Настройки</string>
     <string name="mainOptionMenu_openDebug">Отладка</string>
+    <string name="mainOptionMenu_openAbout">О приложении</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_skip">Пропустить</string>

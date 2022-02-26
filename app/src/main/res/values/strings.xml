@@ -29,6 +29,7 @@
     <string name="mainOptionMenu_openMathTreningGame">Game \'MathTrening\'</string>
     <string name="mainOptionMenu_openSettings">Settings</string>
     <string name="mainOptionMenu_openDebug">Debug</string>
+    <string name="mainOptionMenu_openAbout">About app</string>
 
     <string name="mathTreningGame_activityTitle">SchoolGuide - MathTrening</string>
     <string name="mathTreningGame_optionMenu_skip">Skip</string>

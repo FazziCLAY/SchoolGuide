@@ -34,6 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.UUID;
 
 import ru.fazziclay.schoolguide.R;
+import ru.fazziclay.schoolguide.app.AboutActivity;
 import ru.fazziclay.schoolguide.app.DebugActivity;
 import ru.fazziclay.schoolguide.app.MilkLog;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
@@ -71,6 +72,7 @@ public class PresetListActivity extends AppCompatActivity {
     // Menu
     private MenuItem openUpdateCenterMenuItem;
     private MenuItem openDebugItem;
+    private MenuItem openAboutItem;
 
     // target (always AppPresetList from informatorApp)
     private PresetList presetList;
@@ -126,9 +128,13 @@ public class PresetListActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         openUpdateCenterMenuItem = menu.findItem(R.id.openUpdateCenterItem);
         openDebugItem = menu.findItem(R.id.openDebugItem);
+        openAboutItem = menu.findItem(R.id.openAbout);
         updateOpenUpdateCenterMenuName();
         if (openDebugItem != null) {
             openDebugItem.setVisible(app.getSettings().isDeveloperFeatures());
+        }
+        if (openAboutItem != null) {
+            openAboutItem.setVisible(app.getSettings().isDeveloperFeatures());
         }
         return true;
     }
@@ -171,6 +177,9 @@ public class PresetListActivity extends AppCompatActivity {
                     if (openDebugItem != null) {
                         openDebugItem.setVisible(app.getSettings().isDeveloperFeatures());
                     }
+                    if (openAboutItem != null) {
+                        openAboutItem.setVisible(app.getSettings().isDeveloperFeatures());
+                    }
                 });
             }
             return new Status.Builder()
@@ -209,6 +218,9 @@ public class PresetListActivity extends AppCompatActivity {
 
         } else if (id == R.id.openDebugItem) {
             startActivity(DebugActivity.getLaunchIntent(this));
+
+        } else if (id == R.id.openAbout) {
+            startActivity(new Intent(this, AboutActivity.class));
         }
         return true;
     }
