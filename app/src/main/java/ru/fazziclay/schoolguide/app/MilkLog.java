@@ -5,7 +5,7 @@ import android.util.Log;
 public class MilkLog {
     private static final boolean ENABLED = true;
     private static final boolean APP_TRACE_LOG = true;
-    private static final boolean ANDROID_LOG = false;
+    private static final boolean ANDROID_LOG = true;
     private static final String ANDROID_LOG_TAG = "MilkLog";
 
     public static void g(String message, Exception e) {
