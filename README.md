@@ -9,7 +9,7 @@
 Отображение в уведомлении и виджетах настраивается, но и по умолчанию всё отлично работает!
 
 # Скачать (Download)
-* [Project page](https://fazziclay.github.io/schoolguide)
+https://fazziclay.github.io/schoolguide
 
 # Скриншоты (Screenshots)
 ![TODO: перепиши названия](https://user-images.githubusercontent.com/68351787/143685188-3e015e48-9958-4bde-bb34-2af3d6cf3f18.png)
