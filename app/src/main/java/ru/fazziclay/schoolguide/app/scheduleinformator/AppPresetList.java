@@ -8,6 +8,8 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
 
 public class AppPresetList extends PresetList implements SelectablePresetList {
+    private final Preset UNDEFINED_PRESET = new Preset("Undefined Preset");
+
     @SerializedName("selectedPreset")
     private UUID selectedPresetUUID = new UUID(0, 0);
 
@@ -16,10 +18,10 @@ public class AppPresetList extends PresetList implements SelectablePresetList {
         Preset preset = getPreset(selectedPresetUUID);
         if (preset == null) {
             preset = getPreset(selectFirstByDisplayName());
-            if (preset != null) return preset;
-            preset = new Preset();
-            preset.setName("Undefined Preset");
-            //Log.e("ERROR", "getCurrentPreset: null");
+        }
+
+        if (preset == null) {
+            preset = UNDEFINED_PRESET;
         }
         return preset;
     }
