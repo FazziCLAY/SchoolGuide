@@ -71,7 +71,7 @@ public class ColorUtil {
         int oi = 0; // курсор по chars
         int ni = 0; // курсор по новой строке
         while (oi < chars.length) {
-            log.append("startWhile char=").append(chars[oi]).append(" oi=").append(oi).append("; ni=").append(ni).append("; cfg=").append(currentForegroundSpan).append("; cbg=").append(currentBackgroundSpan).append("; cs=").append(currentStyleSpan).append("\n");
+            if (DEBUG_COLORIZE) log.append("startWhile char=").append(chars[oi]).append(" oi=").append(oi).append("; ni=").append(ni).append("; cfg=").append(currentForegroundSpan).append("; cbg=").append(currentBackgroundSpan).append("; cs=").append(currentStyleSpan).append("\n");
             boolean appendOld = true;
             boolean appendNew = true;
             String toAppend = "";
