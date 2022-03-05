@@ -6,6 +6,8 @@ import java.util.UUID;
  * Набор утилит для UUIDшников
  * **/
 public class UUIDUtil {
+    private static final int MAX_REGENERATE_ITERATIONS = 1000;
+
     /**
      * @return Случайный UUID который не будет содержатся в исключениях
      * @param exclusions исключения которые нельзя генерировать
@@ -28,17 +30,18 @@ public class UUIDUtil {
                 break;
             }
             i++;
-            if (i > 1000) {
-                throw new RuntimeException("Error generating uuid. Iterations count > " + i);
+            if (i >= MAX_REGENERATE_ITERATIONS) {
+                throw new RuntimeException("Error while regenerating uuid. Iterations count >= " + i);
             }
         }
         return uuid;
     }
 
     /**
-     * @see UUIDUtil#generateUUID(UUID[])
+     * Случайный UUID
+     * @see UUID
      * **/
     public static UUID generateUUID() {
-        return generateUUID(new UUID[0]);
+        return UUID.randomUUID();
     }
 }
