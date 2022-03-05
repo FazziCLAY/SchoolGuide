@@ -91,12 +91,10 @@ public class TimeUtil {
     }
 
     /**
-     * Диапазон выдачи <code>0 <= x <= 604800 // ((24*60*60) * 7)</code>
-     * @return количество секунд прошедших с начала недели
+     * @deprecated Use {@link WeekTimeUtil#getWeekSeconds()}
      * **/
+    @Deprecated
     public static int getWeekSeconds() {
-        Calendar current = new GregorianCalendar();
-        int previousWeekDaysSeconds = SECONDS_IN_DAY * (current.get(Calendar.DAY_OF_WEEK) - 1);
-        return previousWeekDaysSeconds + getDaySeconds();
+        return WeekTimeUtil.getWeekSeconds();
     }
 }
