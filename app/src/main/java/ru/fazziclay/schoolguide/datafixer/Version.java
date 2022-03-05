@@ -15,12 +15,6 @@ public class Version {
     @SerializedName("versionsHistory")
     private List<Integer> versionsHistory = new ArrayList<>();
 
-    public Version(int firstVersion, int latestVersion, List<Integer> versionsHistory) {
-        this.firstVersion = firstVersion;
-        this.latestVersion = latestVersion;
-        this.versionsHistory = versionsHistory;
-    }
-
     private Version() {}
 
     public static Version createNone() {
