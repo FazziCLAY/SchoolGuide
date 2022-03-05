@@ -1,8 +1,8 @@
 package ru.fazziclay.schoolguide.app.listener;
 
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
-import ru.fazziclay.schoolguide.app.global.GlobalKeys;
-import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
+import ru.fazziclay.schoolguide.app.global.GlobalCacheKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalLatestVersionManifest;
 import ru.fazziclay.schoolguide.callback.Callback;
 import ru.fazziclay.schoolguide.callback.Status;
 
@@ -11,5 +11,5 @@ import ru.fazziclay.schoolguide.callback.Status;
  * @see ru.fazziclay.schoolguide.app.global.GlobalManager
  * **/
 public interface OnGlobalUpdatedListener extends Callback {
-    Status run(GlobalKeys globalKeys, GlobalVersionManifest globalVersionManifest, GlobalBuiltinPresetList globalBuiltinPresetList);
+    Status run(GlobalCacheKeys globalCacheKeys, GlobalLatestVersionManifest globalLatestVersionManifest, GlobalBuiltinPresetList globalBuiltinPresetList);
 }

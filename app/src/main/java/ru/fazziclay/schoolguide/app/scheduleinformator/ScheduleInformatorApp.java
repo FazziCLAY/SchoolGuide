@@ -18,9 +18,9 @@ import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 import ru.fazziclay.schoolguide.app.Settings;
 import ru.fazziclay.schoolguide.app.SettingsActivity;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
-import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalCacheKeys;
 import ru.fazziclay.schoolguide.app.global.GlobalManager;
-import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
+import ru.fazziclay.schoolguide.app.global.GlobalLatestVersionManifest;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.CompressedEvent;
 import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.Preset;
 import ru.fazziclay.schoolguide.callback.CallbackImportance;
@@ -78,7 +78,7 @@ public class ScheduleInformatorApp {
                     if (gPreset == null || !status) {
                         appPresetList.removePreset(gPresetUUID);
                     } else {
-                        gPreset.setSyncedByGlobal(true);
+                        gPreset.setBuiltin(true);
                         appPresetList.putPreset(gPresetUUID, gPreset);
                     }
 
@@ -106,7 +106,7 @@ public class ScheduleInformatorApp {
                     }
 
                     @Override
-                    public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
+                    public void success(GlobalCacheKeys keys, GlobalLatestVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
                         app.getUpdatePresetListBuiltinSignalListenerCallbacks().run((callbackStorage, callback) -> callback.onSignal(builtinSchedule, settings.isBuiltinPresetList()));
                     }
                 });
@@ -176,11 +176,7 @@ public class ScheduleInformatorApp {
 
             } else {
                 notification = notificationBuilder.build(context, (isNow ? NOTIFICATION_CHANNEL_ID_NOW : NOTIFICATION_CHANNEL_ID_NEXT));
-                if (!isServiceForeground) {
-                    startForeground();
-                } else {
-                    sendNotify();
-                }
+                _updateNotification();
             }
         } else {
             _isHideNotifyManipulation();
@@ -203,11 +199,15 @@ public class ScheduleInformatorApp {
             stopForeground();
         } else {
             this.notification = getNoneNotification();
-            if (!isServiceForeground) {
-                startForeground();
-            } else {
-                sendNotify();
-            }
+            _updateNotification();
+        }
+    }
+
+    private void _updateNotification() {
+        if (!isServiceForeground) {
+            startForeground();
+        } else {
+            sendNotify();
         }
     }
 

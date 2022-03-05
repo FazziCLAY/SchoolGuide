@@ -9,17 +9,17 @@ import ru.fazziclay.schoolguide.app.scheduleinformator.appschedule.PresetList;
  * <p>Aka Built-in schedule</p>
  * @see GlobalManager
  * **/
-public class GlobalBuiltinPresetList extends PresetList implements IGlobalData {
+public class GlobalBuiltinPresetList extends PresetList implements LocalCacheableData {
     /**
      * <h1>Global key</h1>
-     * Name "key" since pre v50
-     * @see IGlobalData
+     * Name "localCacheKey" since v56
+     * @see LocalCacheableData
      * **/
-    @SerializedName("key")
-    private int key = 0;
+    @SerializedName("localCacheKey")
+    private int localCacheKey = 0;
 
     @Override
-    public int getGlobalKey() {
-        return key;
+    public int getLocalCacheKay() {
+        return localCacheKey;
     }
 }

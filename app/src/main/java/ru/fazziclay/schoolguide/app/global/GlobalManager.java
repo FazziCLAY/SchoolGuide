@@ -55,32 +55,32 @@ public class GlobalManager {
             File localBuiltinScheduleFile = new File(cacheDir, CACHE_LOCAL_BUILTIN_SCHEDULE);
 
             String keysStr;
-            GlobalKeys globalKeys = null;
+            GlobalCacheKeys globalCacheKeys = null;
             if (onlineMode) {
-                keysStr = NetworkUtil.parseTextPage(SharedConstrains.KEYS_V2);
-                globalKeys = gson.fromJson(keysStr, GlobalKeys.class);
+                keysStr = NetworkUtil.parseTextPage(SharedConstrains.API_LOCAL_CACHE_KEYS_URL);
+                globalCacheKeys = gson.fromJson(keysStr, GlobalCacheKeys.class);
             }
 
-            GlobalVersionManifest versionManifest = DataUtil.load(localVersionManifestFile, GlobalVersionManifest.class);
-            GlobalBuiltinPresetList builtinSchedule = DataUtil.load(localBuiltinScheduleFile, GlobalBuiltinPresetList.class);
+            GlobalLatestVersionManifest latestVersionManifest = DataUtil.load(localVersionManifestFile, GlobalLatestVersionManifest.class);
+            GlobalBuiltinPresetList builtinPresetList = DataUtil.load(localBuiltinScheduleFile, GlobalBuiltinPresetList.class);
 
-            if (onlineMode && globalKeys.getVersionManifest() != versionManifest.getGlobalKey()) {
-                String versionManifestStr = NetworkUtil.parseTextPage(SharedConstrains.VERSION_MANIFEST_V2);
-                versionManifest = gson.fromJson(versionManifestStr, GlobalVersionManifest.class);
+            if (onlineMode && globalCacheKeys.getLatestVersionManifestKey() != latestVersionManifest.getLocalCacheKay()) {
+                String versionManifestStr = NetworkUtil.parseTextPage(SharedConstrains.API_LATEST_VERSION_MANIFEST_URL);
+                latestVersionManifest = gson.fromJson(versionManifestStr, GlobalLatestVersionManifest.class);
                 FileUtil.write(localVersionManifestFile, versionManifestStr);
             }
 
-            if (onlineMode && globalKeys.getBuiltinSchedule() != builtinSchedule.getGlobalKey()) {
-                String builtinScheduleStr = NetworkUtil.parseTextPage(SharedConstrains.BUILTIN_SCHEDULE_V2);
-                builtinSchedule = gson.fromJson(builtinScheduleStr, GlobalBuiltinPresetList.class);
+            if (onlineMode && globalCacheKeys.getBuiltinPresetListKey() != builtinPresetList.getLocalCacheKay()) {
+                String builtinScheduleStr = NetworkUtil.parseTextPage(SharedConstrains.API_BUILTIN_PRESET_LIST_URL);
+                builtinPresetList = gson.fromJson(builtinScheduleStr, GlobalBuiltinPresetList.class);
                 FileUtil.write(localBuiltinScheduleFile, builtinScheduleStr);
             }
 
-            if (versionManifest == null || builtinSchedule == null) {
+            if (latestVersionManifest == null || builtinPresetList == null) {
                 throw new NullPointerException(EXCEPTION_NULLPOINTEREXCEPTION_TO_FAILED);
             }
 
-            responseInterface.success(globalKeys, versionManifest, builtinSchedule);
+            responseInterface.success(globalCacheKeys, latestVersionManifest, builtinPresetList);
         } catch (Exception e) {
             MilkLog.g("GlobalManager: failed! (processed by interface!)", e);
             responseInterface.failed(e);
@@ -96,6 +96,6 @@ public class GlobalManager {
          * **/
         void failed(Exception exception);
 
-        void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule);
+        void success(GlobalCacheKeys keys, GlobalLatestVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule);
     }
 }

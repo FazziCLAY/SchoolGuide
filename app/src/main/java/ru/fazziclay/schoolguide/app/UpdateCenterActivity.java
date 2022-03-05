@@ -24,9 +24,9 @@ import java.util.Locale;
 
 import ru.fazziclay.schoolguide.R;
 import ru.fazziclay.schoolguide.app.global.GlobalBuiltinPresetList;
-import ru.fazziclay.schoolguide.app.global.GlobalKeys;
+import ru.fazziclay.schoolguide.app.global.GlobalCacheKeys;
 import ru.fazziclay.schoolguide.app.global.GlobalManager;
-import ru.fazziclay.schoolguide.app.global.GlobalVersionManifest;
+import ru.fazziclay.schoolguide.app.global.GlobalLatestVersionManifest;
 import ru.fazziclay.schoolguide.databinding.ActivityUpdateCenterBinding;
 import ru.fazziclay.schoolguide.util.AppTrace;
 import ru.fazziclay.schoolguide.util.ColorUtil;
@@ -170,10 +170,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
             } else if (DEBUG_STATE == 5) {
                 HashMap<String, String> change = new HashMap<>();
                 change.put("default", "Пофикшены баги:\n * Корова прилипала к стене\n$[-#ff0000] * Вылет из-за краша$[-reset]\n$[-#ff0000] * Краш из-за вылета$[-reset]\n\nПодпишись: https://youtube.com\n\nПривет $[@italic;-#ff0000;=#00cccc]owoPeef  $[@reset;-reset;=reset]& $[@italic;-#00ff00;=#cc00cc]_Dane4ka_ $[@reset;-reset;=reset]& $[-#00aaff]@fyozaku");
-                HashMap<String, String> download = new HashMap<>();
-                download.put("release", "https://google.com");
-                download.put("debug", "https://yandex.ru");
-                GlobalVersionManifest.ManifestVersion v = new GlobalVersionManifest.ManifestVersion(20, "0.6 - ReWriTTen", change, download);
+                GlobalLatestVersionManifest v = new GlobalLatestVersionManifest(20, "0.6 - ReWriTTen", "https://google.com/", change);
                 statusInterface.run(Status.OUTDATED.setLatestVersion(v));
             }
             if (DEBUG_STATE != 0) return;
@@ -185,7 +182,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void success(GlobalKeys keys, GlobalVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
+                public void success(GlobalCacheKeys keys, GlobalLatestVersionManifest versionManifest, GlobalBuiltinPresetList builtinSchedule) {
                     if (versionManifest.getLatestVersion() == null) {
                         statusInterface.run(Status.ERROR.setException(new NullPointerException("latestVersion is null")));
                         return;
@@ -219,7 +216,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
         UPDATED,
         OUTDATED;
 
-        public GlobalVersionManifest.ManifestVersion latestVersion;
+        public GlobalLatestVersionManifest latestVersion;
         public Exception exception;
 
         public Status setException(Exception e) {
@@ -227,7 +224,7 @@ public class UpdateCenterActivity extends AppCompatActivity {
             return this;
         }
 
-        public Status setLatestVersion(GlobalVersionManifest.ManifestVersion s) {
+        public Status setLatestVersion(GlobalLatestVersionManifest s) {
             this.latestVersion = s;
             return this;
         }

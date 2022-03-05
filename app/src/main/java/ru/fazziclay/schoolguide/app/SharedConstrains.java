@@ -28,9 +28,9 @@ public class SharedConstrains {
     public static final String APPLICATION_ID = BuildConfig.APPLICATION_ID;
     public static final String APPLICATION_BUILD_TYPE = BuildConfig.BUILD_TYPE;
 
-    public static final String KEYS_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/main/manifest/v2/keys_v2.json";
-    public static final String VERSION_MANIFEST_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/main/manifest/v2/version_manifest_v2.json";
-    public static final String BUILTIN_SCHEDULE_V2 = "https://raw.githubusercontent.com/FazziCLAY/SchoolGuide/main/manifest/v2/builtin_schedule_v2.json";
+    public static final String API_LOCAL_CACHE_KEYS_URL        = "https://fazziclay.github.io/_api_/project_1/local_cache_keys.json";
+    public static final String API_LATEST_VERSION_MANIFEST_URL = "https://fazziclay.github.io/_api_/project_1/latest_version_manifest.json";
+    public static final String API_BUILTIN_PRESET_LIST_URL     = "https://fazziclay.github.io/_api_/project_1/builtin_preset_list.json";
 
     /**
      * @since v50
