@@ -4,7 +4,10 @@ package ru.fazziclay.schoolguide.util;
  * Набот утилит для сортировки
  * **/
 public class SortUtil {
-    public static <T> void sort(T[] list, StringConsumer<T> stringConsumer) {
+    /**
+     * Перерасположить(сортировать) массив list по его имиени, имя достаётся с помощью {@link SortStringConsumer}
+     * **/
+    public static <T> void sortByName(T[] list, SortStringConsumer<T> consumer) {
         int n = list.length;
         T temp;
 
@@ -13,9 +16,10 @@ public class SortUtil {
                 T oI = list[i];
                 T oJ = list[j];
 
-                String s1 = stringConsumer.get(oI);
-                String s2 = stringConsumer.get(oJ);
+                String s1 = consumer.get(oI);
+                String s2 = consumer.get(oJ);
                 if (s1 == null) s1 = "";
+                if (s2 == null) s2 = "";
 
                 if (s1.compareTo(s2) > 0) {
                     temp = list[i];
@@ -26,7 +30,7 @@ public class SortUtil {
         }
     }
 
-    public interface StringConsumer<T> {
+    public interface SortStringConsumer<T> {
         String get(T o);
     }
 }
