@@ -98,7 +98,7 @@ public class FileUtil {
     }
 
     public static boolean isExist(String path) {
-        return new File(fixPathSeparator(path)).isFile();
+        return new File(fixPathSeparator(path)).exists();
     }
 
     public static String fixPathSeparator(String path) {
