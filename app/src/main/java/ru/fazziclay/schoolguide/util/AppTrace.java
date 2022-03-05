@@ -9,10 +9,12 @@ import java.util.List;
 import ru.fazziclay.schoolguide.app.SharedConstrains;
 import ru.fazziclay.schoolguide.app.SchoolGuideApp;
 
-public class AppTrace {
+public class AppTrace implements DebugPointer {
+    private static final String PROJECT = "SchoolGuide";
     private static final String TEXT_BASE =
             "0===== FazziCLAY AppTrace =====0\n" +
                     "--- Init ---\n" +
+                    "project: $(init/project)" +
                     "timeMillis: $(init/timeMillis)\n" +
                     "thread: $(init/thread)\n" +
                     "message: $(init/message)\n" +
@@ -81,12 +83,30 @@ public class AppTrace {
     }
 
     private boolean pointDebugLogException = false;
+
+    @Override
     public void point(String message, Throwable throwable) {
+        point(null, message, throwable);
+    }
+
+    @Override
+    public void point(String message) {
+        point(null, message, null);
+    }
+
+    @Override
+    public void point(String tag, String message) {
+        point(tag, message, null);
+    }
+
+    @Override
+    public void point(String tag, String message, Throwable throwable) {
         long millis = System.currentTimeMillis();
         long nanos = System.nanoTime();
         Point point = new Point(
                 Thread.currentThread(),
                 new Exception().getStackTrace(),
+                tag,
                 message,
                 throwable,
                 millis,
@@ -108,22 +128,19 @@ public class AppTrace {
         } catch (Exception ignored) {}
     }
 
-    public void point(String message) {
-        point(message, null);
-    }
-
     private class Point {
         private final Thread thread;
+        private final StackTraceElement[] stackTrace;
+        private final String tag;
         private final String message;
         private final Throwable throwable;
-        private final StackTraceElement[] stackTrace;
-
         private final long timeMillis;
         private final long timeNanos;
 
-        public Point(Thread thread, StackTraceElement[] stackTrace, String message, Throwable throwable, long timeMillis, long timeNanos) {
+        public Point(Thread thread, StackTraceElement[] stackTrace, String tag, String message, Throwable throwable, long timeMillis, long timeNanos) {
             this.thread = thread;
             this.stackTrace = stackTrace;
+            this.tag = tag;
             this.message = message;
             this.throwable = throwable;
             this.timeMillis = timeMillis;
@@ -132,7 +149,7 @@ public class AppTrace {
 
         public String format(int position) {
             return variable(POINT_BASE, new Object[][]{
-                    {"title", "Point #" + position},
+                    {"title", (tag == null ? "Point #" : "("+tag+") Point #") + position},
                     {"message", formatMultilineMessage(message)},
                     {"thread", thread == null ? "null" : thread.getName()},
                     {"time", String.format("%s / %s", timeMillis, timeNanos)},
@@ -175,6 +192,7 @@ public class AppTrace {
 
     public String getText() {
         return variable(TEXT_BASE, new Object[][]{
+                {"init/project", PROJECT},
                 {"init/timeMillis", initTimeMillis},
                 {"init/thread", initThread.getName()},
                 {"init/message", formatMultilineMessage(initMessage)},
